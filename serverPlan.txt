@@ -1,0 +1,51 @@
+My Plan for the server;
+
+Set up the express server.
+
+Set up database, this will be in a class.  One of the methods will be to initialise the database, and this will be called within the server class.
+
+The site will be able to have a range of sections
+    - Services
+    - Behaviour Support
+    - Mental Health Information
+
+In the services section it will be broken down Into 
+    - Shelter
+    - Addiction
+    - Food And Materials
+    - Housing
+    - Support Groups
+    - Mental Health
+    - Family Services
+
+Whether it is a category or a service it will have a base Class of ListItem.  This will contain
+    - The Name
+    - The Id
+    - the goTo link
+    - a method for applying the colour scheme? - this will be in the client side counterpart not here
+
+A category will extend the List Item and contain
+    - A list of all services within this category
+    - A method which references the database to fill these services
+
+The corresponding MySql table will be a category, there will be a many to one relationship with services. (Should this be many to many as there might be secondary categories it fits into) - remember the relationship is held within the services side
+
+The service will also extend the list Item 
+    - category: class
+    - organisation
+    - description
+    - needsMet - array of strings
+    - minAge
+    - maxAge
+    
+    - contact number
+    - email address
+    - website
+    - referral pathway description: could this be another object?
+    - imageUrl
+    - clientGroups : Exclusive / Range (exclusive means that they must be within this group, aka Travellers, but then male, female) - will need to be selectable from a drop down list. this will be a many to many through a junction table
+    - areasServed - many to many through a junction table
+    - rating
+    - current average wait
+    - 
+    
