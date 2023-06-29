@@ -3,14 +3,14 @@ import mysql from "mysql2";
 import { Pool } from "mysql2/promise";
 
 const { db } = envConfig;
-
+//our overarching database class
 class Database {
   private connection: Pool;
 
   constructor() {
     this.connection = this.initDatabase();
   }
-
+  //connection initialises within the constructor of the database
   private initDatabase(): Pool {
     //settings for the connection
     const pool = mysql.createPool({
