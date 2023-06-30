@@ -1,7 +1,7 @@
 import { RowDataPacket } from "mysql2";
 
 export interface IGenericIterableObject {
-  [key: string]: string;
+  [key: string]: string | number | boolean;
 }
 
 export type mySqlAddedInfo = {
