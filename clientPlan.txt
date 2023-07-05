@@ -1,0 +1,5 @@
+- start off by creating a service creation form
+    - this form will be a multi-step form   
+    - this form will also have a step to create the sub categories - this will work like the salesforce one adding passing different elements over.  I will start by creating this form i think
+    - will then create the other one, I will see whether i need to useContext to hold the information or perhaps a useForm hook or maybe just manage through some simple state.
+    - once i have created this then I will work out a way to pass this to the backend
