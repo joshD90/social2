@@ -8,4 +8,8 @@ export default {
     host: process.env.DB_HOST as string,
     username: process.env.DB_USERNAME as string,
   },
+  server: {
+    port: process.env.PORT as string,
+    clientServer: process.env.CLIENT_SERVER as string,
+  },
 };

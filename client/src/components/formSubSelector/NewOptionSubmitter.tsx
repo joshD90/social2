@@ -4,12 +4,16 @@ import { ISubServiceCategory } from "../../types/serviceTypes/SubServiceCategori
 
 type Props = {
   existingOptions: ISubServiceCategory[];
-  setSelectedOption: React.Dispatch<SetStateAction<ISubServiceCategory[]>>;
+  updateField: (name: string, value: ISubServiceCategory[]) => void;
+  selectedOptions: ISubServiceCategory[];
+  categoryName: string;
 };
 
 const NewOptionSubmitter: FC<Props> = ({
   existingOptions,
-  setSelectedOption,
+  updateField,
+  selectedOptions,
+  categoryName,
 }) => {
   const [currentInput, setCurrentInput] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -32,10 +36,11 @@ const NewOptionSubmitter: FC<Props> = ({
     }
     //if not already there go ahead with adding
     setError("");
-    setSelectedOption((prev) => [
-      ...prev,
+    updateField(categoryName, [
+      ...selectedOptions,
       { value: currentInput, exclusive: false },
     ]);
+
     setCurrentInput("");
   };
 

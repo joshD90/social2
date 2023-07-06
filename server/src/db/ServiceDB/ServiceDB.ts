@@ -1,4 +1,4 @@
-import { Pool } from "mysql2/promise";
+import { Pool, ResultSetHeader } from "mysql2/promise";
 import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
@@ -77,7 +77,7 @@ export class ServiceDB {
   public async createFullServiceEntry(
     baseData: IService,
     subCategories: (TAreasServed | TNeedsMet | TClientGroups)[]
-  ) {
+  ): Promise<ResultSetHeader | Error> {
     try {
       this.connection.beginTransaction();
       //make our base table before proceeding
@@ -107,9 +107,11 @@ export class ServiceDB {
       }
       //commit all the changes if there are no errors
       this.connection.commit();
+      return baseResult;
     } catch (error) {
       console.log(error);
       this.connection.rollback();
+      return error as Error;
     }
   }
 

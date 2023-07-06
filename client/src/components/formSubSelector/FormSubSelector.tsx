@@ -1,18 +1,25 @@
-import { FC, SetStateAction, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
+
 import NewOptionSubmitter from "./NewOptionSubmitter";
-import { ISubServiceCategory } from "../../types/serviceTypes/SubServiceCategories";
+import {
+  ISubServiceCategory,
+  SubServiceCategory,
+} from "../../types/serviceTypes/SubServiceCategories";
 
-const dummyData: ISubServiceCategory[] = [
-  { value: "travellers", exclusive: false },
-  { value: "men", exclusive: false },
-  { value: "alcohol", exclusive: false },
-  { value: "drugs", exclusive: false },
-  { value: "adults", exclusive: false },
-  { value: "women", exclusive: false },
-];
+import subServiceDataMap from "./formSubSelectorInitialData";
 
-const FormSubSelector: FC = () => {
-  const [options, setOptions] = useState<ISubServiceCategory[]>(dummyData);
+type Props = {
+  subCategoryName: SubServiceCategory;
+  value: ISubServiceCategory[];
+  updateField: (name: string, value: ISubServiceCategory[]) => void;
+};
+
+const FormSubSelector: FC<Props> = ({
+  subCategoryName,
+  value,
+  updateField,
+}) => {
+  const [options, setOptions] = useState<ISubServiceCategory[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<ISubServiceCategory[]>(
     []
   );
@@ -20,6 +27,25 @@ const FormSubSelector: FC = () => {
   const [activeSelectedOptions, setSelectedActiveOptions] = useState<string[]>(
     []
   );
+
+  //set data - this will be replaced by an api call once connected to backend
+  useEffect(() => {
+    const subData = subServiceDataMap.get(subCategoryName);
+    if (!subData) return;
+    if (!value || value.length === 0) {
+      setOptions(subData);
+      return;
+    }
+    //we want to be able to prepopulate based on previous choices that have been selected
+    //strip out selected options from our inital
+    const unSelectedOptions = subData.filter(
+      (option) => !value.find((value) => value.value === option.value)
+    );
+
+    setOptions(unSelectedOptions);
+    setSelectedOptions(value);
+  }, [subCategoryName, value]);
+
   //this handles the actual elements inside the HTML select that we have clicked
   const changeActive = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     //get our options into a string array format
@@ -31,24 +57,25 @@ const FormSubSelector: FC = () => {
       setSelectedActiveOptions([...selectedOptions]);
   };
 
-  //this moves it from one panel to the other
-  const transferOptions = (
-    e: React.FormEvent,
-    target: React.Dispatch<SetStateAction<ISubServiceCategory[]>>,
-    source: React.Dispatch<SetStateAction<ISubServiceCategory[]>>,
-    transferData: string[],
-    setTransferData: React.Dispatch<SetStateAction<string[]>>
-  ): void => {
+  //we update the over all state and allow our use effect to do the transfer
+  const updateOptions = (e: React.FormEvent, direction: "add" | "subtract") => {
     e.preventDefault();
-    const mappedTransferData = transferData.map((el) => ({
-      value: el,
-      exclusive: false,
-    }));
-    target((prev) => [...prev, ...mappedTransferData]);
-    source((prev) =>
-      prev.filter((option) => !transferData.includes(option.value))
-    );
-    setTransferData([]);
+    if (direction === "add") {
+      const currentOptions = activeOptions.map((option) => ({
+        value: option,
+        exclusive: false,
+      }));
+
+      updateField(subCategoryName, [...selectedOptions, ...currentOptions]);
+    }
+    if (direction === "subtract") {
+      const filteredSelectedOptions = selectedOptions.filter(
+        (option) => !activeSelectedOptions.includes(option.value)
+      );
+      updateField(subCategoryName, filteredSelectedOptions);
+    }
+    setActiveOptions([]);
+    setSelectedActiveOptions([]);
   };
 
   //handle the double click to set exclusive or not
@@ -61,7 +88,8 @@ const FormSubSelector: FC = () => {
   };
 
   return (
-    <div className="bg-stone-300 rounded-md p-5">
+    <div className="bg-stone-300 rounded-md p-5 w-full">
+      <p className="pb-5">{`After Selecting the Relevant Options for ${subCategoryName} double click any options that are an essential criteria for the service to be accessed`}</p>
       <form className="flex gap-5 mb-5">
         {/* select the options */}
         <div className="flex flex-col border-solid border-stone-500 border-2 rounded-sm w-48">
@@ -84,29 +112,13 @@ const FormSubSelector: FC = () => {
         <div className="flex flex-col justify-center items-center gap-2 ">
           <button
             className="bg-gray-500 rounded-sm p-2 w-20"
-            onClick={(e) =>
-              transferOptions(
-                e,
-                setSelectedOptions,
-                setOptions,
-                activeOptions,
-                setActiveOptions
-              )
-            }
+            onClick={(e) => updateOptions(e, "add")}
           >
             Add
           </button>
           <button
             className="bg-gray-500 rounded-sm p-2 w-20"
-            onClick={(e) =>
-              transferOptions(
-                e,
-                setOptions,
-                setSelectedOptions,
-                activeSelectedOptions,
-                setSelectedActiveOptions
-              )
-            }
+            onClick={(e) => updateOptions(e, "subtract")}
           >
             Remove
           </button>
@@ -139,7 +151,9 @@ const FormSubSelector: FC = () => {
       </form>
       <NewOptionSubmitter
         existingOptions={[...options, ...selectedOptions]}
-        setSelectedOption={setSelectedOptions}
+        selectedOptions={selectedOptions}
+        categoryName={subCategoryName}
+        updateField={updateField}
       />
     </div>
   );
