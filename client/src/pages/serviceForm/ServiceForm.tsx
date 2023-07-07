@@ -4,6 +4,7 @@ import BaseServiceForm from "../../components/serviceForm/BaseServiceForm";
 import ServiceSubSectionForm from "../../components/serviceForm/ServiceSubSectionForm";
 
 import useForm from "../../hooks/useServiceForm";
+import { separateService } from "../../utils/objectSeperation/separateService";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -40,6 +41,25 @@ const ServiceForm = () => {
     });
   };
 
+  const submitForm = async () => {
+    //seperate our form information into two seperate parts
+    const serviceToSend = separateService(formState);
+
+    try {
+      const result = await fetch("http://localhost:3500/service", {
+        method: "POST",
+        body: JSON.stringify(serviceToSend),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!result.ok)
+        throw new Error(`Request failed with status code of ${result.status}`);
+      const data = await result.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <section className="w-full p-5">
       {renderStepComponent()}
@@ -53,9 +73,7 @@ const ServiceForm = () => {
         </button>
         <button
           className="p-2 bg-stone-500 rounded-md hover:bg-stone-400"
-          onClick={() =>
-            stepIndex < 1 ? changeStepIndex(1) : console.log(formState)
-          }
+          onClick={() => (stepIndex < 1 ? changeStepIndex(1) : submitForm())}
         >
           {stepIndex < 1 ? "Next" : "Submit"}
         </button>

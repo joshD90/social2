@@ -78,8 +78,9 @@ export class ServiceDB {
     baseData: IService,
     subCategories: (TAreasServed | TNeedsMet | TClientGroups)[]
   ): Promise<ResultSetHeader | Error> {
+    const connection = await this.connection.getConnection();
+    connection.beginTransaction();
     try {
-      this.connection.beginTransaction();
       //make our base table before proceeding
       const baseResult =
         await this.ServiceBaseQueries.createTableEntryFromPrimitives(
@@ -106,11 +107,11 @@ export class ServiceDB {
         throw new Error("could not make the sub categories");
       }
       //commit all the changes if there are no errors
-      this.connection.commit();
+      connection.commit();
       return baseResult;
     } catch (error) {
       console.log(error);
-      this.connection.rollback();
+      connection.rollback();
       return error as Error;
     }
   }
