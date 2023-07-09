@@ -18,6 +18,7 @@ export type SubCategoryTableSpecific = {
   tableQueries: GeneralQueryGenerator;
   junctionTableQueries: GeneralQueryGenerator;
   tableName: string;
+  fieldName: string;
 };
 
 //when this is returned from the database it will have an id attached to it so we want to type this as well

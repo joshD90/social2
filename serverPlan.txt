@@ -48,6 +48,11 @@ The service will also extend the list Item
     - rating
     - current average wait
     - 
+
+    Base Service is working however our rollback function is not working
+    Fix sub categories tonight as well as fix rollback function tonight;
+
+    fields to add in are image, parent organisation
     
 
     

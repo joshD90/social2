@@ -20,7 +20,7 @@ const NewOptionSubmitter: FC<Props> = ({
 
   const addEnteredOption = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("doing something");
+
     //map into string array
     const mappedOptions = existingOptions.map((option) => option.value);
     if (currentInput.length < 2) return;
@@ -28,7 +28,6 @@ const NewOptionSubmitter: FC<Props> = ({
     const fuzzySearchResult = fuzzySearch(currentInput, mappedOptions);
 
     if (fuzzySearchResult.length > 0) {
-      console.log("matching");
       setError(
         `"${currentInput}" is very similar to existing entry "${fuzzySearchResult[0]}"`
       );

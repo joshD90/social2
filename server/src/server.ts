@@ -2,8 +2,6 @@ import express from "express";
 import cors from "cors";
 require("dotenv").config();
 
-import { Request, Response } from "express";
-
 import Database from "./db/Database";
 import envConfig from "./env/envConfig";
 

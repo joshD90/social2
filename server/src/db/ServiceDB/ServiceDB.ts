@@ -91,10 +91,11 @@ export class ServiceDB {
 
       const serviceId = baseResult.insertId;
 
-      //now that we have made our base table entry we can create our sub directories
+      // //now that we have made our base table entry we can create our sub directories
       const successArray = await Promise.all(
         subCategories.map((category) => {
           const specificSubArray = this.generateSubTableVariables(category);
+
           return this.addFullSubCategory(
             specificSubArray,
             Object.values(category)[0],
@@ -108,6 +109,7 @@ export class ServiceDB {
       }
       //commit all the changes if there are no errors
       connection.commit();
+      console.log(baseResult);
       return baseResult;
     } catch (error) {
       console.log(error);
@@ -124,13 +126,7 @@ export class ServiceDB {
   ): Promise<"success" | "failure"> {
     const successArray = await Promise.all(
       data.map((entry) => {
-        return this.addSubCategory(
-          specificTableVar.tableQueries,
-          specificTableVar.junctionTableQueries,
-          entry,
-          specificTableVar.tableName as SubServiceKey,
-          serviceId
-        );
+        return this.addSubCategory(specificTableVar, entry, serviceId);
       })
     );
     if (successArray.some((el) => el === "failure")) return "failure";
@@ -139,24 +135,40 @@ export class ServiceDB {
 
   //create one subCategory Entry
   public async addSubCategory(
-    generalTableQuery: GeneralQueryGenerator,
-    junctionTableQuery: GeneralQueryGenerator,
+    specificTableVar: SubCategoryTableSpecific,
     data: ISubServiceItem,
-    subTable: SubServiceKey,
     serviceId: number
   ): Promise<"success" | "failure"> {
+    const generalTableQuery = specificTableVar.tableQueries;
+    const junctionTableQuery = specificTableVar.junctionTableQueries;
+    const subTable = specificTableVar.tableName;
+    const fieldName = specificTableVar.fieldName;
     //we need to change the format to fit the general table query.
-    const formattedData = { [subTable]: data.value };
+    const formattedData = { [fieldName]: data.value };
+
     try {
-      const result = await generalTableQuery.createTableEntryFromPrimitives(
-        formattedData
+      //see does this entry already exist
+      const existingEntry = await generalTableQuery.findEntryBy(
+        specificTableVar.fieldName,
+        data.value
       );
-      if (result instanceof Error)
-        throw new Error("Could not create the Sub Directory");
+      if (existingEntry instanceof Error) throw Error(existingEntry.message);
+      let subId: number;
+      //if it does use this id else create a new entry
+      if (existingEntry[0]?.id) {
+        subId = parseInt(existingEntry[0].id);
+      } else {
+        const result = await generalTableQuery.createTableEntryFromPrimitives(
+          formattedData
+        );
+        if (result instanceof Error)
+          throw new Error("Could not create the Sub Directory");
+        subId = result.insertId;
+      }
+
       //take the id from the result and use this for the junction table
       //prepare our data
-      const subId = result.insertId;
-      const refColName = this.generateRefColNameJunc(subTable);
+      const refColName = this.generateRefColNameJunc(subTable as SubServiceKey);
       const junctionData = {
         service_id: serviceId,
         [refColName]: subId,
@@ -193,21 +205,25 @@ export class ServiceDB {
   ): SubCategoryTableSpecific {
     let tableQueries: GeneralQueryGenerator;
     let junctionTableQueries: GeneralQueryGenerator;
-    let tableName: string;
+    let tableName: SubServiceKey;
+    let fieldName: string;
     if (Object.keys(subCategory)[0] === "areasServed") {
       tableQueries = this.areasServedQueries;
       junctionTableQueries = this.areasServedJunctionQueries;
-      tableName = SubServiceKey.NeedsMet;
+      tableName = SubServiceKey.AreasServed;
+      fieldName = "area";
     } else if (Object.keys(subCategory)[0] === "clientGroups") {
       tableQueries = this.clientGroupsQueries;
       junctionTableQueries = this.clientGroupsJunctionQueries;
       tableName = SubServiceKey.ClientGroups;
+      fieldName = "groupName";
     } else {
       tableQueries = this.needsMetQueries;
       junctionTableQueries = this.needsMetJunctionQueries;
       tableName = SubServiceKey.NeedsMet;
+      fieldName = "need";
     }
-    return { tableQueries, junctionTableQueries, tableName };
+    return { tableQueries, junctionTableQueries, tableName, fieldName };
   }
 
   //delete all documents related to a single serviceId
