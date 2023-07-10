@@ -1,4 +1,4 @@
-import { Pool, ResultSetHeader } from "mysql2/promise";
+import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
@@ -24,6 +24,8 @@ export class ServiceDB {
   private needsMetJunctionQueries: GeneralQueryGenerator;
   private clientGroupsJunctionQueries: GeneralQueryGenerator;
   private areasServedJunctionQueries: GeneralQueryGenerator;
+  //construct fetch queries specific to service
+  private fetchSubTableQueries: Map<string, string>;
   constructor(connection: Pool) {
     this.connection = connection;
     //queries for our Base information
@@ -51,6 +53,7 @@ export class ServiceDB {
       "service_areas",
       connection
     );
+    this.fetchSubTableQueries = this.createSubTableFetchQuery();
   }
   //create all our tables if they don't exist already
   public async initialiseServiceRelatedTables(): Promise<void> {
@@ -255,5 +258,49 @@ export class ServiceDB {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  //fetch service and related sub categories
+  public async fetchServiceAndRelatedEntries(serviceId: number) {
+    try {
+      const baseService = await this.ServiceBaseQueries.findEntryBy(
+        "id",
+        serviceId
+      );
+      if (baseService instanceof Error) return null;
+      const [needsMet] = await this.connection.execute<RowDataPacket[][]>(
+        this.fetchSubTableQueries.get("needsMet")!,
+        [serviceId]
+      );
+      const [clientGroups] = await this.connection.execute<RowDataPacket[][]>(
+        this.fetchSubTableQueries.get("clientGroups")!,
+        [serviceId]
+      );
+      const [areasServed] = await this.connection.execute<RowDataPacket[][]>(
+        this.fetchSubTableQueries.get("areasServed")!,
+        [serviceId]
+      );
+      console.log(baseService, needsMet, areasServed, clientGroups);
+      return { baseService, needsMet, areasServed, clientGroups };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  public createSubTableFetchQuery(): Map<string, string> {
+    const queryMap = new Map<string, string>();
+    queryMap.set(
+      "needsMet",
+      "SELECT need, exclusive FROM service_needs JOIN needsMet ON service_needs.need_id = needsMet.id WHERE service_id = ?;"
+    );
+    queryMap.set(
+      "clientGroups",
+      "SELECT groupName, exclusive FROM service_clientGroups JOIN clientGroups ON service_clientGroups.clientGroup_id = clientGroups.id WHERE service_id = ?"
+    );
+    queryMap.set(
+      "areasServed",
+      "SELECT area, exclusive FROM service_areas JOIN areasServed ON service_areas.area_id = areasServed.id WHERE service_id = ?"
+    );
+    return queryMap;
   }
 }

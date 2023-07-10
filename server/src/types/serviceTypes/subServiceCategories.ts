@@ -17,7 +17,7 @@ export interface ISubServiceItem {
 export type SubCategoryTableSpecific = {
   tableQueries: GeneralQueryGenerator;
   junctionTableQueries: GeneralQueryGenerator;
-  tableName: string;
+  tableName: SubServiceKey;
   fieldName: string;
 };
 
