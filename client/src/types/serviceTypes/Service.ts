@@ -1,3 +1,4 @@
+import { IListItemBase, TCategoryNames } from "../categoryTypes/CategoryTypes";
 import { ISubServiceCategory } from "./SubServiceCategories";
 
 export interface TIterableService {
@@ -5,9 +6,8 @@ export interface TIterableService {
 }
 
 //our basic structure
-export interface IService {
-  name: string;
-  category: string;
+export interface IService extends IListItemBase {
+  category: TCategoryNames;
   organisation: string;
   maxAge: number;
   minAge: number;
@@ -16,7 +16,6 @@ export interface IService {
   referralPathway: string;
   address: string;
   imageUrl: string;
-  forwardTo: string;
 }
 
 //Service with subsections

@@ -41,14 +41,14 @@ export class GeneralQueryGenerator {
     column?: string,
     data?: any
   ): Promise<ExtendedRowDataPacket<T>[] | Error> {
-    const query = `SELECT * FROM ${this.table} ${
-      column && data && `WHERE ${column} = ?`
-    }`;
+    const additionalSearchInfo = column && data ? `WHERE ${column} = ?` : "";
+
+    const query = `SELECT * FROM ${this.table} ${additionalSearchInfo}`;
 
     try {
       const [result] = await this.connection.execute<
         ExtendedRowDataPacket<T>[]
-      >(query, [data]);
+      >(query, data ? [data] : null);
       if (!result || result.length === 0)
         throw new Error("Could not find any Entries matching this criteria");
       console.log(result);

@@ -303,4 +303,9 @@ export class ServiceDB {
     );
     return queryMap;
   }
+
+  //basic getters and setters
+  public getBaseTableQueries(): GeneralQueryGenerator {
+    return this.ServiceBaseQueries;
+  }
 }

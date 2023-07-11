@@ -1,12 +1,15 @@
-import FormSubSelector from "./components/formSubSelector/FormSubSelector";
-import PrimitiveInput from "./microcomponents/inputs/PrimitiveInput";
+import { Routes, Route } from "react-router-dom";
+
+import PrimaryLayout from "./pages/primaryLayout/PrimaryLayout";
 import ServiceForm from "./pages/serviceForm/ServiceForm";
 
 const App = () => {
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-red-500 basis-0.5">
-      <ServiceForm />
-    </div>
+    <Routes>
+      <Route path="/services" element={<PrimaryLayout />} />
+      <Route path="/services/:category" element={<PrimaryLayout />} />
+      <Route path="/create/service" element={<ServiceForm />} />
+    </Routes>
   );
 };
 

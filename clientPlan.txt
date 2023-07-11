@@ -3,3 +3,15 @@
     - this form will also have a step to create the sub categories - this will work like the salesforce one adding passing different elements over.  I will start by creating this form i think
     - will then create the other one, I will see whether i need to useContext to hold the information or perhaps a useForm hook or maybe just manage through some simple state.
     - once i have created this then I will work out a way to pass this to the backend
+
+    // tuesday 8.07
+   
+    - create a wrapper which holds the sidebar... we can pass through whether this is a category or a service into this sidebar.  There will be a basic element which will be the sidebar item.  This can be dropped down on smaller screens if it is a service that is passed.  This will have a fetch function which will grab categories. This will go full screen at smaller screen sizes.  The container will have to accommodate for this.
+    - add in react routering
+
+    todo:
+     - create a service page to view services and find a way to display sub categories. Do the full page first.
+     - create a dropdown component which displays the basic information
+     - create microcomponents that will will display information
+     - add image, description, create input select options for service creation form for categories
+     

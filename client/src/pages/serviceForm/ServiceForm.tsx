@@ -61,7 +61,7 @@ const ServiceForm = () => {
   };
 
   return (
-    <section className="w-full p-5">
+    <section className="w-full p-5 bg-stone-600 min-h-screen">
       {renderStepComponent()}
       <div className="flex justify-between w-full pt-10">
         <button
