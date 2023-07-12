@@ -1,10 +1,13 @@
 import { FC } from "react";
 import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
+import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 
 type Props = {
   formState: TIterableService;
-  updatePrimitiveField: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  updatePrimitiveField: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
 };
 
 const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
@@ -72,6 +75,12 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="text"
         updateField={updatePrimitiveField}
         value={formState.forwardTo as string}
+      />
+      <SelectPrimitiveInput
+        name="categoryPicker"
+        label="Category Picker"
+        updateField={updatePrimitiveField}
+        optionArray={["one", "two", "three"]}
       />
     </div>
   );

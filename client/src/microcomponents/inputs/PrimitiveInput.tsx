@@ -23,7 +23,7 @@ const PrimitiveInput: FC<Props> = ({
       <input
         type={type}
         name={name}
-        className="p-2 w-full"
+        className="p-2 w-full rounded-sm"
         onChange={(e) => updateField(e)}
         value={
           value

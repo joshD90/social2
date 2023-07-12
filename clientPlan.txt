@@ -14,4 +14,4 @@
      - create a dropdown component which displays the basic information
      - create microcomponents that will will display information
      - add image, description, create input select options for service creation form for categories
-     
+     - add in something that shows that the service has been created

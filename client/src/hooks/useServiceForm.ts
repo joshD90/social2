@@ -5,7 +5,9 @@ import { ISubServiceCategory } from "../types/serviceTypes/SubServiceCategories"
 const useForm = <T extends TIterableService>(initialState: T) => {
   const [formState, setFormState] = useState<T>(initialState);
 
-  const updatePrimitiveField = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updatePrimitiveField = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
