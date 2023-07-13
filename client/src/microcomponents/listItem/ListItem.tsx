@@ -5,6 +5,7 @@ import { twThemeColors } from "../../assets/themeColors/twThemeColors";
 import { ICategory } from "../../types/categoryTypes/CategoryTypes";
 import { useNavigate } from "react-router-dom";
 import { IService } from "../../types/serviceTypes/Service";
+import DroppedService from "../../components/droppedService/DroppedService";
 
 type Props = {
   themeColor: ThemeColor;
@@ -45,7 +46,12 @@ const ListItem: FC<Props> = ({ themeColor, category, isFullScreen, item }) => {
       >
         <p className="py-5 ">{item.name}</p>
       </div>
-      {dropped && <div className="w-full p-10">Dropped Div</div>}
+      {dropped && (
+        <DroppedService
+          serviceInfo={item as IService}
+          themeColor={themeColor}
+        />
+      )}
     </>
   );
 };

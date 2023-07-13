@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import ListContainer from "../../components/listContainer/ListContainer";
+import DisplayTextInfo from "../../microcomponents/displayInfo/DisplayTextInfo";
+import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
 
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
@@ -25,7 +27,11 @@ const PrimaryLayout = () => {
         <ListContainer isAboveMedium />
       </div>
       <div className="w-full flex justify-center items-center">
-        Where a Service Might Go Or Some Info on the Category maybe explaining
+        <DisplayTextInfo
+          name="Hello"
+          value="Joshua"
+          themeColor={ThemeColor.blue}
+        />
       </div>
     </div>
   );
