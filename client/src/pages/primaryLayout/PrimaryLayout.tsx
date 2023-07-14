@@ -3,17 +3,25 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import ListContainer from "../../components/listContainer/ListContainer";
 import DisplayTextInfo from "../../microcomponents/displayInfo/DisplayTextInfo";
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
+import { useParams } from "react-router-dom";
+import ServiceDisplay from "../serviceDisplay/ServiceDisplay";
 
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
-  useEffect(() => {
-    console.log(!isAboveMedium, "isFullScreen");
-  }, [isAboveMedium]);
+  const { category, serviceId } = useParams();
+
   //on a small screen the layout is solely the list
-  if (!isAboveMedium)
+  if (!isAboveMedium && !serviceId)
     return (
       <div className="w-screen h-screen bg-stone-500">
         <ListContainer isAboveMedium={isAboveMedium} />
+      </div>
+    );
+  //and the service will take up the whole screen on smaller devices
+  if (!isAboveMedium && serviceId)
+    return (
+      <div className="w-screen h-screen bg-stone-500">
+        <ServiceDisplay />
       </div>
     );
 
@@ -27,11 +35,7 @@ const PrimaryLayout = () => {
         <ListContainer isAboveMedium />
       </div>
       <div className="w-full flex justify-center items-center">
-        <DisplayTextInfo
-          name="Hello"
-          value="Joshua"
-          themeColor={ThemeColor.blue}
-        />
+        <ServiceDisplay />
       </div>
     </div>
   );

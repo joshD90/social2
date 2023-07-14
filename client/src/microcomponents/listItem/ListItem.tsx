@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
@@ -16,6 +17,7 @@ type Props = {
 
 const ListItem: FC<Props> = ({ themeColor, category, isFullScreen, item }) => {
   const [dropped, setDropped] = useState(false);
+  const { category: paramCategory } = useParams();
   const navigate = useNavigate();
 
   //we want the dropped to disappear whenever we change to a larger screen size
@@ -24,10 +26,20 @@ const ListItem: FC<Props> = ({ themeColor, category, isFullScreen, item }) => {
   }, [isFullScreen]);
 
   const handleClick = () => {
+    console.log(category);
     if (!category && isFullScreen) {
       return setDropped(!dropped);
     }
-    navigate(item.forwardTo);
+    if (!category) {
+      return navigate(
+        `/services/${paramCategory}/${item.forwardTo}?id=${item.id}`,
+        {
+          replace: true,
+        }
+      );
+    }
+    navigate(`/services/${item.forwardTo}`);
+    console.log("category navigating");
   };
 
   return (

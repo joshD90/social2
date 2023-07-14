@@ -49,7 +49,7 @@ const ListContainer: FC<Props> = ({ isAboveMedium }) => {
           <ListItem
             themeColor={themeColor ? themeColor : ThemeColor.emerald}
             isFullScreen={!isAboveMedium}
-            category={false}
+            category={!category}
             item={item}
             key={index}
           />

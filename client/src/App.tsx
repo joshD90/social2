@@ -8,6 +8,10 @@ const App = () => {
     <Routes>
       <Route path="/services" element={<PrimaryLayout />} />
       <Route path="/services/:category" element={<PrimaryLayout />} />
+      <Route
+        path="/services/:category/:serviceId"
+        element={<PrimaryLayout />}
+      />
       <Route path="/create/service" element={<ServiceForm />} />
     </Routes>
   );
