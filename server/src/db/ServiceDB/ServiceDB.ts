@@ -112,7 +112,7 @@ export class ServiceDB {
       }
       //commit all the changes if there are no errors
       connection.commit();
-      console.log(baseResult);
+
       return baseResult;
     } catch (error) {
       console.log(error);
@@ -155,18 +155,24 @@ export class ServiceDB {
         specificTableVar.fieldName,
         data.value
       );
-      if (existingEntry instanceof Error) throw Error(existingEntry.message);
+
       let subId: number;
       //if it does use this id else create a new entry
-      if (existingEntry[0]?.id) {
-        subId = parseInt(existingEntry[0].id);
-      } else {
+      if (existingEntry instanceof Error) {
         const result = await generalTableQuery.createTableEntryFromPrimitives(
           formattedData
         );
         if (result instanceof Error)
           throw new Error("Could not create the Sub Directory");
         subId = result.insertId;
+      } else if (existingEntry[0]?.id) {
+        subId = parseInt(existingEntry[0].id);
+      } else {
+        throw Error(
+          `Something Unexpected Happenend in checking whether sub category exists ${JSON.stringify(
+            existingEntry
+          )}`
+        );
       }
 
       //take the id from the result and use this for the junction table
@@ -280,7 +286,7 @@ export class ServiceDB {
         this.fetchSubTableQueries.get("areasServed")!,
         [serviceId]
       );
-      console.log(baseService, needsMet, areasServed, clientGroups);
+
       return { baseService, needsMet, areasServed, clientGroups };
     } catch (error) {
       return error;

@@ -6,6 +6,7 @@ export interface IService {
   name: string;
   category: string;
   organisation: string;
+  description: string;
   maxAge: number;
   minAge: number;
   contactNumber: string;

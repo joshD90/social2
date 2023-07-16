@@ -6,9 +6,12 @@ const useForm = <T extends TIterableService>(initialState: T) => {
   const [formState, setFormState] = useState<T>(initialState);
 
   const updatePrimitiveField = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    console.log(formState);
   };
 
   const updateSubCategoryField = (

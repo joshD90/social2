@@ -29,6 +29,8 @@ const ServiceDisplay = () => {
     categoryThemes.get(category as TCategoryNames)
   );
 
+  console.log(themeColor, category);
+
   useEffect(() => {
     const url = `http://localhost:3500/service/service/${serviceId}`;
     const abortController = new AbortController();

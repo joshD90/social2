@@ -26,7 +26,6 @@ const ListItem: FC<Props> = ({ themeColor, category, isFullScreen, item }) => {
   }, [isFullScreen]);
 
   const handleClick = () => {
-    console.log(category);
     if (!category && isFullScreen) {
       return setDropped(!dropped);
     }
@@ -39,7 +38,6 @@ const ListItem: FC<Props> = ({ themeColor, category, isFullScreen, item }) => {
       );
     }
     navigate(`/services/${item.forwardTo}`);
-    console.log("category navigating");
   };
 
   return (
