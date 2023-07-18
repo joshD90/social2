@@ -16,3 +16,12 @@
 
      - add image, description, create input select options for service creation form for categories
      - add in something that shows that the service has been created
+     - need to add in a fetch request for sub category list options
+
+
+     suggestions from Ailish:
+    - maximum occupancy / user base, optional
+    - minimum requirements to access the service - low / high - requirements necessary
+    - Access hours - Whole new process, range of tables probably link to sepearte database entry and opening hours object
+    - add gender associated into needs methods
+    - 

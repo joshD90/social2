@@ -16,6 +16,7 @@ export interface IService extends IListItemBase {
   referralPathway: string;
   address: string;
   imageUrl: string;
+  description: string;
 }
 
 //Service with subsections

@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import ListContainer from "../../components/listContainer/ListContainer";
-import DisplayTextInfo from "../../microcomponents/displayInfo/DisplayTextInfo";
-import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
+
 import { useParams } from "react-router-dom";
 import ServiceDisplay from "../serviceDisplay/ServiceDisplay";
+import CategoryLanding from "../categoryLanding/CategoryLanding";
 
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
-  const { category, serviceId } = useParams();
+  const { serviceId } = useParams();
 
   //on a small screen the layout is solely the list
   if (!isAboveMedium && !serviceId)
@@ -35,7 +34,7 @@ const PrimaryLayout = () => {
         <ListContainer isAboveMedium />
       </div>
       <div className="w-full flex justify-center items-center">
-        <ServiceDisplay />
+        {serviceId ? <ServiceDisplay /> : <CategoryLanding />}
       </div>
     </div>
   );

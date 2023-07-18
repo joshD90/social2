@@ -6,6 +6,7 @@ type Props = {
   name: string;
   value: string;
   updateField: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  gridSpan?: number;
 };
 
 const TextAreaInput: FC<Props> = ({
@@ -14,9 +15,11 @@ const TextAreaInput: FC<Props> = ({
   name,
   updateField,
   value,
+  gridSpan,
 }) => {
+  const generateGridSpan = () => `col-span-${gridSpan || 1}`;
   return (
-    <div className="flex flex-col w-full">
+    <div className={`flex flex-col w-full ${generateGridSpan()}`}>
       <label htmlFor={name} className="text-stone-800">
         {label}
       </label>

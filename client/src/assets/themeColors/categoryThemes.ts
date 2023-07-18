@@ -8,4 +8,4 @@ categoryThemes.set("housing", ThemeColor.blue);
 categoryThemes.set("material", ThemeColor.cyan);
 categoryThemes.set("shelter", ThemeColor.voilet);
 categoryThemes.set("medical", ThemeColor.emerald);
-categoryThemes.set("mentalHealth", ThemeColor.orange);
+categoryThemes.set("mentalHealth", ThemeColor.teal);

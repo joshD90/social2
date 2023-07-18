@@ -1,5 +1,3 @@
-import { ThemeColor } from "../themeColorTypes/themeColorTypes";
-
 export type TCategoryNames =
   | "housing"
   | "mentalHealth"
@@ -18,5 +16,7 @@ export interface IListItemBase {
 }
 
 export interface ICategory extends IListItemBase {
-  name: TCategoryNames;
+  forwardTo: TCategoryNames;
 }
+
+export type TCategoryInfo = { image: string; info: string[]; name: string };

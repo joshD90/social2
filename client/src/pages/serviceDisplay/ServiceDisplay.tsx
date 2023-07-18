@@ -29,9 +29,8 @@ const ServiceDisplay = () => {
     categoryThemes.get(category as TCategoryNames)
   );
 
-  console.log(themeColor, category);
-
   useEffect(() => {
+    if (!serviceId) return;
     const url = `http://localhost:3500/service/service/${serviceId}`;
     const abortController = new AbortController();
 
@@ -55,23 +54,46 @@ const ServiceDisplay = () => {
     return () => abortController.abort();
   }, [serviceId]);
 
+  const generatePathForBackClick = (): string => {
+    if (isAboveMedium && category) return "/services";
+    return `/services/${category}`;
+  };
   return (
     <section className="w-full h-full overflow-auto">
       {service ? (
         <div className="relative">
-          {!isAboveMedium && (
-            <button
-              className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2"
-              onClick={() => navigate(`/services/${category}`)}
-            >
-              Back
-            </button>
-          )}
+          <button
+            className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2"
+            onClick={() => {
+              setService(null);
+              navigate(generatePathForBackClick());
+            }}
+          >
+            Back
+          </button>
+
           <h1 className="w-full flex justify-center mt-5 text-2xl">
             {service.name}
           </h1>
-          {service.imageUrl && <img src={service.imageUrl} />}
-          <div className="p-5 grid lg:grid-cols-2 gap-5">
+          {service.imageUrl && (
+            <div className="w-full flex justify-center my-5">
+              <img
+                src={service.imageUrl}
+                className="rounded-sm"
+                style={{ maxHeight: "15rem" }}
+              />
+            </div>
+          )}
+          <div className="flex flex-col items-center">
+            {service.description && (
+              <p className="my-5 text-stone-900 w-4/5 text-center">
+                {service.description}
+              </p>
+            )}
+            <hr className="w-2/3 ml-auto mr-auto" />
+          </div>
+
+          <div className="p-5 grid lg:grid-cols-2 gap-3">
             <DisplayTextInfo
               name="Address"
               value={service.address}
@@ -129,16 +151,17 @@ const ServiceDisplay = () => {
 export default ServiceDisplay;
 
 const mappedSubService = (
-  subServices: { [key: string]: string | boolean }[],
+  subServices: { [key: string]: string | number }[],
   type: SubServiceCategory
 ): ISubServiceCategory[] => {
   {
     const mappedServices = subServices.map((item) => {
       const key = createKey(type);
+
       let value = "";
       let exclusive = false;
       if (typeof item[key] === "string") value = item[key] as string;
-      if (typeof item[key] === "boolean") exclusive = item[key] as boolean;
+      exclusive = item.exclusive === 1 ? true : false;
 
       return { value, exclusive };
     });

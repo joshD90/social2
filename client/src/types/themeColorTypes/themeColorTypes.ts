@@ -1,7 +1,7 @@
 export enum ThemeColor {
   blue = "blue",
   orange = "orange",
-  amber = "amber",
+  teal = "teal",
   emerald = "emerald",
   cyan = "cyan",
   voilet = "violet",

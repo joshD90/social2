@@ -51,7 +51,7 @@ export class GeneralQueryGenerator {
       >(query, data ? [data] : null);
       if (!result || result.length === 0)
         throw new Error("Could not find any Entries matching this criteria");
-      console.log(result);
+
       return result;
     } catch (error) {
       return error as Error;

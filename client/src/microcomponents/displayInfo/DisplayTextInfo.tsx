@@ -12,7 +12,7 @@ type Props = {
 const DisplayTextInfo: FC<Props> = ({ name, value, themeColor }) => {
   return (
     <div
-      className={`flex  rounded-sm ${twThemeColors.border[themeColor]} border-2 w-full my-5`}
+      className={`flex  rounded-sm ${twThemeColors.border[themeColor]} border-2 w-full my-2`}
     >
       <p className="bg-stone-400 p-2 w-36">{name}:</p>
       <p className="p-2 bg-stone-300 flex-grow">{value?.toString()}</p>

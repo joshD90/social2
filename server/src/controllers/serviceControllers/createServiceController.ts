@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { db } from "../../server";
 
 const createServiceController = async (req: Request, res: Response) => {
-  console.log(req.body);
   //set up
   const serviceDB = db.getServiceDB();
   const serviceBase = req.body.serviceBase;

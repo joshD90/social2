@@ -3,6 +3,7 @@ import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
+import { mappedCategorySelectInfo } from "../../assets/category/categoryInfo";
 
 type Props = {
   formState: TIterableService;
@@ -22,13 +23,6 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="text"
         updateField={updatePrimitiveField}
         value={formState.name as string}
-      />
-      <PrimitiveInput
-        name="category"
-        label="Category"
-        type="text"
-        updateField={updatePrimitiveField}
-        value={formState.category as string}
       />
       <PrimitiveInput
         name="maxAge"
@@ -80,10 +74,17 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         value={formState.forwardTo as string}
       />
       <SelectPrimitiveInput
-        name="categoryPicker"
+        name="category"
         label="Category Picker"
         updateField={updatePrimitiveField}
-        optionArray={["one", "two", "three"]}
+        optionArray={mappedCategorySelectInfo}
+      />
+      <PrimitiveInput
+        name="imageUrl"
+        label="Image of Service"
+        updateField={updatePrimitiveField}
+        type="text"
+        value={formState.imageUrl as string}
       />
       <TextAreaInput
         size={{ cols: 40, rows: 10 }}
@@ -91,6 +92,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         value={formState.description as string}
         name="description"
         updateField={updatePrimitiveField}
+        gridSpan={2}
       />
     </div>
   );

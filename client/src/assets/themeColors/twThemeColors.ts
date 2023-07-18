@@ -2,7 +2,7 @@ export const twThemeColors = {
   bg: {
     blue: "bg-blue-800",
     orange: "bg-orange-800",
-    amber: "bg-amber-800",
+    teal: "bg-teal-800",
     emerald: "bg-emerald-800",
     cyan: "bg-cyan-800",
     violet: "bg-violet-800",
@@ -11,7 +11,7 @@ export const twThemeColors = {
   bgGradientHover: {
     blue: "hover:from-blue-700 hover:to-blue-700",
     orange: "hover:from-orange-700 hover:to-orange-700",
-    amber: "hover:from-amber-700 hover:to-amber-700",
+    teal: "hover:from-teal-700 hover:to-teal-700",
     emerald: "hover:from-emerald-700 hover:to-emerald-700",
     cyan: "hover:from-cyan-700 hover:to-cyan-700",
     violet: "hover:from-violet-700 hover:to-violet-700",
@@ -20,7 +20,7 @@ export const twThemeColors = {
   border: {
     blue: "border-blue-500",
     orange: "border-orange-500",
-    amber: "border-amber-500",
+    teal: "border-teal-500",
     emerald: "border-emerald-500",
     cyan: "border-cyan-500",
     violet: "border-violet-500",
@@ -29,7 +29,7 @@ export const twThemeColors = {
   bgGradient: {
     blue: "bg-gradient-to-b from-blue-700 to-blue-800",
     orange: "bg-gradient-to-b from-orange-700 to-orange-800",
-    amber: "bg-gradient-to-b from-amber-700 to-amber-800",
+    teal: "bg-gradient-to-b from-teal-700 to-teal-800",
     emerald: "bg-gradient-to-b from-emerald-700 to-emerald-800",
     cyan: "bg-gradient-to-b from-cyan-700 to-cyan-800",
     violet: "bg-gradient-to-b from-violet-700 to-violet-800",
@@ -38,7 +38,7 @@ export const twThemeColors = {
   textDarker: {
     blue: "text-blue-800",
     orange: "text-orange-800",
-    amber: "text-amber-800",
+    teal: "text-teal-800",
     emerald: "text-emerald-800",
     cyan: "text-cyan-800",
     violet: "text-violet-800",

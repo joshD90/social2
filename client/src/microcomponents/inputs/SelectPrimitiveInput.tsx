@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 type Props = {
-  optionArray: (string | number)[];
+  optionArray: { name: string | number; value: string | number }[];
   label: string;
   name: string;
   updateField: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -24,8 +24,8 @@ const SelectPrimitiveInput: FC<Props> = ({
         className="p-2 border-none rounded-sm"
       >
         {optionArray.map((opt, index) => (
-          <option key={index} value={opt}>
-            {opt}
+          <option key={index} value={opt.value}>
+            {opt.name}
           </option>
         ))}
       </select>

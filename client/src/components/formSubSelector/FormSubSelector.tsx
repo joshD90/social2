@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import NewOptionSubmitter from "./NewOptionSubmitter";
 import {
