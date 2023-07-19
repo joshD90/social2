@@ -15,7 +15,7 @@ const SelectPrimitiveInput: FC<Props> = ({
 }) => {
   return (
     <div className="flex flex-col">
-      <label htmlFor={name} className="text-stone-800">
+      <label htmlFor={name} className="text-stone-50">
         {label}
       </label>
       <select
@@ -23,6 +23,7 @@ const SelectPrimitiveInput: FC<Props> = ({
         onChange={updateField}
         className="p-2 border-none rounded-sm"
       >
+        <option value="noneSelected">None Selected</option>
         {optionArray.map((opt, index) => (
           <option key={index} value={opt.value}>
             {opt.name}

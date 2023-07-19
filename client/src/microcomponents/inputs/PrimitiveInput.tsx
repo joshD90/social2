@@ -16,8 +16,8 @@ const PrimitiveInput: FC<Props> = ({
   value,
 }) => {
   return (
-    <div className="flex flex-col w-full">
-      <label htmlFor={name} className="text-stone-800">
+    <div className="flex flex-col w-full ">
+      <label htmlFor={name} className="text-stone-50">
         {label}
       </label>
       <input

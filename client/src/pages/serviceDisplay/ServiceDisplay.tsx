@@ -9,10 +9,7 @@ import { categoryThemes } from "../../assets/themeColors/categoryThemes";
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
 import { TCategoryNames } from "../../types/categoryTypes/CategoryTypes";
 import SubServiceDisplay from "../../components/subServiceDisplay/SubServiceDisplay";
-import {
-  ISubServiceCategory,
-  SubServiceCategory,
-} from "../../types/serviceTypes/SubServiceCategories";
+import { mapSubServiceToISubCategory } from "./mapSubServiceToISubCategory";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 const ServiceDisplay = () => {
@@ -41,9 +38,15 @@ const ServiceDisplay = () => {
         const data = await result.json();
         const formattedData = {
           ...data.baseService[0],
-          needsMet: mappedSubService(data.needsMet, "needsMet"),
-          clientGroups: mappedSubService(data.clientGroups, "clientGroups"),
-          areasServed: mappedSubService(data.areasServed, "areasServed"),
+          needsMet: mapSubServiceToISubCategory(data.needsMet, "needsMet"),
+          clientGroups: mapSubServiceToISubCategory(
+            data.clientGroups,
+            "clientGroups"
+          ),
+          areasServed: mapSubServiceToISubCategory(
+            data.areasServed,
+            "areasServed"
+          ),
         };
 
         setService(formattedData);
@@ -149,33 +152,3 @@ const ServiceDisplay = () => {
 };
 
 export default ServiceDisplay;
-
-const mappedSubService = (
-  subServices: { [key: string]: string | number }[],
-  type: SubServiceCategory
-): ISubServiceCategory[] => {
-  {
-    const mappedServices = subServices.map((item) => {
-      const key = createKey(type);
-
-      let value = "";
-      let exclusive = false;
-      if (typeof item[key] === "string") value = item[key] as string;
-      exclusive = item.exclusive === 1 ? true : false;
-
-      return { value, exclusive };
-    });
-    return mappedServices;
-  }
-};
-
-const createKey = (category: SubServiceCategory): string => {
-  switch (category) {
-    case "needsMet":
-      return "need";
-    case "areasServed":
-      return "area";
-    case "clientGroups":
-      return "groupName";
-  }
-};

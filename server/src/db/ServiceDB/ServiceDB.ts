@@ -310,6 +310,18 @@ export class ServiceDB {
     return queryMap;
   }
 
+  //fetch all subCategory possibilities
+  public async fetchAllSubCategoryEntries(tableName: SubServiceKey) {
+    switch (tableName) {
+      case "needsMet":
+        return await this.needsMetQueries.findEntryBy();
+      case "clientGroups":
+        return await this.clientGroupsQueries.findEntryBy();
+      case "areasServed":
+        return await this.areasServedQueries.findEntryBy();
+    }
+  }
+
   //basic getters and setters
   public getBaseTableQueries(): GeneralQueryGenerator {
     return this.ServiceBaseQueries;

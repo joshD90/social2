@@ -6,7 +6,8 @@ import {
   SubServiceCategory,
 } from "../../types/serviceTypes/SubServiceCategories";
 
-import subServiceDataMap from "./formSubSelectorInitialData";
+import useGetFetch from "../../hooks/useGetFetch";
+import { createKey } from "../../pages/serviceDisplay/mapSubServiceToISubCategory";
 
 type Props = {
   subCategoryName: SubServiceCategory;
@@ -14,12 +15,24 @@ type Props = {
   updateField: (name: string, value: ISubServiceCategory[]) => void;
 };
 
+interface IDynamicObject {
+  id: string;
+  [param: string]: string;
+}
+
 const FormSubSelector: FC<Props> = ({
   subCategoryName,
   value,
   updateField,
 }) => {
+  //todo - create a backend endpoint
+  const { fetchedData, loading, error } = useGetFetch<IDynamicObject[]>(
+    `http://localhost:3500/service/subCategories/${subCategoryName}`,
+    []
+  );
+
   const [options, setOptions] = useState<ISubServiceCategory[]>([]);
+
   const [selectedOptions, setSelectedOptions] = useState<ISubServiceCategory[]>(
     []
   );
@@ -30,21 +43,23 @@ const FormSubSelector: FC<Props> = ({
 
   //set data - this will be replaced by an api call once connected to backend
   useEffect(() => {
-    const subData = subServiceDataMap.get(subCategoryName);
-    if (!subData) return;
-    if (!value || value.length === 0) {
-      setOptions(subData);
-      return;
-    }
+    if (!fetchedData) return;
+    const mappedData = fetchedData.map((dataItem) => ({
+      value: dataItem[createKey(subCategoryName)],
+      exclusive: false,
+    }));
+    console.log(mappedData, "mapped data");
+    setOptions(mappedData);
+    if (!value || value.length === 0) return;
     //we want to be able to prepopulate based on previous choices that have been selected
     //strip out selected options from our inital
-    const unSelectedOptions = subData.filter(
+    const unSelectedOptions = mappedData.filter(
       (option) => !value.find((value) => value.value === option.value)
     );
 
     setOptions(unSelectedOptions);
     setSelectedOptions(value);
-  }, [subCategoryName, value]);
+  }, [subCategoryName, value, fetchedData]);
 
   //this handles the actual elements inside the HTML select that we have clicked
   const changeActive = (e: React.ChangeEvent<HTMLSelectElement>): void => {
