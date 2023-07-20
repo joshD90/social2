@@ -12,13 +12,14 @@ const useGetFetch = <T>(url: string, initialState?: T) => {
     (async () => {
       try {
         setLoading(true);
-
+        setError("");
         const result = await fetch(url, { signal: abortController.signal });
 
         if (!result.ok)
           throw Error(
             `Fetch Request Failed with Status Code of ${result.status}`
           );
+        setError("");
         const data = await result.json();
 
         setFetchedData(data);
@@ -32,7 +33,7 @@ const useGetFetch = <T>(url: string, initialState?: T) => {
     return () => abortController.abort();
   }, [url]);
 
-  return { fetchedData, error, loading };
+  return { fetchedData, error, loading, setFetchedData };
 };
 
 export default useGetFetch;

@@ -26,10 +26,11 @@ const FormSubSelector: FC<Props> = ({
   updateField,
 }) => {
   //todo - create a backend endpoint
-  const { fetchedData, loading, error } = useGetFetch<IDynamicObject[]>(
+  const { fetchedData, error } = useGetFetch<IDynamicObject[]>(
     `http://localhost:3500/service/subCategories/${subCategoryName}`,
     []
   );
+  console.log(error);
 
   const [options, setOptions] = useState<ISubServiceCategory[]>([]);
 
@@ -44,15 +45,15 @@ const FormSubSelector: FC<Props> = ({
   //set data - this will be replaced by an api call once connected to backend
   useEffect(() => {
     if (!fetchedData) return;
+    //we need to map the data into a usable form once we have fetch it
     const mappedData = fetchedData.map((dataItem) => ({
       value: dataItem[createKey(subCategoryName)],
       exclusive: false,
     }));
-    console.log(mappedData, "mapped data");
+
     setOptions(mappedData);
     if (!value || value.length === 0) return;
-    //we want to be able to prepopulate based on previous choices that have been selected
-    //strip out selected options from our inital
+    //we want to be able to prepopulate if we are switching between stages of the form and keep our presaved data
     const unSelectedOptions = mappedData.filter(
       (option) => !value.find((value) => value.value === option.value)
     );
@@ -108,20 +109,30 @@ const FormSubSelector: FC<Props> = ({
       <form className="flex gap-5 mb-5">
         {/* select the options */}
         <div className="flex flex-col border-solid border-stone-500 border-2 rounded-sm w-48">
-          <label htmlFor="subSelector">Select Multiple</label>
-          <select
-            name="subSelector"
-            id="subSelector"
-            multiple
-            className="w-full h-full"
-            onChange={changeActive}
-          >
-            {options.map((data) => (
-              <option value={data.value} key={data.value} className="w-48 p-2">
-                {data.value}
-              </option>
-            ))}
-          </select>
+          {error === "" ? (
+            <>
+              <label htmlFor="subSelector">Select Multiple</label>
+              <select
+                name="subSelector"
+                id="subSelector"
+                multiple
+                className="w-full h-full"
+                onChange={changeActive}
+              >
+                {options.map((data) => (
+                  <option
+                    value={data.value}
+                    key={data.value}
+                    className="w-48 p-2"
+                  >
+                    {data.value}
+                  </option>
+                ))}
+              </select>
+            </>
+          ) : (
+            "There was an error in fetching categories"
+          )}
         </div>
         {/* central buttons */}
         <div className="flex flex-col justify-center items-center gap-2 ">

@@ -236,33 +236,33 @@ export class ServiceDB {
   }
 
   //delete all documents related to a single serviceId
-  public async deleteServiceAndRelatedEntries(serviceId: number) {
+  public async deleteServiceAndRelatedEntries(
+    serviceId: number
+  ): Promise<true | Error> {
     //we need to seperate all this out to delete in a specific order as they reference each other - junction/ base / subcategories
     const junctionTablesQuery = [
       this.areasServedJunctionQueries,
       this.clientGroupsJunctionQueries,
       this.needsMetJunctionQueries,
     ];
-    const subTablesQuery = [
-      this.areasServedQueries,
-      this.needsMetQueries,
-      this.clientGroupsQueries,
-    ];
-    //now we delete them in order - we must away the promises to avoid race conditions
+
+    //now we delete them in order - we must await the promises to avoid race conditions
     try {
       await Promise.all(
         junctionTablesQuery.map((tableQuery) =>
-          tableQuery.deleteBySingleCriteria("id", serviceId)
+          tableQuery.deleteBySingleCriteria("service_id", serviceId)
         )
       );
       await this.ServiceBaseQueries.deleteBySingleCriteria("id", serviceId);
-      await Promise.all(
-        subTablesQuery.map((tableQuery) =>
-          tableQuery.deleteBySingleCriteria("id", serviceId)
-        )
-      );
+
+      return true;
     } catch (error) {
-      console.log(error);
+      if (
+        error instanceof Error &&
+        error.message === "There was no record matching that criteria"
+      )
+        return true;
+      return error as Error;
     }
   }
 

@@ -12,16 +12,25 @@
      - create a dropdown component which displays the basic information
      - create microcomponents that will will display information
 
+     - add image, description, create input select options for service creation form for categories
+          - need to add in a fetch request for sub category list options
+
     todo:
 
-     - add image, description, create input select options for service creation form for categories
      - add in something that shows that the service has been created
-     - need to add in a fetch request for sub category list options
+     - add in admin section and /admin/services/create
+                                -/admin/services/update/:id 
+                                -/admin/services - get all services - can click into delete or update
+    - manually add in rest of categories into mySQL
+    -
+
+    - deletion of service not working, await fetch request appears to be handing perhaps after deleting? not sure why, maybe i need to send a response instead of just a 204. need to create more services to practice deleting
+
 
 
      suggestions from Ailish:
     - maximum occupancy / user base, optional
-    - minimum requirements to access the service - low / high - requirements necessary
+    - minimum requirements to access the service - low / high - requirements necessary - use 
     - Access hours - Whole new process, range of tables probably link to sepearte database entry and opening hours object
     - add gender associated into needs methods
     - 

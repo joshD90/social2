@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import PrimaryLayout from "./pages/primaryLayout/PrimaryLayout";
 import ServiceForm from "./pages/serviceForm/ServiceForm";
+import AdminServicesView from "./pages/admin/adminServicesView/adminServicesView";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         element={<PrimaryLayout />}
       />
       <Route path="/create/service" element={<ServiceForm />} />
+      <Route path="/admin/services" element={<AdminServicesView />} />
     </Routes>
   );
 };

@@ -28,3 +28,29 @@ categoryDescription.set("addiction", {
     "https://domf5oio6qrcr.cloudfront.net/medialibrary/7495/hb-addiction-0416207266121921.jpg",
   info: ["Addiction is a bad thing", "Like a Really Bad Thing"],
 });
+
+categoryDescription.set("housing", {
+  name: "Housing",
+  image:
+    "https://www.irishexaminer.com/cms_media/module_img/3160/1580330_1_articlelarge_ie-436588_f6c5ad92e8344c24b1df5822e966fefd.jpg",
+  info: [
+    "Housing in this Context refers to services who's primary purpose is to move you to permanent housing where you have your own key to the property",
+    "This should not be confused with services who provide shelter such as STA's or TEA's",
+  ],
+});
+
+categoryDescription.set("shelter", {
+  name: "Shelter",
+  image: "https://img2.thejournal.ie/inline/3131478/original/?width=605",
+  info: [
+    "These are services that give people accommodation be it short term or longer term",
+    "These services should not be confused with services where the primary goal is Housing such as DCC, Housing First etc",
+  ],
+});
+
+categoryDescription.set("mentalHealth", {
+  name: "Mental Health",
+  image:
+    "https://ca-times.brightspotcdn.com/dims4/default/43ac27c/2147483647/strip/true/crop/2000x1333+0+0/resize/1024x682!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8e%2Fb7%2F99beae9a4be0bbced1487b04b619%2Fla-hm-nyny-mental-health.jpg",
+  info: ["Services primarily dealing with Mental Health issues"],
+});
