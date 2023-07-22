@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import AdminServicesListItem from "../../../components/admin/adminServicesListItem/adminServicesListItem";
+import AdminServicesListItem from "../../../components/admin/adminServicesListItem/AdminServicesListItem";
 import useDeleteFetch from "../../../hooks/useDeleteFetch";
 import useGetFetch from "../../../hooks/useGetFetch";
 import { IService } from "../../../types/serviceTypes/Service";

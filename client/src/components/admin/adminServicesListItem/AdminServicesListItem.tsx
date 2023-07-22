@@ -1,4 +1,6 @@
 import { FC } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { IService } from "../../../types/serviceTypes/Service";
 
 type Props = {
@@ -7,6 +9,8 @@ type Props = {
 };
 
 const AdminServicesListItem: FC<Props> = ({ service, deleteItem }) => {
+  const navigate = useNavigate();
+
   const handleDelete = () => {
     if (!service.id) return;
     const serviceId =
@@ -21,7 +25,12 @@ const AdminServicesListItem: FC<Props> = ({ service, deleteItem }) => {
       </div>
 
       <div className="flex gap-2">
-        <button className="bg-green-600 p-2 hover:bg-green-500">Edit</button>
+        <button
+          className="bg-green-600 p-2 hover:bg-green-500"
+          onClick={() => navigate(`/admin/services/edit/${service.id}`)}
+        >
+          Edit
+        </button>
         <button
           className="bg-red-600 p-2 hover:bg-red-500"
           onClick={handleDelete}

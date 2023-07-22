@@ -46,8 +46,10 @@ const CategoryLanding = () => {
       </button>
       <h1 className="text-4xl my-5">{categoryInfo.name}</h1>
       <div className="w-4/5 text-center ml-auto mr-auto">
-        {categoryInfo.info.map((infoPar) => (
-          <p className="mt-5">{infoPar}</p>
+        {categoryInfo.info.map((infoPar, index) => (
+          <p className="mt-5" key={index}>
+            {infoPar}
+          </p>
         ))}
       </div>
     </section>

@@ -1,16 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import BaseServiceForm from "../../components/serviceForm/BaseServiceForm";
 import ServiceSubSectionForm from "../../components/serviceForm/ServiceSubSectionForm";
 
 import useForm from "../../hooks/useServiceForm";
 import { separateService } from "../../utils/objectSeperation/separateService";
+import { TIterableService } from "../../types/serviceTypes/Service";
+import useGetFetch from "../../hooks/useGetFetch";
+
+import { mapSubServiceToISubCategory } from "../serviceDisplay/mapSubServiceToISubCategory";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
-  const { formState, updatePrimitiveField, updateSubCategoryField } = useForm(
-    {}
+  const {
+    formState,
+    updatePrimitiveField,
+    updateSubCategoryField,
+    setFormState,
+  } = useForm<TIterableService>({});
+  const { serviceId } = useParams();
+  const { fetchedData } = useGetFetch(
+    serviceId ? `http://localhost:3500/service/service/${serviceId}` : ""
   );
+
+  useEffect(() => {
+    //we dont need to do this if we dont have an edit id or if we haven't fetched the data yet
+    if (!serviceId || !fetchedData) return;
+
+    const formattedData = generateFormattedData(fetchedData);
+    if (!formattedData) return;
+
+    setFormState(formattedData);
+  }, [fetchedData, serviceId, setFormState]);
 
   //this will render our multistep form depending on the stage we are at
   const renderStepComponent = () => {
@@ -83,3 +105,35 @@ const ServiceForm = () => {
 };
 
 export default ServiceForm;
+
+const generateFormattedData = (
+  fetchedData: unknown
+): TIterableService | false => {
+  if (!fetchedData) return false;
+  if (
+    typeof fetchedData === "object" &&
+    "baseService" in fetchedData &&
+    "clientGroups" in fetchedData &&
+    "needsMet" in fetchedData &&
+    "areasServed" in fetchedData
+  ) {
+    if (Array.isArray(fetchedData.baseService) && fetchedData.baseService[0]) {
+      return {
+        ...fetchedData.baseService[0],
+        clientGroups: mapSubServiceToISubCategory(
+          fetchedData.clientGroups as { [key: string]: string | number }[],
+          "clientGroups"
+        ),
+        needsMet: mapSubServiceToISubCategory(
+          fetchedData.needsMet as { [key: string]: string | number }[],
+          "needsMet"
+        ),
+        areasServed: mapSubServiceToISubCategory(
+          fetchedData.areasServed as { [key: string]: string | number }[],
+          "areasServed"
+        ),
+      };
+    }
+  }
+  return false;
+};

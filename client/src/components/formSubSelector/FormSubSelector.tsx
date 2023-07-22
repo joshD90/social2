@@ -30,7 +30,6 @@ const FormSubSelector: FC<Props> = ({
     `http://localhost:3500/service/subCategories/${subCategoryName}`,
     []
   );
-  console.log(error);
 
   const [options, setOptions] = useState<ISubServiceCategory[]>([]);
 
@@ -45,6 +44,7 @@ const FormSubSelector: FC<Props> = ({
   //set data - this will be replaced by an api call once connected to backend
   useEffect(() => {
     if (!fetchedData) return;
+
     //we need to map the data into a usable form once we have fetch it
     const mappedData = fetchedData.map((dataItem) => ({
       value: dataItem[createKey(subCategoryName)],

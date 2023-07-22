@@ -11,7 +11,6 @@ const useForm = <T extends TIterableService>(initialState: T) => {
     >
   ) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    console.log(formState);
   };
 
   const updateSubCategoryField = (
@@ -19,9 +18,15 @@ const useForm = <T extends TIterableService>(initialState: T) => {
     value: ISubServiceCategory[]
   ) => {
     setFormState((prev) => ({ ...prev, [name]: value }));
+    console.log(formState);
   };
 
-  return { formState, updatePrimitiveField, updateSubCategoryField };
+  return {
+    formState,
+    updatePrimitiveField,
+    updateSubCategoryField,
+    setFormState,
+  };
 };
 
 export default useForm;
