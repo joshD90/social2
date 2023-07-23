@@ -6,6 +6,7 @@ import { findServicesByCategory } from "../controllers/serviceControllers/findSe
 import { findAllInSubCategory } from "../controllers/serviceControllers/findAllInSubCategory";
 import getAllServicesController from "../controllers/serviceControllers/getAllServicesController";
 import deleteServiceByIdController from "../controllers/serviceControllers/deleteServiceByIdController";
+import updateServiceController from "../controllers/serviceControllers/updateServiceController";
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.delete("/:serviceId", deleteServiceByIdController);
 router.get("/service/:serviceId", findServiceByIdController);
 router.get("/subCategories/:subCategory", findAllInSubCategory);
 router.post("/", createServiceController);
+router.put("/:serviceId", updateServiceController);
 
 export default router;

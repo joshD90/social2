@@ -100,7 +100,8 @@ const FormSubSelector: FC<Props> = ({
       if (opt.value === value) return { ...opt, exclusive: !opt.exclusive };
       return opt;
     });
-    setSelectedOptions(adjustedOptions);
+
+    updateField(subCategoryName, adjustedOptions);
   };
 
   return (
