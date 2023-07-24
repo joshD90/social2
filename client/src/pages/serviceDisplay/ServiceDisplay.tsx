@@ -74,7 +74,6 @@ const ServiceDisplay = () => {
           >
             Back
           </button>
-
           <h1 className="w-full flex justify-center mt-5 text-2xl">
             {service.name}
           </h1>
@@ -95,7 +94,6 @@ const ServiceDisplay = () => {
             )}
             <hr className="w-2/3 ml-auto mr-auto" />
           </div>
-
           <div className="p-5 grid lg:grid-cols-2 gap-3">
             <DisplayTextInfo
               name="Address"
@@ -127,6 +125,36 @@ const ServiceDisplay = () => {
               value={service.organisation}
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
+            {service.maxCapacity && (
+              <DisplayTextInfo
+                name="Maximum Capacity"
+                value={service.maxCapacity}
+                themeColor={themeColor ? themeColor : ThemeColor.blue}
+              />
+            )}
+            {service.website && (
+              <DisplayTextInfo
+                name="Website"
+                value={service.website}
+                themeColor={themeColor ? themeColor : ThemeColor.blue}
+              />
+            )}
+            {service.threshold && (
+              <DisplayTextInfo
+                name="Threshold"
+                value={service.threshold}
+                themeColor={themeColor ? themeColor : ThemeColor.blue}
+              />
+            )}
+            {service.minRequirementsToAccess && (
+              <DisplayTextInfo
+                name="Minimum Requirements to Access"
+                value={service.minRequirementsToAccess}
+                themeColor={themeColor ? themeColor : ThemeColor.blue}
+              />
+            )}
+          </div>
+          <div className="p-5 grid lg:grid-cols-2 gap-3">
             <SubServiceDisplay
               title="Needs that Service Meets"
               subServices={service.needsMet}

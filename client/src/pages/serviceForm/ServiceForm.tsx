@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import BaseServiceForm from "../../components/serviceForm/BaseServiceForm";
+import BaseServiceFormEssentials from "../../components/serviceForm/BaseServiceFormEssentials";
 import ServiceSubSectionForm from "../../components/serviceForm/ServiceSubSectionForm";
 
 import useForm from "../../hooks/useServiceForm";
@@ -10,6 +10,7 @@ import { TIterableService } from "../../types/serviceTypes/Service";
 import useGetFetch from "../../hooks/useGetFetch";
 
 import { mapSubServiceToISubCategory } from "../serviceDisplay/mapSubServiceToISubCategory";
+import BaseServiceFormExtras from "../../components/serviceForm/BaseServiceFormExtras";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -39,12 +40,19 @@ const ServiceForm = () => {
     switch (stepIndex) {
       case 0:
         return (
-          <BaseServiceForm
+          <BaseServiceFormEssentials
             updatePrimitiveField={updatePrimitiveField}
             formState={formState}
           />
         );
       case 1:
+        return (
+          <BaseServiceFormExtras
+            formState={formState}
+            updatePrimitiveField={updatePrimitiveField}
+          />
+        );
+      case 2:
         return (
           <ServiceSubSectionForm
             formState={formState}
@@ -58,18 +66,21 @@ const ServiceForm = () => {
   const changeStepIndex = (changeAmount: 1 | -1) => {
     setStepIndex((prev) => {
       const newAmount = prev + changeAmount;
-      if (newAmount < 0 || newAmount > 1) return prev;
+      if (newAmount < 0 || newAmount > 2) return prev;
       return newAmount;
     });
   };
-
+  //could this all be abstracted into a custom hook / function? probably just easiest to seperate into a function maybe
   const submitForm = async () => {
     //seperate our form information into two seperate parts
     const serviceToSend = separateService(formState);
-
+    const url = serviceId
+      ? `http://localhost:3500/service/${serviceId}`
+      : "http://localhost:3500/service";
+    const method = serviceId ? "PUT" : "POST";
     try {
-      const result = await fetch("http://localhost:3500/service", {
-        method: "POST",
+      const result = await fetch(url, {
+        method: method,
         body: JSON.stringify(serviceToSend),
         headers: { "Content-Type": "application/json" },
       });
@@ -83,7 +94,7 @@ const ServiceForm = () => {
   };
 
   return (
-    <section className="w-full p-5 bg-stone-600 min-h-screen">
+    <section className="w-full p-5 bg-stone-800 min-h-screen">
       {renderStepComponent()}
       <div className="flex justify-between w-full pt-10">
         <button
@@ -95,9 +106,9 @@ const ServiceForm = () => {
         </button>
         <button
           className="p-2 bg-stone-500 rounded-md hover:bg-stone-400"
-          onClick={() => (stepIndex < 1 ? changeStepIndex(1) : submitForm())}
+          onClick={() => (stepIndex < 2 ? changeStepIndex(1) : submitForm())}
         >
-          {stepIndex < 1 ? "Next" : "Submit"}
+          {stepIndex < 2 ? "Next" : "Submit"}
         </button>
       </div>
     </section>

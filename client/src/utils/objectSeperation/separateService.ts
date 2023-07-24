@@ -6,7 +6,7 @@ export interface SplitService {
 export const separateService = (obj: { [key: string]: unknown }) => {
   return Object.entries(obj).reduce<SplitService>(
     (result, [key, value]) => {
-      if (typeof value === "object") {
+      if (typeof value === "object" && value !== null) {
         result.subCategories.push({ [key]: value });
       } else result.serviceBase[key] = value;
       return result;

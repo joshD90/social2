@@ -17,6 +17,10 @@ export interface IService extends IListItemBase {
   address: string;
   imageUrl: string;
   description: string;
+  website?: string;
+  maxCapacity?: number;
+  threshold?: "high" | "low";
+  minRequirementsToAccess?: string;
 }
 
 //Service with subsections

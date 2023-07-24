@@ -24,20 +24,22 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         updateField={updatePrimitiveField}
         value={formState.name as string}
       />
-      <PrimitiveInput
-        name="maxAge"
-        label="Maximum Age"
-        type="number"
-        updateField={updatePrimitiveField}
-        value={formState.maxAge as number}
-      />
-      <PrimitiveInput
-        name="minAge"
-        label="Minimum Age"
-        type="number"
-        updateField={updatePrimitiveField}
-        value={formState.minAge as number}
-      />
+      <div className="flex gap-2">
+        <PrimitiveInput
+          name="minAge"
+          label="Minimum Age"
+          type="number"
+          updateField={updatePrimitiveField}
+          value={formState.minAge as number}
+        />
+        <PrimitiveInput
+          name="maxAge"
+          label="Maximum Age"
+          type="number"
+          updateField={updatePrimitiveField}
+          value={formState.maxAge as number}
+        />
+      </div>
       <PrimitiveInput
         name="contactNumber"
         label="Contact Number"
@@ -51,13 +53,6 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="email"
         updateField={updatePrimitiveField}
         value={formState.contactEmail as string}
-      />
-      <PrimitiveInput
-        name="referralPathway"
-        label="Referral Pathway"
-        type="text"
-        updateField={updatePrimitiveField}
-        value={formState.referralPathway as string}
       />
       <PrimitiveInput
         name="address"
@@ -79,13 +74,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         updateField={updatePrimitiveField}
         optionArray={mappedCategorySelectInfo}
       />
-      <PrimitiveInput
-        name="imageUrl"
-        label="Image of Service"
-        updateField={updatePrimitiveField}
-        type="text"
-        value={formState.imageUrl as string}
-      />
+
       <TextAreaInput
         size={{ cols: 40, rows: 10 }}
         label="Description of the Service"
