@@ -12,9 +12,14 @@ type Props = {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => void;
+  inputErrors: { [key: string]: string };
 };
 
-const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
+const BaseServiceForm: FC<Props> = ({
+  formState,
+  updatePrimitiveField,
+  inputErrors,
+}) => {
   return (
     <div className="w-full grid grid-cols-2 gap-5 p-5">
       <PrimitiveInput
@@ -23,6 +28,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="text"
         updateField={updatePrimitiveField}
         value={formState.name as string}
+        inputError={inputErrors}
       />
       <div className="flex gap-2">
         <PrimitiveInput
@@ -31,6 +37,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
           type="number"
           updateField={updatePrimitiveField}
           value={formState.minAge as number}
+          inputError={inputErrors}
         />
         <PrimitiveInput
           name="maxAge"
@@ -38,6 +45,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
           type="number"
           updateField={updatePrimitiveField}
           value={formState.maxAge as number}
+          inputError={inputErrors}
         />
       </div>
       <PrimitiveInput
@@ -46,6 +54,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="text"
         updateField={updatePrimitiveField}
         value={formState.contactNumber as string}
+        inputError={inputErrors}
       />
       <PrimitiveInput
         name="contactEmail"
@@ -53,6 +62,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="email"
         updateField={updatePrimitiveField}
         value={formState.contactEmail as string}
+        inputError={inputErrors}
       />
       <PrimitiveInput
         name="address"
@@ -60,6 +70,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="text"
         updateField={updatePrimitiveField}
         value={formState.address as string}
+        inputError={inputErrors}
       />
       <PrimitiveInput
         name="forwardTo"
@@ -67,12 +78,15 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         type="text"
         updateField={updatePrimitiveField}
         value={formState.forwardTo as string}
+        inputError={inputErrors}
       />
       <SelectPrimitiveInput
         name="category"
         label="Category Picker"
         updateField={updatePrimitiveField}
         optionArray={mappedCategorySelectInfo}
+        value={formState.category as string}
+        inputError={inputErrors}
       />
 
       <TextAreaInput
@@ -82,6 +96,7 @@ const BaseServiceForm: FC<Props> = ({ formState, updatePrimitiveField }) => {
         name="description"
         updateField={updatePrimitiveField}
         gridSpan={2}
+        inputError={inputErrors}
       />
     </div>
   );

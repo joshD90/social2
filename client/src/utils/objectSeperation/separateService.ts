@@ -1,5 +1,5 @@
 export interface SplitService {
-  serviceBase: { [key: string]: unknown };
+  serviceBase: { [key: string]: string | number };
   subCategories: { [key: string]: unknown }[];
 }
 
@@ -8,7 +8,7 @@ export const separateService = (obj: { [key: string]: unknown }) => {
     (result, [key, value]) => {
       if (typeof value === "object" && value !== null) {
         result.subCategories.push({ [key]: value });
-      } else result.serviceBase[key] = value;
+      } else result.serviceBase[key] = value as string | number;
       return result;
     },
     { serviceBase: {}, subCategories: [] }

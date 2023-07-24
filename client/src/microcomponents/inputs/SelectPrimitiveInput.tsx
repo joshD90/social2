@@ -5,6 +5,8 @@ type Props = {
   label: string;
   name: string;
   updateField: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  value?: string | number;
+  inputError?: { [key: string]: string };
 };
 
 const SelectPrimitiveInput: FC<Props> = ({
@@ -12,6 +14,8 @@ const SelectPrimitiveInput: FC<Props> = ({
   name,
   label,
   updateField,
+  value,
+  inputError,
 }) => {
   return (
     <div className="flex flex-col">
@@ -23,13 +27,19 @@ const SelectPrimitiveInput: FC<Props> = ({
         onChange={updateField}
         className="p-2 border-none rounded-sm"
       >
-        <option value="noneSelected">None Selected</option>
+        {!value && (
+          <option value={value ? value : "noneSelected"}>
+            {optionArray.find((opt) => opt.value === value)?.name ||
+              "None Selected"}
+          </option>
+        )}
         {optionArray.map((opt, index) => (
           <option key={index} value={opt.value}>
             {opt.name}
           </option>
         ))}
       </select>
+      {inputError && inputError[name] && <p>{inputError[name]}</p>}
     </div>
   );
 };

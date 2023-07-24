@@ -7,6 +7,7 @@ type Props = {
   value: string;
   updateField: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   gridSpan?: number;
+  inputError?: { [key: string]: string };
 };
 
 const TextAreaInput: FC<Props> = ({
@@ -16,6 +17,7 @@ const TextAreaInput: FC<Props> = ({
   updateField,
   value,
   gridSpan,
+  inputError,
 }) => {
   const generateGridSpan = () => `col-span-${gridSpan || 1}`;
 
@@ -32,6 +34,9 @@ const TextAreaInput: FC<Props> = ({
         onChange={(e) => updateField(e)}
         value={value}
       ></textarea>
+      {inputError && inputError[name] && (
+        <p className="text-red-400">{inputError[name]}</p>
+      )}
     </div>
   );
 };

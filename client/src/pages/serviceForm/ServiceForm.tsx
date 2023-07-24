@@ -11,9 +11,11 @@ import useGetFetch from "../../hooks/useGetFetch";
 
 import { mapSubServiceToISubCategory } from "../serviceDisplay/mapSubServiceToISubCategory";
 import BaseServiceFormExtras from "../../components/serviceForm/BaseServiceFormExtras";
+import validateServiceForm from "../../utils/formValidation/serviceFormValidation/serviceFormValidation";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
+  const [inputError, setInputError] = useState<{ [key: string]: string }>({});
   const {
     formState,
     updatePrimitiveField,
@@ -43,6 +45,7 @@ const ServiceForm = () => {
           <BaseServiceFormEssentials
             updatePrimitiveField={updatePrimitiveField}
             formState={formState}
+            inputErrors={inputError}
           />
         );
       case 1:
@@ -50,6 +53,7 @@ const ServiceForm = () => {
           <BaseServiceFormExtras
             formState={formState}
             updatePrimitiveField={updatePrimitiveField}
+            inputErrors={inputError}
           />
         );
       case 2:
@@ -74,6 +78,16 @@ const ServiceForm = () => {
   const submitForm = async () => {
     //seperate our form information into two seperate parts
     const serviceToSend = separateService(formState);
+    //validate our form
+    const validationResult = await validateServiceForm(
+      serviceToSend.serviceBase
+    );
+    if (validationResult instanceof Error) return;
+    if (!validationResult.valid) {
+      console.log(validationResult.errors, "Errors");
+      return setInputError(validationResult.errors);
+    }
+
     const url = serviceId
       ? `http://localhost:3500/service/${serviceId}`
       : "http://localhost:3500/service";

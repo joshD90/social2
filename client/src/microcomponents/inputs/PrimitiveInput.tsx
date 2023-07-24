@@ -6,6 +6,7 @@ type Props = {
   name: string;
   value: string | number;
   updateField: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputError?: { [key: string]: string };
 };
 
 const PrimitiveInput: FC<Props> = ({
@@ -14,6 +15,7 @@ const PrimitiveInput: FC<Props> = ({
   name,
   updateField,
   value,
+  inputError,
 }) => {
   return (
     <div className="flex flex-col w-full ">
@@ -33,6 +35,9 @@ const PrimitiveInput: FC<Props> = ({
             : 0
         }
       />
+      {inputError && inputError[name] && (
+        <p className="text-red-400">{inputError[name]}</p>
+      )}
     </div>
   );
 };
