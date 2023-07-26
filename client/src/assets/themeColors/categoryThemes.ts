@@ -7,5 +7,6 @@ categoryThemes.set("addiction", ThemeColor.orange);
 categoryThemes.set("housing", ThemeColor.blue);
 categoryThemes.set("material", ThemeColor.cyan);
 categoryThemes.set("shelter", ThemeColor.voilet);
-categoryThemes.set("medical", ThemeColor.emerald);
+categoryThemes.set("medical", ThemeColor.fuchsia);
 categoryThemes.set("mentalHealth", ThemeColor.teal);
+categoryThemes.set("financial", ThemeColor.emerald);

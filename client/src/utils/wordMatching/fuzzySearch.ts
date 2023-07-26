@@ -6,7 +6,7 @@ export const fuzzySearch = (query: string, array: string[]): string[] => {
     const distance = levenshteinDistance(query, item);
     const similarity = 1 - distance / Math.max(query.length, item.length);
 
-    if (similarity >= 0.5) {
+    if (similarity >= 0.8) {
       results.push(item);
     }
   }

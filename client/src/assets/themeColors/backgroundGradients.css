@@ -1,0 +1,18 @@
+.backgroundAllColorLight {
+  background: linear-gradient(lime, transparent),
+    linear-gradient(to top left, rgb(222, 62, 62), transparent),
+    linear-gradient(to top right, blue, transparent);
+  background-blend-mode: screen;
+}
+.backgroundAllColorDark {
+  background: linear-gradient(rgb(0, 53, 0), transparent),
+    linear-gradient(to top left, rgb(47, 0, 0), transparent),
+    linear-gradient(to top right, rgb(0, 0, 53), transparent);
+  background-blend-mode: screen;
+}
+.backgroundAllColorDarkLarge {
+  background: linear-gradient(rgb(0, 53, 0), transparent),
+    linear-gradient(to top left, rgb(47, 0, 0), transparent),
+    linear-gradient(to top right, rgb(0, 0, 53), transparent);
+  background-blend-mode: screen;
+}

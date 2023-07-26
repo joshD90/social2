@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import ServiceDisplay from "../serviceDisplay/ServiceDisplay";
 import CategoryLanding from "../categoryLanding/CategoryLanding";
 
+import "../../assets/themeColors/backgroundGradients.css";
+
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
   const { serviceId } = useParams();
@@ -26,7 +28,7 @@ const PrimaryLayout = () => {
 
   //on larger screens we get the list on the left and the window on the right
   return (
-    <div className="w-screen h-screen flex bg-stone-500">
+    <div className="w-screen h-screen flex backgroundAllColorDarkLarge">
       <div
         className="basis-1/3"
         style={{ maxWidth: "20rem", minWidth: "15rem" }}

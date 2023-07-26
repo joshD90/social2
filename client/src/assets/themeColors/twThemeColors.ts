@@ -44,4 +44,13 @@ export const twThemeColors = {
     violet: "text-violet-800",
     fuchsia: "text-fuchsia-800",
   },
+  bgDarkGradient: {
+    blue: "bg-gradient-to-b from-stone-950 to-blue-950",
+    orange: "bg-gradient-to-b from-stone-950 to-orange-950",
+    teal: "bg-gradient-to-b from-stone-950 to-teal-950",
+    emerald: "bg-gradient-to-b from-stone-950 to-emerald-950",
+    cyan: "bg-gradient-to-b from-stone-950 to-cyan-950",
+    violet: "bg-gradient-to-b from-stone-950 to-violet-950",
+    fuchsia: "bg-gradient-to-b from-stone-950 to-fuchsia-950",
+  },
 };

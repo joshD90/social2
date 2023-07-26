@@ -11,6 +11,7 @@ import { TCategoryNames } from "../../types/categoryTypes/CategoryTypes";
 import SubServiceDisplay from "../../components/subServiceDisplay/SubServiceDisplay";
 import { mapSubServiceToISubCategory } from "./mapSubServiceToISubCategory";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { twThemeColors } from "../../assets/themeColors/twThemeColors";
 
 const ServiceDisplay = () => {
   const myCurrentUrl = useLocation();
@@ -62,7 +63,11 @@ const ServiceDisplay = () => {
     return `/services/${category}`;
   };
   return (
-    <section className="w-full h-full overflow-auto">
+    <section
+      className={`w-full h-full overflow-auto ${
+        twThemeColors.bgDarkGradient[themeColor ? themeColor : "blue"]
+      }`}
+    >
       {service ? (
         <div className="relative">
           <button
@@ -88,7 +93,7 @@ const ServiceDisplay = () => {
           )}
           <div className="flex flex-col items-center">
             {service.description && (
-              <p className="my-5 text-stone-900 w-4/5 text-center">
+              <p className="my-5 text-stone-50 w-4/5 text-center">
                 {service.description}
               </p>
             )}
@@ -154,6 +159,7 @@ const ServiceDisplay = () => {
               />
             )}
           </div>
+          <hr className="w-2/3 ml-auto mr-auto" />
           <div className="p-5 grid lg:grid-cols-2 gap-3">
             <SubServiceDisplay
               title="Needs that Service Meets"

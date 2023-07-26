@@ -20,9 +20,7 @@ const validationSchema = Yup.object().shape({
   category: Yup.string()
     .required()
     .oneOf(categoryArray, "Not a valid category"),
-  email: Yup.string()
-    .email("Invalid Email Address")
-    .required("Email Is Required"),
+
   address: Yup.string().required(
     "An Address is Required, enter N/A if not applicable"
   ),

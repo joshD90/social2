@@ -10,6 +10,8 @@ import {
 } from "../../types/categoryTypes/CategoryTypes";
 import { IService } from "../../types/serviceTypes/Service";
 
+import "../../assets/themeColors/backgroundGradients.css";
+
 type Props = {
   isAboveMedium: boolean;
 };
@@ -40,7 +42,7 @@ const ListContainer: FC<Props> = ({ isAboveMedium }) => {
   }, [category]);
 
   return (
-    <div className="w-full overflow-y-auto h-full">
+    <div className="w-full overflow-y-auto h-full border-x-2 border-stone-700 backgroundAllColorDark">
       {listItems.map((item, index) => {
         const themeColor = category
           ? categoryThemes.get(item?.category as TCategoryNames)

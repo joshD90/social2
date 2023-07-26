@@ -21,7 +21,7 @@ const BaseServiceForm: FC<Props> = ({
   inputErrors,
 }) => {
   return (
-    <div className="w-full grid grid-cols-2 gap-5 p-5">
+    <div className="w-full grid grid-cols-2 gap-5 p-5 ">
       <PrimitiveInput
         name="name"
         label="Service Name"
