@@ -3,10 +3,17 @@ import { Routes, Route } from "react-router-dom";
 import PrimaryLayout from "./pages/primaryLayout/PrimaryLayout";
 import ServiceForm from "./pages/serviceForm/ServiceForm";
 import AdminServicesView from "./pages/admin/adminServicesView/AdminServicesView";
+import AuthWrapper from "./pages/auth/authWrapper/AuthWrapper";
+import SignUp from "./pages/auth/signup/SignUp";
+import SignIn from "./pages/auth/signin/SignIn";
 
 const App = () => {
   return (
     <Routes>
+      <Route path="/auth" element={<AuthWrapper />}>
+        <Route path="signup" element={<SignUp />} />
+        <Route path="signin" element={<SignIn />} />
+      </Route>
       <Route path="/services/*" element={<PrimaryLayout />}>
         <Route path=":category" />
         <Route path=":category/:serviceId" />

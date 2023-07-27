@@ -3,6 +3,7 @@ import mysql from "mysql2";
 import { Pool } from "mysql2/promise";
 import { ServiceDB } from "./ServiceDB/ServiceDB";
 import { CategoryDB } from "./CategoryDB/CategoryDB";
+import UserDB from "./UserDB/UserDB";
 
 const { db } = envConfig;
 //our overarching database class
@@ -10,12 +11,14 @@ class Database {
   private connection: Pool;
   private serviceDB: ServiceDB;
   private categoryDB: CategoryDB;
+  private userDB: UserDB;
 
   constructor() {
     this.connection = this.initDatabase();
     this.serviceDB = new ServiceDB(this.connection);
     this.serviceDB.initialiseServiceRelatedTables();
     this.categoryDB = new CategoryDB(this.connection);
+    this.userDB = new UserDB(this.connection);
   }
   //connection initialises within the constructor of the database
   private initDatabase(): Pool {
@@ -36,14 +39,17 @@ class Database {
   }
 
   //getters
-  getConnection(): Pool {
+  public getConnection(): Pool {
     return this.connection;
   }
-  getServiceDB(): ServiceDB {
+  public getServiceDB(): ServiceDB {
     return this.serviceDB;
   }
-  getCategoryDB(): CategoryDB {
+  public getCategoryDB(): CategoryDB {
     return this.categoryDB;
+  }
+  public getUserDB(): UserDB {
+    return this.userDB;
   }
 }
 

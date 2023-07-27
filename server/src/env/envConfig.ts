@@ -12,4 +12,7 @@ export default {
     port: process.env.PORT as string,
     clientServer: process.env.CLIENT_SERVER as string,
   },
+  auth: {
+    jwtSecret: process.env.JWT_SECRET as string,
+  },
 };
