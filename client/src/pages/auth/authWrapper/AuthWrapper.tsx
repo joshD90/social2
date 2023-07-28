@@ -4,7 +4,7 @@ import "../../../assets/themeColors/backgroundGradients.css";
 
 const AuthWrapper = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen backgroundAllColorDark">
+    <div className="flex flex-col items-center justify-center w-full min-h-screen backgroundAllColorDark p-10">
       <Outlet />
       <div className="w-2/3 mt-5 flex justify-center items-center flex-col">
         <button className="w-48 bg-stone-600 p-2 rounded-sm hover:bg-green-600">

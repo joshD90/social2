@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 import useForm from "../../../hooks/useServiceForm";
 import PrimitiveInput from "../../../microcomponents/inputs/PrimitiveInput";
@@ -13,10 +14,15 @@ const SignUp = () => {
     password: "",
     passwordConfirm: "",
     organisation: "",
+    firstName: "",
+    lastName: "",
   });
   const navigate = useNavigate();
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     const validatedUser = await validateUser(formState);
+
     if (validatedUser instanceof Error) return;
     if (!validatedUser.valid) return setErrors(validatedUser.errors);
 
@@ -49,6 +55,23 @@ const SignUp = () => {
           updateField={updatePrimitiveField}
           inputError={errors}
         />
+        <PrimitiveInput
+          label="First Name"
+          name="firstName"
+          type="text"
+          value={formState.firstName}
+          updateField={updatePrimitiveField}
+          inputError={errors}
+        />
+        <PrimitiveInput
+          label="Last Name"
+          name="lastName"
+          type="text"
+          value={formState.lastName}
+          updateField={updatePrimitiveField}
+          inputError={errors}
+        />
+
         <PrimitiveInput
           label="Password"
           name="password"
