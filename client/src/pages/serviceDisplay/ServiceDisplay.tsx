@@ -34,7 +34,10 @@ const ServiceDisplay = () => {
 
     (async () => {
       try {
-        const result = await fetch(url, { signal: abortController.signal });
+        const result = await fetch(url, {
+          signal: abortController.signal,
+          credentials: "include",
+        });
         if (!result.ok) throw Error(result.statusText);
         const data = await result.json();
         const formattedData = {

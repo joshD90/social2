@@ -13,7 +13,10 @@ const useGetFetch = <T>(url: string, initialState?: T) => {
       try {
         setLoading(true);
         setError("");
-        const result = await fetch(url, { signal: abortController.signal });
+        const result = await fetch(url, {
+          signal: abortController.signal,
+          credentials: "include",
+        });
 
         if (!result.ok)
           throw Error(

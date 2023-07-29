@@ -97,6 +97,7 @@ const ServiceForm = () => {
         method: method,
         body: JSON.stringify(serviceToSend),
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
       if (!result.ok)
         throw new Error(`Request failed with status code of ${result.status}`);

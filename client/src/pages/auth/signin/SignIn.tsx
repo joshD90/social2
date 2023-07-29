@@ -2,16 +2,41 @@ import { useNavigate } from "react-router-dom";
 
 import useForm from "../../../hooks/useServiceForm";
 import PrimitiveInput from "../../../microcomponents/inputs/PrimitiveInput";
+import validateLoginDetails from "../../../utils/formValidation/loginValidation/loginValidation";
+import { useContext, useState } from "react";
+import { TIterableStringObj } from "../../../types/userTypes/UserTypes";
+import { AuthContext } from "../../../context/authContext/AuthContext";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState<TIterableStringObj>({});
   const { formState, updatePrimitiveField } = useForm({
     email: "",
     password: "",
   });
+  const { userDispatch } = useContext(AuthContext);
 
-  const handleSubmit = () => {
-    console.log("submitting");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const url = "http://localhost:3500/auth/signin";
+    const validationObj = await validateLoginDetails(formState);
+    if (validationObj instanceof Error) return;
+    if (!validationObj.valid || !validationObj.obj)
+      return setErrors(validationObj.errors);
+
+    try {
+      const result = await fetch(url, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(validationObj.obj),
+        credentials: "include",
+      });
+      if (!result.ok) throw Error(result.statusText);
+      const user = await result.json();
+      userDispatch({ type: "GET_USER_SUCCESS", payload: user });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <section>
@@ -25,6 +50,7 @@ const SignIn = () => {
           type="email"
           value={formState.email ? formState.email : ""}
           updateField={updatePrimitiveField}
+          inputError={errors}
         />
         <PrimitiveInput
           label="Password"
@@ -32,6 +58,7 @@ const SignIn = () => {
           type="password"
           value={formState.password ? formState.password : ""}
           updateField={updatePrimitiveField}
+          inputError={errors}
         />
         <button
           type="submit"
