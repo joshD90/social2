@@ -10,7 +10,8 @@ const authSignInController = (req: Request, res: Response): Response => {
       .status(500)
       .json("There was an issue with verifying your credentials");
 
-  const user = req.user as IUser;
+  const [user] = req.user as IUser[];
+  console.log(user);
   try {
     const token = jwt.sign(
       {
@@ -23,6 +24,9 @@ const authSignInController = (req: Request, res: Response): Response => {
       envConfig.auth.jwtSecret,
       { expiresIn: "1d" }
     );
+
+    console.log(token, "token just after signing");
+
     return res
       .cookie("jwt", token, { httpOnly: true, secure: false })
       .status(200)

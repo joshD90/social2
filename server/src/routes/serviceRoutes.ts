@@ -7,13 +7,18 @@ import { findAllInSubCategory } from "../controllers/serviceControllers/findAllI
 import getAllServicesController from "../controllers/serviceControllers/getAllServicesController";
 import deleteServiceByIdController from "../controllers/serviceControllers/deleteServiceByIdController";
 import updateServiceController from "../controllers/serviceControllers/updateServiceController";
+import passport from "passport";
 
 const router = express.Router();
 
 router.get("/", getAllServicesController);
 router.get("/:category", findServicesByCategory);
 router.delete("/:serviceId", deleteServiceByIdController);
-router.get("/service/:serviceId", findServiceByIdController);
+router.get(
+  "/service/:serviceId",
+  passport.authenticate("jwt", { session: false }),
+  findServiceByIdController
+);
 router.get("/subCategories/:subCategory", findAllInSubCategory);
 router.post("/", createServiceController);
 router.put("/:serviceId", updateServiceController);

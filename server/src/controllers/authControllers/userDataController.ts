@@ -4,7 +4,9 @@ import { Request, Response } from "express";
 const userDataController = async (req: Request, res: Response) => {
   if (!req.user) return res.status(401).json("Your Credentials are Invalid");
   //to manage this statelessly we can simply return the deserialised cookie information as we can confirm that this is authenticated due to the JWT signing
+
   const user = req.user;
+  console.log(user, "user in user data endpoint");
   res.status(200).json(user);
 };
 
