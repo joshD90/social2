@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
 
 import { db } from "../../server";
+import { IUser } from "../../types/userTypes/UserType";
 //to update the service we completely delete all the records associated with a service and then add in the updated service rather than altering the existing records for the sake of simplicity
 const updateServiceController = async (req: Request, res: Response) => {
+  if (!req.user || (req.user as IUser).privileges !== "admin")
+    return res
+      .status(401)
+      .json("You are not Authorised to Update a Service. Must be an admin");
+
   const serviceId = parseInt(req.params.serviceId);
 
   if (!serviceId)
@@ -10,7 +16,6 @@ const updateServiceController = async (req: Request, res: Response) => {
   const { serviceBase, subCategories } = req.body;
 
   if (!serviceBase || !subCategories) {
-    console.log("no base or sub");
     return res.status(400).json("Not in proper format");
   }
 

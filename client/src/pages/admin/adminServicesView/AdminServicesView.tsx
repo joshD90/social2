@@ -12,16 +12,15 @@ const AdminServicesView = () => {
   //put into useCallback so that we can pass down to children.  We want to keep the useDeleteFetch's other properties available to the parent so we keep it in this and pass it down
   const deleteItem = useCallback(
     async (url: string, id: number) => {
-      console.log("deleting ITEM");
       //don't need to put into try/catch block as error handling is done through the hook
+
       const result = await fetchDelete(url);
-      console.log(result);
-      if (result instanceof Error || !fetchedData)
-        return console.log(result, fetchedData, "therefore returning");
+
+      if (result instanceof Error || !fetchedData) return console.log("error");
       setFetchedData((prev) => {
         if (!prev) return null;
-        console.log(prev);
-        return prev.filter((service) => service.id !== id);
+        const filtered = prev.filter((service) => service.id !== id);
+        return filtered;
       });
     },
     [fetchDelete, setFetchedData, fetchedData]

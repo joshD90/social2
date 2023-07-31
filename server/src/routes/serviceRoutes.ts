@@ -13,14 +13,22 @@ const router = express.Router();
 
 router.get("/", getAllServicesController);
 router.get("/:category", findServicesByCategory);
-router.delete("/:serviceId", deleteServiceByIdController);
-router.get(
-  "/service/:serviceId",
+router.delete(
+  "/:serviceId",
   passport.authenticate("jwt", { session: false }),
-  findServiceByIdController
+  deleteServiceByIdController
 );
+router.get("/service/:serviceId", findServiceByIdController);
 router.get("/subCategories/:subCategory", findAllInSubCategory);
-router.post("/", createServiceController);
-router.put("/:serviceId", updateServiceController);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  createServiceController
+);
+router.put(
+  "/:serviceId",
+  passport.authenticate("jwt", { session: false }),
+  updateServiceController
+);
 
 export default router;

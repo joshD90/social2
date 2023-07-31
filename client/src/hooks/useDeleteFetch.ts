@@ -10,16 +10,18 @@ const useDeleteFetch = () => {
     try {
       setLoading(true);
       setError("");
-      console.log("in usehook");
+
       const result = await fetch(url, {
         method: "DELETE",
         signal: abortController.signal,
+        credentials: "include",
       });
-      console.log(result, "result in usegetfetch");
+
       if (!result.ok)
         throw new Error(
           `There was an error with the request with status code of ${result.status}:${result.statusText}`
         );
+
       setLoading(false);
       return "deleted";
     } catch (error) {

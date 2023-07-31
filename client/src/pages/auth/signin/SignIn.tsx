@@ -34,6 +34,7 @@ const SignIn = () => {
       if (!result.ok) throw Error(result.statusText);
       const user = await result.json();
       userDispatch({ type: "GET_USER_SUCCESS", payload: user });
+      navigate("/services");
     } catch (error) {
       console.log(error);
     }

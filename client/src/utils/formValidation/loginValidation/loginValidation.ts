@@ -28,9 +28,7 @@ const validateLoginDetails = async (
     return { valid: true, obj: result, errors: {} };
   } catch (error) {
     if (error instanceof Yup.ValidationError) {
-      console.log(error.inner, "inner");
       error.inner.forEach((err) => {
-        console.log(err);
         errors[err.path ? err.path : "null"] = err.message;
       });
 

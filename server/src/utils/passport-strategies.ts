@@ -45,7 +45,6 @@ export const configurePassport = (app: Application) => {
         secretOrKey: envConfig.auth.jwtSecret,
       },
       (payload, done) => {
-        console.log(payload, "Payload");
         try {
           done(null, payload);
         } catch (error) {
@@ -64,6 +63,7 @@ const cookieExtractor: JwtFromRequestFunction = (req) => {
   let token = null;
 
   if (req && req.cookies) {
+    console.log(req.cookies, "req.cookies");
     token = req.cookies["jwt"];
   }
 

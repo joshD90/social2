@@ -63,12 +63,12 @@ export class GeneralQueryGenerator {
     value: string | number
   ): Promise<ResultSetHeader | Error> {
     const query = `DELETE FROM ${this.table} WHERE ${column} = ?`;
-    console.log(query, value);
+
     try {
       const [result] = await this.connection.execute<ResultSetHeader>(query, [
         value,
       ]);
-      console.log(result);
+
       if (result.affectedRows === 0)
         throw Error("There was no record matching that criteria");
 

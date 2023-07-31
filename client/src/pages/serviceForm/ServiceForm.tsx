@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import BaseServiceFormEssentials from "../../components/serviceForm/BaseServiceFormEssentials";
 import ServiceSubSectionForm from "../../components/serviceForm/ServiceSubSectionForm";
@@ -26,6 +26,7 @@ const ServiceForm = () => {
   const { fetchedData } = useGetFetch(
     serviceId ? `http://localhost:3500/service/service/${serviceId}` : ""
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     //we dont need to do this if we dont have an edit id or if we haven't fetched the data yet
@@ -82,9 +83,9 @@ const ServiceForm = () => {
     const validationResult = await validateServiceForm(
       serviceToSend.serviceBase
     );
+
     if (validationResult instanceof Error) return;
     if (!validationResult.valid) {
-      console.log(validationResult.errors, "Errors");
       return setInputError(validationResult.errors);
     }
 
@@ -99,10 +100,11 @@ const ServiceForm = () => {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
+
       if (!result.ok)
         throw new Error(`Request failed with status code of ${result.status}`);
       const data = await result.json();
-      console.log(data);
+      navigate(`/admin/services/${data.id}`);
     } catch (error) {
       console.log(error);
     }

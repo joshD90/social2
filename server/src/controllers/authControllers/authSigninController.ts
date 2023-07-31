@@ -11,7 +11,7 @@ const authSignInController = (req: Request, res: Response): Response => {
       .json("There was an issue with verifying your credentials");
 
   const [user] = req.user as IUser[];
-  console.log(user);
+
   try {
     const token = jwt.sign(
       {

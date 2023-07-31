@@ -6,7 +6,7 @@ type Props = { children?: React.ReactNode };
 
 //because we must export the AuthContext external to the Provider wrapper we need to be able to pass an empty function to the authContext initialiser however this empty function will never be used in child components it will only be consuming the setState function
 export const AuthContext = createContext<UserContextType>({
-  currentUser: { isLoading: false, user: null, error: null },
+  currentUser: { isLoading: true, user: null, error: null },
   userDispatch: () => {
     null;
   },
@@ -18,7 +18,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
     user: null,
     error: null,
   });
-
+  console.log(currentUser.isLoading);
   useEffect(() => {
     const url = `http://localhost:3500/auth/user-data`;
     const abortController = new AbortController();
@@ -32,6 +32,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
         });
         if (!result.ok) throw Error(result.statusText);
         const user = await result.json();
+        console.log(user, "user in context auth");
         return userDispatch({ type: "GET_USER_SUCCESS", payload: user });
       } catch (error) {
         if (error instanceof Error)
@@ -50,7 +51,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
 
   if (currentUser.isLoading)
     return (
-      <div className="flex items-center justify-center bg-slate-800 text-slate-50">
+      <div className="w-screen h-screen flex items-center justify-center bg-slate-800 text-slate-50">
         ...Loading
       </div>
     );

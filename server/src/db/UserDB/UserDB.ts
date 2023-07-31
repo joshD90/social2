@@ -17,7 +17,6 @@ class UserDB {
   private async initialiseUserTable() {
     try {
       await this.connection.query(queryObj.initUserTable);
-      console.log("user table initialised");
     } catch (error) {
       console.log(error);
     }

@@ -6,6 +6,7 @@ import AdminServicesView from "./pages/admin/adminServicesView/AdminServicesView
 import AuthWrapper from "./pages/auth/authWrapper/AuthWrapper";
 import SignUp from "./pages/auth/signup/SignUp";
 import SignIn from "./pages/auth/signin/SignIn";
+import AdminProtectedWrapper from "./components/admin/adminProtectedWrapper/AdminProtectedWrapper";
 
 const App = () => {
   return (
@@ -18,11 +19,12 @@ const App = () => {
         <Route path=":category" />
         <Route path=":category/:serviceId" />
       </Route>
-
-      <Route path="/admin/services/">
-        <Route index element={<AdminServicesView />} />
-        <Route path="create" element={<ServiceForm />} />
-        <Route path="edit/:serviceId" element={<ServiceForm />} />
+      <Route path="/admin" element={<AdminProtectedWrapper />}>
+        <Route path="services/">
+          <Route index element={<AdminServicesView />} />
+          <Route path="create" element={<ServiceForm />} />
+          <Route path="edit/:serviceId" element={<ServiceForm />} />
+        </Route>
       </Route>
     </Routes>
   );
