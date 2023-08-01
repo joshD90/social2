@@ -63,7 +63,6 @@ const cookieExtractor: JwtFromRequestFunction = (req) => {
   let token = null;
 
   if (req && req.cookies) {
-    console.log(req.cookies, "req.cookies");
     token = req.cookies["jwt"];
   }
 

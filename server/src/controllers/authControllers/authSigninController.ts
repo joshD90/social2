@@ -25,8 +25,6 @@ const authSignInController = (req: Request, res: Response): Response => {
       { expiresIn: "1d" }
     );
 
-    console.log(token, "token just after signing");
-
     return res
       .cookie("jwt", token, { httpOnly: true, secure: false })
       .status(200)
