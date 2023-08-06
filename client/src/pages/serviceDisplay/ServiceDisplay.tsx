@@ -62,6 +62,9 @@ const ServiceDisplay = () => {
   }, [serviceId]);
 
   const generatePathForBackClick = (): string => {
+    //if we are in the admin section stay in admin section
+    if (myCurrentUrl.pathname.split("/").includes("admin"))
+      return "/admin/services";
     if (isAboveMedium && category) return "/services";
     return `/services/${category}`;
   };
