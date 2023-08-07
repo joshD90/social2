@@ -3,7 +3,7 @@ import cors from "cors";
 require("dotenv").config();
 import cookieParser from "cookie-parser";
 
-import Database from "./db/Database";
+import Database from "./db/Database/Database";
 import envConfig from "./env/envConfig";
 
 import serviceRouter from "./routes/serviceRoutes";

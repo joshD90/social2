@@ -1,9 +1,9 @@
-import envConfig from "../env/envConfig";
+import envConfig from "../../env/envConfig";
 import mysql from "mysql2";
 import { Pool } from "mysql2/promise";
-import { ServiceDB } from "./ServiceDB/ServiceDB";
-import { CategoryDB } from "./CategoryDB/CategoryDB";
-import UserDB from "./UserDB/UserDB";
+import { ServiceDB } from "../ServiceDB/ServiceDB";
+import { CategoryDB } from "../CategoryDB/CategoryDB";
+import UserDB from "../UserDB/UserDB";
 
 const { db } = envConfig;
 //our overarching database class
