@@ -65,15 +65,17 @@ export class GeneralQueryGenerator {
     const query = `DELETE FROM ${this.table} WHERE ${column} = ?`;
 
     try {
-      const [result] = await this.connection.execute<ResultSetHeader>(query, [
+      const dataBack = await this.connection.execute<ResultSetHeader>(query, [
         value,
       ]);
 
+      const [result] = dataBack;
       if (result.affectedRows === 0)
         throw Error("There was no record matching that criteria");
 
       return result;
     } catch (error) {
+      console.log(error, "this is the error that is thrown");
       return error as Error;
     }
   }
@@ -111,14 +113,16 @@ export class GeneralQueryGenerator {
     const values = Object.values(updateObject);
 
     const keysInQuery = keys.map((key) => `${key} = ?`).join(", ");
-
+    //identifier column for where fieldName = "someValue" <-identifier value so we dont update the whole table
     const query = `UPDATE ${this.table} SET ${keysInQuery} WHERE ${identifierColumn} = ?`;
 
     try {
-      const [result] = await this.connection.execute<ResultSetHeader>(query, [
+      const dataBack = await this.connection.execute<ResultSetHeader>(query, [
         ...values,
         identifierValue,
       ]);
+      console.log(dataBack);
+      const [result] = dataBack;
       if (!result || result.affectedRows === 0)
         throw new Error("Could not update this entry");
       return result;
