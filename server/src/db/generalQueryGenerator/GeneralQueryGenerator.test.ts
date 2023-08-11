@@ -79,6 +79,28 @@ describe("General Query Generator Test Suite", () => {
     });
   });
 
+  describe("test suite for deleteByTwoCriteria", () => {
+    const cols = ["col1", "col2"];
+    const vals = ["val1", "val2"];
+    it("should return resultSetHeader if successfully deleted", async () => {
+      const executeSpy = jest.spyOn(connectionMock, "execute");
+      mockExecute.mockResolvedValueOnce([{ affectedRows: 1 }]);
+      const actual = await sut.deleteByTwoCriteria(cols, vals);
+      expect(executeSpy).toBeCalledTimes(1);
+      expect(actual).toEqual({ affectedRows: 1 });
+    });
+
+    it("should return Error if unsuccessful in deletion", async () => {
+      mockExecute
+        .mockResolvedValueOnce([{ affectedRows: 0 }])
+        .mockResolvedValueOnce(undefined);
+      let actual = await sut.deleteByTwoCriteria(cols, vals);
+      expect(actual).toBeInstanceOf(Error);
+      actual = await sut.deleteByTwoCriteria(cols, vals);
+      expect(actual).toBeInstanceOf(Error);
+    });
+  });
+
   describe("test suite for updateTableEntriesByMultiple", () => {
     it("should call connection.execute once and return a result.setHeader", async () => {
       mockExecute.mockResolvedValueOnce([{ affectedRows: 1 }]);
