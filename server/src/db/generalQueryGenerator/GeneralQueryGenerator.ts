@@ -121,7 +121,7 @@ export class GeneralQueryGenerator {
         ...values,
         identifierValue,
       ]);
-      console.log(dataBack);
+
       const [result] = dataBack;
       if (!result || result.affectedRows === 0)
         throw new Error("Could not update this entry");

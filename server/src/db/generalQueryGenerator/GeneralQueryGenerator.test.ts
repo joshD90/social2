@@ -11,6 +11,9 @@ export const connectionMock = {
 
 describe("General Query Generator Test Suite", () => {
   let sut: GeneralQueryGenerator;
+
+  beforeAll(() => jest.clearAllMocks());
+
   beforeEach(() => {
     sut = new GeneralQueryGenerator("table1", connectionMock as any as Pool);
   });
@@ -74,7 +77,7 @@ describe("General Query Generator Test Suite", () => {
         warningStatus: 0,
       });
       const actual = await sut.deleteBySingleCriteria("column1", 1);
-      console.log(actual);
+
       expect(actual).toBeInstanceOf(Error);
     });
   });
