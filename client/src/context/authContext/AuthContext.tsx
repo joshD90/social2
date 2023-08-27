@@ -18,7 +18,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
     user: null,
     error: null,
   });
-  console.log(currentUser.isLoading);
+
   useEffect(() => {
     const url = `http://localhost:3500/auth/user-data`;
     const abortController = new AbortController();
@@ -32,7 +32,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
         });
         if (!result.ok) throw Error(result.statusText);
         const user = await result.json();
-        console.log(user, "user in context auth");
+
         return userDispatch({ type: "GET_USER_SUCCESS", payload: user });
       } catch (error) {
         if (error instanceof Error)

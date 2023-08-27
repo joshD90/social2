@@ -1,6 +1,7 @@
 import { Pool } from "mysql2/promise";
 import { ServiceDB } from "./ServiceDB";
 import { IService } from "../../types/serviceTypes/ServiceType";
+import { SubCategoryTableSpecific } from "../../types/serviceTypes/subServiceCategories";
 
 //mocks
 const mockExecute = jest.fn();
@@ -110,5 +111,121 @@ describe("ServiceDB test suite", () => {
       expect(actual).toBeInstanceOf(Error);
       expect(connectionRollbackSpy).toBeCalled();
     });
+
+    it("should call connection.commit and return the baseResult if successArray is successful", async () => {
+      const commitSpy = jest.spyOn(connectionMock, "commit");
+      jest.spyOn(sut, "addFullSubCategory").mockResolvedValueOnce("success");
+      createTableEntryFromPrimitivesMock.mockResolvedValueOnce({ insertId: 1 });
+      const subServiceCategory = { value: "something", exclusive: true };
+      const actual = await sut.createFullServiceEntry({} as any, [
+        { areasServed: [subServiceCategory] },
+      ]);
+      expect(commitSpy).toBeCalledTimes(1);
+      expect(actual).toEqual({ insertId: 1 });
+    });
+  });
+
+  describe("AddFullSubCategory Test Suite", () => {
+    const subServiceItem = { value: "string", exclusive: true };
+    it("should return success if all addSubCategory functions return success", async () => {
+      const addSubCategoriesSpy = jest
+        .spyOn(sut, "addSubCategory")
+        .mockResolvedValueOnce("success")
+        .mockResolvedValueOnce("success");
+
+      const actual = await sut.addFullSubCategory(
+        {} as SubCategoryTableSpecific,
+        [subServiceItem, subServiceItem],
+        1
+      );
+      expect(addSubCategoriesSpy).toBeCalledTimes(2);
+      expect(actual).toBe("success");
+    });
+  });
+
+  describe("test suite for addSubCategory", () => {
+    let findEntryBySpy: jest.SpyInstance;
+    let createTableEntrySpy: jest.SpyInstance;
+
+    const dummyParams: [
+      SubCategoryTableSpecific,
+      { value: string; exclusive: boolean },
+      number
+    ] = [
+      {
+        tableQueries: generalQueryMock,
+        tableName: "needsMet",
+        junctionTableQueries: generalQueryMock,
+      } as any as SubCategoryTableSpecific,
+      { value: "string", exclusive: false },
+      1,
+    ];
+
+    beforeEach(() => {
+      findEntryBySpy = jest.spyOn(generalQueryMock, "findEntryBy");
+      createTableEntrySpy = jest.spyOn(
+        generalQueryMock,
+        "createTableEntryFromPrimitives"
+      );
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it("should call createTableFromPrimitives if findEntryBy returns Error", async () => {
+      findEntryBySpy.mockResolvedValueOnce(Error());
+      await sut.addSubCategory(...dummyParams);
+      expect(createTableEntrySpy).toBeCalled();
+    });
+
+    it("should throw an error if findEntryBy does not return an error or id", async () => {
+      findEntryBySpy.mockResolvedValueOnce("something random");
+      const actual = await sut.addSubCategory(...dummyParams);
+      expect(actual).toBe("failure");
+    });
+
+    it("should continue by calling createTableEntry if successful", async () => {
+      findEntryBySpy.mockResolvedValueOnce(Error());
+      createTableEntrySpy
+        .mockResolvedValueOnce([{ insertId: 1 }])
+        .mockResolvedValueOnce([{ insertId: 1 }]);
+
+      const actual = await sut.addSubCategory(...dummyParams);
+      expect(createTableEntrySpy).toBeCalledTimes(2);
+      expect(actual).toBe("success");
+    });
+
+    it("should return failure if the final createTableEntry returns an error", async () => {
+      findEntryByMock.mockResolvedValueOnce(Error());
+      createTableEntrySpy
+        .mockResolvedValueOnce([{ insertId: 1 }])
+        .mockResolvedValueOnce(Error());
+      const actual = await sut.addSubCategory(...dummyParams);
+      expect(actual).toBe("failure");
+    });
+  });
+
+  describe("test suite for deleteServiceAndReturnRelatedEntry", () => {
+    it("should call deleteBySingleCriteria 4x times over the course of the deletion", async () => {
+      const deleteBySingleCriteriaSpy = jest.spyOn(
+        generalQueryMock,
+        "deleteBySingleCriteria"
+      );
+      deleteBySingleCritriaMock.mockResolvedValue(1);
+      const actual = await sut.deleteServiceAndRelatedEntries(1);
+      expect(deleteBySingleCriteriaSpy).toBeCalledTimes(4);
+      expect(actual).toBe(true);
+    });
+
+    it.todo(
+      "should Error if deleteBySingleCriteriaReturns an Error"
+      // async () => {
+      //need to change the actual sut to return an error properly.
+      // deleteBySingleCritriaMock.mockResolvedValueOnce(Error());
+      // const actual = await sut.deleteServiceAndRelatedEntries(1);
+      // expect(actual).toBeInstanceOf(Error);
+      // }
+    );
   });
 });

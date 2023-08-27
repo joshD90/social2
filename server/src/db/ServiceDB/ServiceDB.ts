@@ -248,10 +248,11 @@ export class ServiceDB {
 
     //now we delete them in order - we must await the promises to avoid race conditions
     try {
+      //TODO: we should probably throw an error if there is an error returned from deleteBySingleCritera - should probably include connection.commit and revert here as well
       await Promise.all(
-        junctionTablesQuery.map((tableQuery) =>
-          tableQuery.deleteBySingleCriteria("service_id", serviceId)
-        )
+        junctionTablesQuery.map((tableQuery) => {
+          return tableQuery.deleteBySingleCriteria("service_id", serviceId);
+        })
       );
       await this.ServiceBaseQueries.deleteBySingleCriteria("id", serviceId);
 
