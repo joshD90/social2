@@ -3,7 +3,10 @@ import { Request, Response } from "express";
 import { db } from "../../server";
 import { IUser } from "../../types/userTypes/UserType";
 
-const createServiceController = async (req: Request, res: Response) => {
+const createServiceController = async (
+  req: Request,
+  res: Response
+): Promise<Response | undefined> => {
   if (!req.user || (req.user as IUser).privileges !== "admin")
     return res
       .status(401)
@@ -13,6 +16,7 @@ const createServiceController = async (req: Request, res: Response) => {
   const serviceDB = db.getServiceDB();
   const serviceBase = req.body.serviceBase;
   const subCatergories = req.body.subCategories;
+
   //create database entry
   const result = await serviceDB.createFullServiceEntry(
     serviceBase,
@@ -23,12 +27,10 @@ const createServiceController = async (req: Request, res: Response) => {
       .status(500)
       .send(`Could not create the service due to ${result.message}`);
 
-  res
-    .status(201)
-    .json({
-      id: result.insertId,
-      message: `Service created with base service having an id of ${result.insertId}`,
-    });
+  res.status(201).json({
+    id: result.insertId,
+    message: `Service created with base service having an id of ${result.insertId}`,
+  });
 };
 
 export default createServiceController;

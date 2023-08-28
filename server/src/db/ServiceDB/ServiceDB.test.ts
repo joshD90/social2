@@ -206,7 +206,7 @@ describe("ServiceDB test suite", () => {
     });
   });
 
-  describe("test suite for deleteServiceAndReturnRelatedEntry", () => {
+  describe("test suite for deleteServiceAndRelatedEntry", () => {
     it("should call deleteBySingleCriteria 4x times over the course of the deletion", async () => {
       const deleteBySingleCriteriaSpy = jest.spyOn(
         generalQueryMock,
@@ -227,5 +227,29 @@ describe("ServiceDB test suite", () => {
       // expect(actual).toBeInstanceOf(Error);
       // }
     );
+  });
+
+  describe("test suite for fetchServiceAndRelatedEntries", () => {
+    test("it should return null when findEntryBy returns an error", async () => {
+      findEntryByMock.mockResolvedValueOnce(Error());
+      const actual = await sut.fetchServiceAndRelatedEntries(1);
+      expect(actual).toBeNull();
+    });
+    test("it should call connection.execute 3x times if baseService is found", async () => {
+      findEntryByMock.mockResolvedValueOnce(1);
+      const executeSpy = jest.spyOn(connectionMock, "execute");
+      mockExecute
+        .mockResolvedValueOnce([1])
+        .mockResolvedValueOnce([2])
+        .mockResolvedValueOnce([3]);
+      const actual = await sut.fetchServiceAndRelatedEntries(1);
+      expect(executeSpy).toBeCalledTimes(3);
+      expect(actual).toEqual({
+        baseService: 1,
+        needsMet: 1,
+        areasServed: 3,
+        clientGroups: 2,
+      });
+    });
   });
 });
