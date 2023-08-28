@@ -13,6 +13,7 @@ const deleteServiceByIdController = async (
       .json("You are not Authorised to Delete a Service. Must be an admin");
 
   const serviceId = parseInt(req.params.serviceId);
+
   if (Number.isNaN(serviceId))
     return res.status(400).json("Service Id Provided is not a number");
 
@@ -20,8 +21,11 @@ const deleteServiceByIdController = async (
     const result = await db
       .getServiceDB()
       .deleteServiceAndRelatedEntries(serviceId);
-    if (result) return res.status(204).json("deleted");
-    throw Error("There was an error in deleting this record");
+    //if unsuccessful
+    if (result instanceof Error)
+      throw Error("There was an error in deleting this record");
+    //otherwise return deleted
+    return res.status(204).json("deleted");
   } catch (error) {
     if (error instanceof Error) return res.status(500).json(error.message);
     return res.status(500).json({ error: error });
