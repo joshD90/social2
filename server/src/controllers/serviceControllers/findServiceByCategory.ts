@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 
 import { db } from "../../server";
 
-export const findServicesByCategory = async (req: Request, res: Response) => {
+export const findServicesByCategory = async (
+  req: Request,
+  res: Response
+): Promise<Response | undefined> => {
   const { category } = req.params;
   if (!category)
     return res

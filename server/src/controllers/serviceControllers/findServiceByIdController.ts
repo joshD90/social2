@@ -7,6 +7,7 @@ export const findServiceByIdController = async (
   res: Response
 ) => {
   const serviceId = parseInt(req.params.serviceId);
+  if (!serviceId) return res.status(400).json("Needs a serviceId");
   try {
     const serviceResult = await db
       .getServiceDB()

@@ -33,6 +33,7 @@ const updateServiceController = async (req: Request, res: Response) => {
       throw Error(
         "Service was deleted in preparation however an error occured when trying to add in updated version"
       );
+
     res
       .status(200)
       .json({ id: createResult.insertId, message: "Successfully updated" });
