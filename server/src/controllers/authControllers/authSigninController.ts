@@ -7,10 +7,10 @@ import envConfig from "../../env/envConfig";
 const authSignInController = (req: Request, res: Response): Response => {
   if (!req.user)
     return res
-      .status(500)
+      .status(401)
       .json("There was an issue with verifying your credentials");
 
-  const [user] = req.user as IUser[];
+  const user = req.user as IUser;
 
   try {
     const token = jwt.sign(

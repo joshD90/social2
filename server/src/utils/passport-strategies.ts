@@ -28,7 +28,7 @@ export const configurePassport = (app: Application) => {
           if (!passwordMatches) return done(null, false);
           //delete sensitive data before returning object
           delete userFound[0].password;
-          return done(null, userFound);
+          return done(null, userFound[0]);
         } catch (error) {
           console.log(error);
           return done(error);
