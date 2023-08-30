@@ -28,6 +28,7 @@ const authSignupController = async (req: Request, res: Response) => {
 
   try {
     const hashedPW = await bcrypt.hash(password, 10);
+
     const user: IUser = {
       email,
       firstName,
