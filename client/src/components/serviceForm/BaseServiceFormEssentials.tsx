@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
@@ -13,12 +13,14 @@ type Props = {
     >
   ) => void;
   inputErrors: { [key: string]: string };
+  setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
 
 const BaseServiceForm: FC<Props> = ({
   formState,
   updatePrimitiveField,
   inputErrors,
+  setInputErrors,
 }) => {
   return (
     <div className="w-full grid grid-cols-2 gap-5 p-5 ">
@@ -29,6 +31,7 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         value={formState.name as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <div className="flex gap-2">
         <PrimitiveInput
@@ -38,6 +41,7 @@ const BaseServiceForm: FC<Props> = ({
           updateField={updatePrimitiveField}
           value={formState.minAge as number}
           inputError={inputErrors}
+          setInputError={setInputErrors}
         />
         <PrimitiveInput
           name="maxAge"
@@ -46,6 +50,7 @@ const BaseServiceForm: FC<Props> = ({
           updateField={updatePrimitiveField}
           value={formState.maxAge as number}
           inputError={inputErrors}
+          setInputError={setInputErrors}
         />
       </div>
       <PrimitiveInput
@@ -55,6 +60,7 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         value={formState.contactNumber as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <PrimitiveInput
         name="contactEmail"
@@ -63,6 +69,7 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         value={formState.contactEmail as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <PrimitiveInput
         name="address"
@@ -71,6 +78,7 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         value={formState.address as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <PrimitiveInput
         name="forwardTo"
@@ -79,6 +87,7 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         value={formState.forwardTo as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <SelectPrimitiveInput
         name="category"
@@ -87,6 +96,7 @@ const BaseServiceForm: FC<Props> = ({
         optionArray={mappedCategorySelectInfo}
         value={formState.category as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
 
       <TextAreaInput
@@ -97,6 +107,7 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         gridSpan={2}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
     </div>
   );

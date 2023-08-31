@@ -16,6 +16,7 @@ import validateServiceForm from "../../utils/formValidation/serviceFormValidatio
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
   const [inputError, setInputError] = useState<{ [key: string]: string }>({});
+  const [fetchError, setFetchError] = useState("");
   const {
     formState,
     updatePrimitiveField,
@@ -47,6 +48,7 @@ const ServiceForm = () => {
             updatePrimitiveField={updatePrimitiveField}
             formState={formState}
             inputErrors={inputError}
+            setInputErrors={setInputError}
           />
         );
       case 1:
@@ -55,6 +57,7 @@ const ServiceForm = () => {
             formState={formState}
             updatePrimitiveField={updatePrimitiveField}
             inputErrors={inputError}
+            setInputErrors={setInputError}
           />
         );
       case 2:
@@ -79,6 +82,7 @@ const ServiceForm = () => {
   const submitForm = async () => {
     //seperate our form information into two seperate parts
     const serviceToSend = separateService(formState);
+
     //validate our form
     const validationResult = await validateServiceForm(
       serviceToSend.serviceBase
@@ -86,7 +90,9 @@ const ServiceForm = () => {
 
     if (validationResult instanceof Error) return;
     if (!validationResult.valid) {
-      return setInputError(validationResult.errors);
+      setInputError(validationResult.errors);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
     }
 
     const url = serviceId
@@ -104,14 +110,39 @@ const ServiceForm = () => {
       if (!result.ok)
         throw new Error(`Request failed with status code of ${result.status}`);
       const data = await result.json();
-      navigate(`/admin/services/${data.id}`);
+      navigate(`/admin/services/view?id=${data.id}`);
     } catch (error) {
+      if (error instanceof Error) {
+        setFetchError(error.message);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
       console.log(error);
     }
   };
 
+  const checkErrorsPresent = () => {
+    let errorsPresent = false;
+    if (Object.keys(inputError).length > 0) errorsPresent = true;
+    return {
+      errorsPresent,
+      inputsAffected: [...Object.keys(inputError).join(", ")],
+    };
+  };
+
   return (
     <section className="w-full p-5 bg-stone-800 min-h-screen">
+      {/* an overarching error message */}
+      {checkErrorsPresent().errorsPresent ? (
+        <p className="text-red-400 w-full text-center mb-5">
+          There were Errors Present in following inputs ...
+          {checkErrorsPresent().inputsAffected}
+        </p>
+      ) : null}
+      {fetchError !== "" ? (
+        <p className="w-full text-center text-red-400 mb-5">{fetchError}</p>
+      ) : null}
+      {/* conditional rendering of each stage */}
       {renderStepComponent()}
       <div className="flex justify-between w-full pt-10">
         <button

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 
 type Props = {
   label: string;
@@ -8,6 +8,7 @@ type Props = {
   updateField: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   gridSpan?: number;
   inputError?: { [key: string]: string };
+  setInputError?: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
 
 const TextAreaInput: FC<Props> = ({
@@ -18,8 +19,15 @@ const TextAreaInput: FC<Props> = ({
   value,
   gridSpan,
   inputError,
+  setInputError,
 }) => {
   const generateGridSpan = () => `col-span-${gridSpan || 1}`;
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    updateField(e);
+    setInputError &&
+      setInputError((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
 
   return (
     <div className={`flex flex-col w-full ${generateGridSpan()}`}>
@@ -31,8 +39,8 @@ const TextAreaInput: FC<Props> = ({
         rows={size.rows}
         name={name}
         className="p-2 w-full rounded-sm"
-        onChange={(e) => updateField(e)}
-        value={value}
+        onChange={handleChange}
+        value={value ? value : ""}
       ></textarea>
       {inputError && inputError[name] && (
         <p className="text-red-400">{inputError[name]}</p>

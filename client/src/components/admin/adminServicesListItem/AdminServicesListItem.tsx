@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { AiFillEye } from "react-icons/ai";
 
 import { IService } from "../../../types/serviceTypes/Service";
 
@@ -25,6 +26,12 @@ const AdminServicesListItem: FC<Props> = ({ service, deleteItem }) => {
       </div>
 
       <div className="flex gap-2">
+        <button
+          onClick={() => navigate(`/admin/services/view?id=${service.id}`)}
+          className="text-3xl"
+        >
+          <AiFillEye />
+        </button>
         <button
           className="bg-green-600 p-2 hover:bg-green-500"
           onClick={() => navigate(`/admin/services/edit/${service.id}`)}

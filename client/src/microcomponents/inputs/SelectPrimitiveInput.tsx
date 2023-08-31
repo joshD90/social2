@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 
 type Props = {
   optionArray: { name: string | number; value: string | number }[];
@@ -7,6 +7,7 @@ type Props = {
   updateField: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   value?: string | number;
   inputError?: { [key: string]: string };
+  setInputError?: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
 
 const SelectPrimitiveInput: FC<Props> = ({
@@ -16,7 +17,13 @@ const SelectPrimitiveInput: FC<Props> = ({
   updateField,
   value,
   inputError,
+  setInputError,
 }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    updateField(e);
+    setInputError &&
+      setInputError((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="text-stone-50">
@@ -24,7 +31,7 @@ const SelectPrimitiveInput: FC<Props> = ({
       </label>
       <select
         name={name}
-        onChange={updateField}
+        onChange={handleChange}
         className="p-2 border-none rounded-sm"
       >
         {!value && (
@@ -39,7 +46,9 @@ const SelectPrimitiveInput: FC<Props> = ({
           </option>
         ))}
       </select>
-      {inputError && inputError[name] && <p>{inputError[name]}</p>}
+      {inputError && inputError[name] && (
+        <p className="text-red-400">{inputError[name]}</p>
+      )}
     </div>
   );
 };

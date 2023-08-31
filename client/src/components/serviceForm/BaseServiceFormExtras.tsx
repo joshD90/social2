@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
@@ -17,12 +17,14 @@ type Props = {
     >
   ) => void;
   inputErrors: { [key: string]: string };
+  setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
 
 const BaseServiceFormExtras: FC<Props> = ({
   formState,
   updatePrimitiveField,
   inputErrors,
+  setInputErrors,
 }) => {
   return (
     <div className="w-full grid lg:grid-cols-2 gap-5 p-5">
@@ -33,6 +35,7 @@ const BaseServiceFormExtras: FC<Props> = ({
         updateField={updatePrimitiveField}
         value={formState.referralPathway as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <PrimitiveInput
         name="imageUrl"
@@ -41,6 +44,7 @@ const BaseServiceFormExtras: FC<Props> = ({
         type="text"
         value={formState.imageUrl as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <PrimitiveInput
         name="website"
@@ -49,6 +53,7 @@ const BaseServiceFormExtras: FC<Props> = ({
         type="text"
         value={formState.website ? (formState.website as string) : ""}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <PrimitiveInput
         name="maxCapacity"
@@ -57,6 +62,7 @@ const BaseServiceFormExtras: FC<Props> = ({
         type="number"
         value={formState.maxCapacity ? (formState.maxCapacity as number) : 0}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <SelectPrimitiveInput
         name="threshold"
@@ -65,13 +71,16 @@ const BaseServiceFormExtras: FC<Props> = ({
         optionArray={thresholdOptions}
         value={formState.threshold as string}
         inputError={inputErrors}
+        setInputError={setInputErrors}
       />
       <TextAreaInput
         label="The minimum requirements needed to access service"
         name="minRequirementsToAccess"
         size={{ cols: 2, rows: 5 }}
-        value={formState.minimumRequirementsToAccess as string}
+        value={formState.minRequirementsToAccess as string}
         updateField={updatePrimitiveField}
+        inputError={inputErrors}
+        setInputError={setInputErrors}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SetStateAction } from "react";
 
 type Props = {
   label: string;
@@ -7,6 +7,7 @@ type Props = {
   value: string | number;
   updateField: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputError?: { [key: string]: string };
+  setInputError?: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
 
 const PrimitiveInput: FC<Props> = ({
@@ -16,7 +17,13 @@ const PrimitiveInput: FC<Props> = ({
   updateField,
   value,
   inputError,
+  setInputError,
 }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateField(e);
+    setInputError &&
+      setInputError((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
   return (
     <div className="flex flex-col w-full ">
       <label htmlFor={name} className="text-stone-50">
@@ -26,7 +33,7 @@ const PrimitiveInput: FC<Props> = ({
         type={type}
         name={name}
         className="p-2 w-full rounded-sm"
-        onChange={(e) => updateField(e)}
+        onChange={handleChange}
         value={
           value
             ? value
