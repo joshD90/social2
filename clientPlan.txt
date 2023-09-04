@@ -29,6 +29,11 @@
     -there is a bug with saving exclusive, it is not reaching backend correctly so it must be in how it is saved with the form - so as far as i can tell when i update the state of the subselector form's exclusive, its not propogating all the way up to the form state
 
 
+    -Outstanding from the 31.08 ----
+    - Need to have some feedback if trying to log in and credentials are working
+    - submit in edit form appears to be broken
+
+
 
      suggestions from Ailish:
     - maximum occupancy / user base, optional

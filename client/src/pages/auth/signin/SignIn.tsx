@@ -36,11 +36,17 @@ const SignIn = () => {
       userDispatch({ type: "GET_USER_SUCCESS", payload: user });
       navigate("/services");
     } catch (error) {
-      console.log(error);
+      setErrors((prev) => ({
+        ...prev,
+        fetchError: (error as Error).message + ": Your Login was Unsuccesful",
+      }));
     }
   };
   return (
     <section>
+      <p className="text-red-500 mb-2">
+        {errors.fetchError && errors.fetchError}
+      </p>
       <form
         onSubmit={handleSubmit}
         className="p-5 border-stone-50 border-2 rounded-md flex flex-col gap-5"
@@ -52,6 +58,7 @@ const SignIn = () => {
           value={formState.email ? formState.email : ""}
           updateField={updatePrimitiveField}
           inputError={errors}
+          setInputError={setErrors}
         />
         <PrimitiveInput
           label="Password"
@@ -60,6 +67,7 @@ const SignIn = () => {
           value={formState.password ? formState.password : ""}
           updateField={updatePrimitiveField}
           inputError={errors}
+          setInputError={setErrors}
         />
         <button
           type="submit"

@@ -6,6 +6,7 @@ import ServiceDisplay from "../serviceDisplay/ServiceDisplay";
 import CategoryLanding from "../categoryLanding/CategoryLanding";
 
 import "../../assets/themeColors/backgroundGradients.css";
+import PrimaryLayoutNav from "./primaryLayoutNav/PrimaryLayoutNav";
 
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
@@ -28,15 +29,18 @@ const PrimaryLayout = () => {
 
   //on larger screens we get the list on the left and the window on the right
   return (
-    <div className="w-screen h-screen flex backgroundAllColorDarkLarge">
-      <div
-        className="basis-1/3"
-        style={{ maxWidth: "20rem", minWidth: "15rem" }}
-      >
-        <ListContainer isAboveMedium />
-      </div>
-      <div className="w-full flex justify-center items-center">
-        {serviceId ? <ServiceDisplay /> : <CategoryLanding />}
+    <div className="w-screen h-screen flex flex-col">
+      <PrimaryLayoutNav />
+      <div className="flex backgroundAllColorDarkLarge flex-grow max-h-full">
+        <div
+          className="basis-1/3"
+          style={{ maxWidth: "20rem", minWidth: "15rem" }}
+        >
+          <ListContainer isAboveMedium />
+        </div>
+        <div className="w-full flex justify-center items-center">
+          {serviceId ? <ServiceDisplay /> : <CategoryLanding />}
+        </div>
       </div>
     </div>
   );
