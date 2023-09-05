@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import AdminServicesListItem from "../../../components/admin/adminServicesListItem/AdminServicesListItem";
 import useDeleteFetch from "../../../hooks/useDeleteFetch";
 import useGetFetch from "../../../hooks/useGetFetch";
@@ -8,6 +9,7 @@ const AdminServicesView = () => {
   const { fetchedData, loading, error, setFetchedData } = useGetFetch<
     IService[]
   >("http://localhost:3500/service/");
+  const navigate = useNavigate();
   const { fetchDelete, error: deleteError } = useDeleteFetch();
   //put into useCallback so that we can pass down to children.  We want to keep the useDeleteFetch's other properties available to the parent so we keep it in this and pass it down
   const deleteItem = useCallback(
@@ -31,6 +33,15 @@ const AdminServicesView = () => {
 
   return (
     <div className="bg-stone-800 grid lg:grid-cols-2 gap-2 p-5 relative">
+      <div className="w-full flex justify-between">
+        <h2 className="text-2xl text-stone-50">All Services</h2>
+        <button
+          className="bg-green-600 hover:bg-green-500 p-2 text-stone-50 rounded-sm"
+          onClick={() => navigate("/admin/services/create")}
+        >
+          Create New
+        </button>
+      </div>
       {Array.isArray(fetchedData) &&
         fetchedData.map((service) => (
           <AdminServicesListItem

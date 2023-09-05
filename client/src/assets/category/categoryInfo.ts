@@ -26,7 +26,12 @@ categoryDescription.set("addiction", {
   name: "Addiction",
   image:
     "https://domf5oio6qrcr.cloudfront.net/medialibrary/7495/hb-addiction-0416207266121921.jpg",
-  info: ["Addiction is a bad thing", "Like a Really Bad Thing"],
+  info: [
+    "Addiction can be one of the major barriers for people exiting homelessness",
+    "Typically it can run co-morbidly with other issues",
+    "Addiction Services can cater to people experiencing addiction in a number of different ways.  Firstly Harm Reduction practices can remove a sense of the chaotic use involved and minimise the harm caused by addiction while the person is still trying to figure out what they wish to do.  Secondly community treatment services can support a person exit their addiction.  Some cases require inpatient detox and rehabilitation services for a person to exit.  ",
+    "As from the housing first model, addiction services are unlikely to have a long lasting impact should other stability ensuring aspects not be available such as a place to call home.",
+  ],
 });
 
 categoryDescription.set("housing", {

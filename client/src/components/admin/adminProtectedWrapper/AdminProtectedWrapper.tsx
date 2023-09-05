@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 import { AuthContext } from "../../../context/authContext/AuthContext";
+import AdminNav from "../adminNav/AdminNav";
 
 const AdminProtectedWrapper = () => {
   const { currentUser } = useContext(AuthContext);
@@ -10,6 +11,7 @@ const AdminProtectedWrapper = () => {
   //     return <Navigate to="/services" />;
   return (
     <div>
+      <AdminNav />
       <Outlet />
     </div>
   );

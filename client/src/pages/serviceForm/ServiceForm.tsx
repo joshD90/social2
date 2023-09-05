@@ -123,7 +123,11 @@ const ServiceForm = () => {
 
   const checkErrorsPresent = () => {
     let errorsPresent = false;
-    if (Object.keys(inputError).length > 0) errorsPresent = true;
+    if (
+      Object.keys(inputError).length > 0 &&
+      Object.values(inputError).some((value) => value !== "")
+    )
+      errorsPresent = true;
     return {
       errorsPresent,
       inputsAffected: [...Object.keys(inputError).join(", ")],

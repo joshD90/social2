@@ -16,6 +16,7 @@ const PrimaryLayout = () => {
   if (!isAboveMedium && !serviceId)
     return (
       <div className="w-screen h-screen bg-stone-500">
+        <PrimaryLayoutNav />
         <ListContainer isAboveMedium={isAboveMedium} />
       </div>
     );
@@ -23,6 +24,7 @@ const PrimaryLayout = () => {
   if (!isAboveMedium && serviceId)
     return (
       <div className="w-screen h-screen bg-stone-500">
+        <PrimaryLayoutNav />
         <ServiceDisplay />
       </div>
     );
