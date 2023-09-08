@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 
+import { MdReportProblem } from "react-icons/md";
+
 import { IServiceWithSubs } from "../../types/serviceTypes/Service";
 
 import findQueryParam from "../../utils/queryParams/findQueryParam";
@@ -19,13 +21,12 @@ const ServiceDisplay = () => {
   const serviceId = findQueryParam(myCurrentUrl.search, "id");
   const { category } = useParams();
 
+  const [reportModalVis, setReportModalVis] = useState(false);
   const [service, setService] = useState<IServiceWithSubs | null>(null);
 
   const isAboveMedium = useMediaQuery("(min-width:768px)");
 
-  const [themeColor, setThemeColor] = useState(
-    categoryThemes.get(category as TCategoryNames)
-  );
+  const [themeColor] = useState(categoryThemes.get(category as TCategoryNames));
 
   useEffect(() => {
     if (!serviceId) return;
@@ -68,6 +69,11 @@ const ServiceDisplay = () => {
     if (isAboveMedium && category) return "/services";
     return `/services/${category}`;
   };
+
+  const toggleReportModalVis = () => {
+    setReportModalVis((prev) => !prev);
+  };
+
   return (
     <section
       className={`w-full h-full overflow-auto ${
@@ -77,7 +83,7 @@ const ServiceDisplay = () => {
       {service ? (
         <div className="relative">
           <button
-            className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2"
+            className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2 text-stone-800"
             onClick={() => {
               setService(null);
               navigate(generatePathForBackClick());
@@ -85,6 +91,14 @@ const ServiceDisplay = () => {
           >
             Back
           </button>
+          <button
+            className="absolute right-4 text-stone-50 text-2xl hover:text-yellow-400 cursor-pointer"
+            title="Notice Some Details Wrong with this Service?"
+            onClick={toggleReportModalVis}
+          >
+            <MdReportProblem />
+          </button>
+          {reportModalVis && <div className="w-10 h-10 bg-yellow-400"></div>}
           <h1 className="w-full flex justify-center mt-5 text-2xl">
             {service.name}
           </h1>

@@ -20,13 +20,14 @@ const ProfileNavDropDown: FC<Props> = ({ isVisible }) => {
       if (!response.ok) throw Error("Could not logout");
       navigate("/services");
     } catch (error) {
+      //to do Error Handle
       console.log(error);
     }
   };
   return (
     <div
-      className={`w-96 h-48 bg-blue-950 text-stone-50 rounded-bl-lg overflow-hidden transition-transform origin-top ${
-        isVisible ? "scale-y-100" : "scale-y-0"
+      className={`w-96 bg-blue-950 text-stone-50 rounded-bl-lg overflow-hidden transition-all origin-top ${
+        isVisible ? "h-0" : "h-48"
       }`}
     >
       <ul className="h-full w-full p-0 m-0 flex flex-col">
