@@ -14,6 +14,7 @@ import SubServiceDisplay from "../../components/subServiceDisplay/SubServiceDisp
 import { mapSubServiceToISubCategory } from "./mapSubServiceToISubCategory";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
+import ServiceReportModal from "../../components/serviceReportModal/ServiceReportModal";
 
 const ServiceDisplay = () => {
   const myCurrentUrl = useLocation();
@@ -72,6 +73,7 @@ const ServiceDisplay = () => {
 
   const toggleReportModalVis = () => {
     setReportModalVis((prev) => !prev);
+    console.log("togglin modal vis");
   };
 
   return (
@@ -98,7 +100,11 @@ const ServiceDisplay = () => {
           >
             <MdReportProblem />
           </button>
-          {reportModalVis && <div className="w-10 h-10 bg-yellow-400"></div>}
+          {reportModalVis && (
+            <div className="absolute">
+              <ServiceReportModal />
+            </div>
+          )}
           <h1 className="w-full flex justify-center mt-5 text-2xl">
             {service.name}
           </h1>

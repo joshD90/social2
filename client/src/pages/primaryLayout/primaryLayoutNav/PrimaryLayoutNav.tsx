@@ -36,7 +36,10 @@ const PrimaryLayoutNav = () => {
           <FaUser />
         </button>
         <div className="absolute right-0 z-10 top-full">
-          <ProfileNavDropDown isVisible={profileDropDownVis} />
+          <ProfileNavDropDown
+            isVisible={profileDropDownVis}
+            setIsVisible={setProfileDropDownVis}
+          />
         </div>
       </div>
     </div>
