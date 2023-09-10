@@ -8,6 +8,7 @@ import getAllServicesController from "../controllers/serviceControllers/getAllSe
 import deleteServiceByIdController from "../controllers/serviceControllers/deleteServiceByIdController";
 import updateServiceController from "../controllers/serviceControllers/updateServiceController";
 import passport from "passport";
+import createServiceReportController from "../controllers/serviceControllers/serviceReportControllers/createServiceReportController/createServiceReportController";
 
 const router = express.Router();
 
@@ -17,6 +18,11 @@ router.delete(
   "/:serviceId",
   passport.authenticate("jwt", { session: false }),
   deleteServiceByIdController
+);
+router.post(
+  "/service/report",
+  passport.authenticate("jwt", { session: false }),
+  createServiceReportController
 );
 router.get("/service/:serviceId", findServiceByIdController);
 router.get("/subCategories/:subCategory", findAllInSubCategory);

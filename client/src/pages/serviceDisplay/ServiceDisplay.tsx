@@ -73,7 +73,6 @@ const ServiceDisplay = () => {
 
   const toggleReportModalVis = () => {
     setReportModalVis((prev) => !prev);
-    console.log("togglin modal vis");
   };
 
   return (
@@ -101,8 +100,11 @@ const ServiceDisplay = () => {
             <MdReportProblem />
           </button>
           {reportModalVis && (
-            <div className="absolute">
-              <ServiceReportModal />
+            <div className="fixed top-0 left-0">
+              <ServiceReportModal
+                serviceId={serviceId}
+                setVisible={setReportModalVis}
+              />
             </div>
           )}
           <h1 className="w-full flex justify-center mt-5 text-2xl">

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AiFillHome, AiOutlineSearch } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import ProfileNavDropDown from "../../../components/navbar/profileNavDropDown/ProfileNavDropDown";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const PrimaryLayoutNav = () => {
   const [profileDropDownVis, setProfileDropDownVis] = useState(false);
@@ -11,6 +11,7 @@ const PrimaryLayoutNav = () => {
     setProfileDropDownVis((prev) => !prev);
   };
   const navigate = useNavigate();
+  const profileToggleRef = useRef(null);
   return (
     <div className="w-full py-1 px-3 bg-blue-950 p-2 text-stone-50 flex items-center justify-between relative">
       <div>
@@ -30,8 +31,9 @@ const PrimaryLayoutNav = () => {
           />
         </div>
         <button
-          className="text-xl hover:text-white"
+          className="text-xl hover:text-white px-3"
           onClick={toggleProfileDropDown}
+          ref={profileToggleRef}
         >
           <FaUser />
         </button>
@@ -39,6 +41,7 @@ const PrimaryLayoutNav = () => {
           <ProfileNavDropDown
             isVisible={profileDropDownVis}
             setIsVisible={setProfileDropDownVis}
+            profileToggleRef={profileToggleRef}
           />
         </div>
       </div>

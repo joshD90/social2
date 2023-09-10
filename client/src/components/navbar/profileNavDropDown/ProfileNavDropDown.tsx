@@ -1,4 +1,11 @@
-import { FC, SetStateAction, useContext, useEffect, useRef } from "react";
+import {
+  FC,
+  MutableRefObject,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { AuthContext } from "../../../context/authContext/AuthContext";
 import { AiOutlineLogout } from "react-icons/ai";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
@@ -7,9 +14,14 @@ import { useNavigate } from "react-router-dom";
 type Props = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<SetStateAction<boolean>>;
+  profileToggleRef: MutableRefObject<HTMLButtonElement | null>;
 };
 
-const ProfileNavDropDown: FC<Props> = ({ isVisible, setIsVisible }) => {
+const ProfileNavDropDown: FC<Props> = ({
+  isVisible,
+  setIsVisible,
+  profileToggleRef,
+}) => {
   const {
     currentUser: { user },
   } = useContext(AuthContext);
@@ -22,7 +34,7 @@ const ProfileNavDropDown: FC<Props> = ({ isVisible, setIsVisible }) => {
     try {
       const response = await fetch(url, { credentials: "include" });
       if (!response.ok) throw Error("Could not logout");
-      navigate("/services");
+      navigate("/auth/signin");
     } catch (error) {
       //to do Error Handle
       console.log(error);
@@ -32,16 +44,18 @@ const ProfileNavDropDown: FC<Props> = ({ isVisible, setIsVisible }) => {
   //this is to handle clicking outside of the dropdown menu this will close it
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      console.log(((e.target as HTMLElement)?.parentNode as HTMLElement).id);
       if (
         dropDownRef.current &&
-        !dropDownRef.current.contains(e.target as Node)
+        !dropDownRef.current.contains(e.target as Node) &&
+        !profileToggleRef.current?.contains(e.target as Node)
       ) {
         setIsVisible(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [setIsVisible]);
+  }, [setIsVisible, profileToggleRef]);
   return (
     <div
       className={`w-96 bg-blue-950 text-stone-50 rounded-bl-lg overflow-hidden transition-all origin-top ${

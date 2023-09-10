@@ -4,6 +4,7 @@ import { Pool } from "mysql2/promise";
 import { ServiceDB } from "../ServiceDB/ServiceDB";
 import { CategoryDB } from "../CategoryDB/CategoryDB";
 import UserDB from "../UserDB/UserDB";
+import { ServiceReportDB } from "../ServiceReportDB/ServiceReportDB";
 
 const { db } = envConfig;
 //our overarching database class
@@ -12,6 +13,7 @@ class Database {
   private serviceDB: ServiceDB;
   private categoryDB: CategoryDB;
   private userDB: UserDB;
+  private serviceReportDB: ServiceReportDB;
 
   constructor() {
     this.connection = this.initDatabase();
@@ -19,6 +21,7 @@ class Database {
     this.serviceDB.initialiseServiceRelatedTables();
     this.categoryDB = new CategoryDB(this.connection);
     this.userDB = new UserDB(this.connection);
+    this.serviceReportDB = new ServiceReportDB(this.connection);
   }
   //connection initialises within the constructor of the database
   private initDatabase(): Pool {
@@ -50,6 +53,9 @@ class Database {
   }
   public getUserDB(): UserDB {
     return this.userDB;
+  }
+  public getServiceReportDB(): ServiceReportDB {
+    return this.serviceReportDB;
   }
 }
 
