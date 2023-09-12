@@ -24,3 +24,14 @@ export interface IService {
 //typing for the object that is returned from the mySQL database
 
 export type TServiceReturnSQL = ExtendedRowDataPacket<IService>;
+
+export interface IServiceReport {
+  userId: number;
+  serviceId: number;
+  report: string;
+  status?: "submitted" | "under review" | "completed" | "dismissed";
+}
+export interface IServiceReportEntry extends IServiceReport {
+  id: number;
+  created_at: string;
+}

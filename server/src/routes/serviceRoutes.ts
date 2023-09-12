@@ -9,6 +9,8 @@ import deleteServiceByIdController from "../controllers/serviceControllers/delet
 import updateServiceController from "../controllers/serviceControllers/updateServiceController";
 import passport from "passport";
 import createServiceReportController from "../controllers/serviceControllers/serviceReportControllers/createServiceReportController/createServiceReportController";
+import findAllServiceReportController from "../controllers/serviceControllers/serviceReportControllers/findAllServiceReportController/findAllServiceReportController";
+import findServiceReportController from "../controllers/serviceControllers/serviceReportControllers/findServiceReportController/findServiceReportController";
 
 const router = express.Router();
 
@@ -23,6 +25,17 @@ router.post(
   "/service/report",
   passport.authenticate("jwt", { session: false }),
   createServiceReportController
+);
+//do i need to change the typings for the name space of express
+router.get(
+  "/service/report",
+  passport.authenticate("jwt", { session: false }),
+  findAllServiceReportController
+);
+router.get(
+  "service/report/:id",
+  passport.authenticate("jwt", { session: false }),
+  findServiceReportController
 );
 router.get("/service/:serviceId", findServiceByIdController);
 router.get("/subCategories/:subCategory", findAllInSubCategory);
