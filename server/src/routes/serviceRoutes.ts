@@ -22,18 +22,18 @@ router.delete(
   deleteServiceByIdController
 );
 router.post(
-  "/service/report",
+  "/service/reports",
   passport.authenticate("jwt", { session: false }),
   createServiceReportController
 );
 //do i need to change the typings for the name space of express
 router.get(
-  "/service/report",
+  "/service/reports",
   passport.authenticate("jwt", { session: false }),
   findAllServiceReportController
 );
 router.get(
-  "service/report/:id",
+  "service/reports/:id",
   passport.authenticate("jwt", { session: false }),
   findServiceReportController
 );

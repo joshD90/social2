@@ -1,33 +1,26 @@
-import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-
-import { MdReportProblem } from "react-icons/md";
+import { FC, useEffect, useState } from "react";
 
 import { IServiceWithSubs } from "../../types/serviceTypes/Service";
 
-import findQueryParam from "../../utils/queryParams/findQueryParam";
 import DisplayTextInfo from "../../microcomponents/displayInfo/DisplayTextInfo";
-import { categoryThemes } from "../../assets/themeColors/categoryThemes";
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
-import { TCategoryNames } from "../../types/categoryTypes/CategoryTypes";
 import SubServiceDisplay from "../../components/subServiceDisplay/SubServiceDisplay";
 import { mapSubServiceToISubCategory } from "./mapSubServiceToISubCategory";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
-import ServiceReportModal from "../../components/serviceReportModal/ServiceReportModal";
+import ServiceOverlay from "../../components/serviceOverlay/ServiceOverlay";
 
-const ServiceDisplay = () => {
-  const myCurrentUrl = useLocation();
-  const navigate = useNavigate();
-  const serviceId = findQueryParam(myCurrentUrl.search, "id");
-  const { category } = useParams();
+type Props = {
+  serviceId: string | boolean;
+  themeColor: ThemeColor;
+  backClickPath: string;
+};
 
-  const [reportModalVis, setReportModalVis] = useState(false);
+const ServiceDisplay: FC<Props> = ({
+  serviceId,
+  themeColor,
+  backClickPath,
+}) => {
   const [service, setService] = useState<IServiceWithSubs | null>(null);
-
-  const isAboveMedium = useMediaQuery("(min-width:768px)");
-
-  const [themeColor] = useState(categoryThemes.get(category as TCategoryNames));
 
   useEffect(() => {
     if (!serviceId) return;
@@ -63,51 +56,16 @@ const ServiceDisplay = () => {
     return () => abortController.abort();
   }, [serviceId]);
 
-  const generatePathForBackClick = (): string => {
-    //if we are in the admin section stay in admin section
-    if (myCurrentUrl.pathname.split("/").includes("admin"))
-      return "/admin/services";
-    if (isAboveMedium && category) return "/services";
-    return `/services/${category}`;
-  };
-
-  const toggleReportModalVis = () => {
-    setReportModalVis((prev) => !prev);
-  };
-
   return (
     <section
-      className={`w-full h-full overflow-auto ${
+      className={`w-full ${
         twThemeColors.bgDarkGradient[themeColor ? themeColor : "blue"]
       }`}
     >
       {service ? (
-        <div className="relative">
-          <button
-            className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2 text-stone-800"
-            onClick={() => {
-              setService(null);
-              navigate(generatePathForBackClick());
-            }}
-          >
-            Back
-          </button>
-          <button
-            className="absolute right-4 text-stone-50 text-2xl hover:text-yellow-400 cursor-pointer"
-            title="Notice Some Details Wrong with this Service?"
-            onClick={toggleReportModalVis}
-          >
-            <MdReportProblem />
-          </button>
-          {reportModalVis && (
-            <div className="fixed top-0 left-0">
-              <ServiceReportModal
-                serviceId={serviceId}
-                setVisible={setReportModalVis}
-              />
-            </div>
-          )}
-          <h1 className="w-full flex justify-center mt-5 text-2xl">
+        <div className="relative pt-10">
+          <ServiceOverlay serviceId={serviceId} backClickPath={backClickPath} />
+          <h1 className="w-full flex justify-center text-2xl text-stone-50">
             {service.name}
           </h1>
           {service.imageUrl && (

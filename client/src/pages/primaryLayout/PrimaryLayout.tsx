@@ -7,6 +7,7 @@ import CategoryLanding from "../categoryLanding/CategoryLanding";
 
 import "../../assets/themeColors/backgroundGradients.css";
 import PrimaryLayoutNav from "./primaryLayoutNav/PrimaryLayoutNav";
+import ServiceDisplayContainer from "../serviceDisplayContainer/ServiceDisplayContainer";
 
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
@@ -25,7 +26,7 @@ const PrimaryLayout = () => {
     return (
       <div className="w-screen h-screen bg-stone-500">
         <PrimaryLayoutNav />
-        <ServiceDisplay />
+        <ServiceDisplayContainer />
       </div>
     );
 
@@ -41,7 +42,7 @@ const PrimaryLayout = () => {
           <ListContainer isAboveMedium />
         </div>
         <div className="w-full flex justify-center items-center">
-          {serviceId ? <ServiceDisplay /> : <CategoryLanding />}
+          {serviceId ? <ServiceDisplayContainer /> : <CategoryLanding />}
         </div>
       </div>
     </div>

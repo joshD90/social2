@@ -4,6 +4,7 @@ import ServiceDisplay from "../../../pages/serviceDisplay/ServiceDisplay";
 import "../../../assets/themeColors/backgroundGradients.css";
 import findQueryParam from "../../../utils/queryParams/findQueryParam";
 import useDeleteFetch from "../../../hooks/useDeleteFetch";
+import ServiceDisplayContainer from "../../../pages/serviceDisplayContainer/ServiceDisplayContainer";
 
 const AdminServiceWrapper = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const AdminServiceWrapper = () => {
           </button>
         </div>
       </div>
-      <ServiceDisplay />
+      <ServiceDisplayContainer />
     </section>
   );
 };
