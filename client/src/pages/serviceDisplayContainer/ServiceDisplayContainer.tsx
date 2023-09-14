@@ -48,7 +48,7 @@ const ServiceDisplayContainer = () => {
       />
       {currentUser?.user?.privileges === "admin" && (
         <div
-          className={`w-full bg-green-300 ${
+          className={`w-full bg-yellow-500 ${
             reportsOpen ? "max-h-96 overflow-auto" : "h-10 overflow-hidden"
           }`}
         >
@@ -56,7 +56,7 @@ const ServiceDisplayContainer = () => {
             <h1 className="justify-self-center">Issue Reports</h1>
             <button
               className="text-4xl font-extrabold"
-              onClick={() => setReportsOpen(true)}
+              onClick={() => setReportsOpen((prev) => !prev)}
             >
               <BsChevronCompactDown />
             </button>

@@ -5,12 +5,20 @@ type Props = { report: IServiceReportEntry };
 
 const AdminServiceREportIndividual: FC<Props> = ({ report }) => {
   return (
-    <div className="w-full flex border-2 border-solid border-stone-500">
-      <div className="flex-1">{report.id}</div>
-      <div className="flex-3">{report.report}</div>
-      <div className="flex-1">{report.created_at}</div>
-      <div className="flex-1">{report.userId}</div>
-    </div>
+    <tr className="border-b-2 border-stone-500 border-solid">
+      <td className="border-x-2 border-stone-500 border-solid px-1 text-center">
+        {report.id}
+      </td>
+      <td className="border-x-2 border-stone-500 border-solid px-1 text-center">
+        {report.report}
+      </td>
+      <td className="border-x-2 border-stone-500 border-solid px-1 text-center">
+        {report.created_at}
+      </td>
+      <td className="border-x-2 border-stone-500 border-solid px-1 text-center">
+        {report.userId}
+      </td>
+    </tr>
   );
 };
 

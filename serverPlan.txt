@@ -53,6 +53,10 @@ The service will also extend the list Item
     Fix sub categories tonight as well as fix rollback function tonight;
 
     fields to add in are image, parent organisation
+
+    SEARCH FUNCTIONALITY
+    Create a Search functionality object. We will have to have unique search functionality so this search object has a method on it that searches services, comments, reports maybe.  This will join all the necessary subtables together and then make a CASE and describe each of the sources of this. Should probably limit to 100 for scalability.
+    Each table shoul have a processor that seperates out the results and has a link back to the parent object of the search result so that when the person clicks into it can direct them back to the right place.  We may also have to construct a "goTo" link that can be clicked depending on whether it is a service or some other facility.
     
 
     

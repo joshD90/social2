@@ -41,3 +41,6 @@
     - Access hours - Whole new process, range of tables probably link to sepearte database entry and opening hours object
     - add gender associated into needs methods
     - 
+
+    SEARCH FUNCTIONALITY
+    When an individual clicks into the search bar and starts searching we need to implement a debounce, probably with a relatively significant delay so avoid serious calls. On return we need to find a way to sub in the search selection into the outlet, can we redirect to something that has search.  It might be a bit hard to refresh this 
