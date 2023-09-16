@@ -1,4 +1,6 @@
 {
   "workbench.preferredHighContrastLightColorTheme": "Default High Contrast",
-  "workbench.preferredLightColorTheme": "Default High Contrast"
+  "workbench.preferredLightColorTheme": "Default High Contrast",
+  "workbench.preferredHighContrastColorTheme": "Visual Studio Dark",
+  "workbench.preferredDarkColorTheme": "Visual Studio Dark"
 }
