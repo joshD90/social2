@@ -9,6 +9,7 @@ import envConfig from "./env/envConfig";
 import serviceRouter from "./routes/serviceRoutes";
 import categoryRouter from "./routes/categoryRoutes";
 import authRouter from "./routes/authRoutes";
+import searchRouter from "./routes/searchRoutes";
 
 import { configurePassport } from "./utils/passport-strategies";
 //configure server app
@@ -25,6 +26,7 @@ configurePassport(app);
 app.use("/service", serviceRouter);
 app.use("/categories", categoryRouter);
 app.use("/auth", authRouter);
+app.use("/search", searchRouter);
 
 app.listen(envConfig.server.port, () =>
   console.log(`Server is listening on ${envConfig.server.port}`)

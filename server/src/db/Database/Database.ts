@@ -5,6 +5,7 @@ import { ServiceDB } from "../ServiceDB/ServiceDB";
 import { CategoryDB } from "../CategoryDB/CategoryDB";
 import UserDB from "../UserDB/UserDB";
 import { ServiceReportDB } from "../ServiceReportDB/ServiceReportDB";
+import { DatabaseSearcher } from "../../search/DatabaseSearcher/DatabaseSearcher";
 
 const { db } = envConfig;
 //our overarching database class
@@ -14,6 +15,7 @@ class Database {
   private categoryDB: CategoryDB;
   private userDB: UserDB;
   private serviceReportDB: ServiceReportDB;
+  private databaseSearcher: DatabaseSearcher;
 
   constructor() {
     this.connection = this.initDatabase();
@@ -22,6 +24,7 @@ class Database {
     this.categoryDB = new CategoryDB(this.connection);
     this.userDB = new UserDB(this.connection);
     this.serviceReportDB = new ServiceReportDB(this.connection);
+    this.databaseSearcher = new DatabaseSearcher(this.connection);
   }
   //connection initialises within the constructor of the database
   private initDatabase(): Pool {
@@ -56,6 +59,9 @@ class Database {
   }
   public getServiceReportDB(): ServiceReportDB {
     return this.serviceReportDB;
+  }
+  public getSearcher(): DatabaseSearcher {
+    return this.databaseSearcher;
   }
 }
 
