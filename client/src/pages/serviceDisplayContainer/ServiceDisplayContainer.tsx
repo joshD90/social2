@@ -34,7 +34,7 @@ const ServiceDisplayContainer = () => {
       })(),
     [myCurrentUrl, isAboveMedium, category]
   );
-  console.log(currentUser);
+
   return (
     <section
       className="overflow-auto"

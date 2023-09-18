@@ -30,7 +30,7 @@ const ProfileNavDropDown: FC<Props> = ({
 
   const handleLogout = async () => {
     const url = "http://localhost:3500/auth/signout";
-    console.log("trying to sign out");
+
     try {
       const response = await fetch(url, { credentials: "include" });
       if (!response.ok) throw Error("Could not logout");
@@ -44,7 +44,6 @@ const ProfileNavDropDown: FC<Props> = ({
   //this is to handle clicking outside of the dropdown menu this will close it
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      console.log(((e.target as HTMLElement)?.parentNode as HTMLElement).id);
       if (
         dropDownRef.current &&
         !dropDownRef.current.contains(e.target as Node) &&

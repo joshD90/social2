@@ -4,6 +4,7 @@ import { AiFillHome, AiOutlineSearch } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import ProfileNavDropDown from "../../../components/navbar/profileNavDropDown/ProfileNavDropDown";
 import { useRef, useState } from "react";
+import SearchBar from "../../../microcomponents/searchBar/SearchBar";
 
 const PrimaryLayoutNav = () => {
   const [profileDropDownVis, setProfileDropDownVis] = useState(false);
@@ -23,13 +24,14 @@ const PrimaryLayoutNav = () => {
         </button>
       </div>
       <div className="flex gap-5">
-        <div className="flex items-center gap-2 text-xl">
+        {/* <div className="flex items-center gap-2 text-xl">
           <AiOutlineSearch />
           <input
             type="text"
             className="rounded-full text-stone-800 px-2 text-lg"
           />
-        </div>
+        </div> */}
+        <SearchBar />
         <button
           className="text-xl hover:text-white px-3"
           onClick={toggleProfileDropDown}

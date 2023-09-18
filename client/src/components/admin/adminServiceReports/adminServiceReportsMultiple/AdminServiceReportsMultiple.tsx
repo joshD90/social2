@@ -10,7 +10,6 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
     `http://localhost:3500/service/service/reports?serviceId=${serviceId}`,
     []
   );
-  console.log(fetchedData, error, loading);
 
   if (loading || !fetchedData) return <div>...Loading</div>;
   if (error !== "") return <div>{error}</div>;
@@ -35,7 +34,10 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
         </thead>
         <tbody>
           {fetchedData.map((serviceReport) => (
-            <AdminServiceREportIndividual report={serviceReport} />
+            <AdminServiceREportIndividual
+              report={serviceReport}
+              key={serviceReport.id}
+            />
           ))}
         </tbody>
       </table>

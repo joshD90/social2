@@ -1,32 +1,28 @@
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import ListContainer from "../../components/listContainer/ListContainer";
-
-import { useParams } from "react-router-dom";
-import ServiceDisplay from "../serviceDisplay/ServiceDisplay";
-import CategoryLanding from "../categoryLanding/CategoryLanding";
-
+import { Outlet } from "react-router-dom";
 import "../../assets/themeColors/backgroundGradients.css";
 import PrimaryLayoutNav from "./primaryLayoutNav/PrimaryLayoutNav";
-import ServiceDisplayContainer from "../serviceDisplayContainer/ServiceDisplayContainer";
+import useDisplayOutletChecker from "../../hooks/useDisplayOutletChecker";
 
 const PrimaryLayout = () => {
   const isAboveMedium = useMediaQuery("(min-width:768px)");
-  const { serviceId } = useParams();
-
-  //on a small screen the layout is solely the list
-  if (!isAboveMedium && !serviceId)
+  const shouldOutletBeUsed = useDisplayOutletChecker();
+  //for displaying just the ListContainer
+  if (!isAboveMedium && !shouldOutletBeUsed)
     return (
       <div className="w-screen h-screen bg-stone-500">
         <PrimaryLayoutNav />
         <ListContainer isAboveMedium={isAboveMedium} />
       </div>
     );
-  //and the service will take up the whole screen on smaller devices
-  if (!isAboveMedium && serviceId)
+
+  //on a small screen the layout is solely the list
+  if (!isAboveMedium)
     return (
       <div className="w-screen h-screen bg-stone-500">
         <PrimaryLayoutNav />
-        <ServiceDisplayContainer />
+        <Outlet />
       </div>
     );
 
@@ -42,7 +38,7 @@ const PrimaryLayout = () => {
           <ListContainer isAboveMedium />
         </div>
         <div className="w-full flex justify-center items-center">
-          {serviceId ? <ServiceDisplayContainer /> : <CategoryLanding />}
+          <Outlet />
         </div>
       </div>
     </div>

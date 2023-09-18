@@ -9,6 +9,9 @@ import SignIn from "./pages/auth/signin/SignIn";
 import AdminProtectedWrapper from "./components/admin/adminProtectedWrapper/AdminProtectedWrapper";
 import AdminLanding from "./components/admin/adminLanding/AdminLanding";
 import AdminServiceWrapper from "./components/admin/adminServiceWrapper/AdminServiceWrapper";
+import CategoryLanding from "./pages/categoryLanding/CategoryLanding";
+import ServiceDisplayContainer from "./pages/serviceDisplayContainer/ServiceDisplayContainer";
+import SearchResultsContainer from "./pages/searchResults/searchResultsContainer/SearchResultsContainer";
 
 const App = () => {
   return (
@@ -18,8 +21,13 @@ const App = () => {
         <Route path="signin" element={<SignIn />} />
       </Route>
       <Route path="/services/*" element={<PrimaryLayout />}>
-        <Route path=":category" />
-        <Route path=":category/:serviceId" />
+        <Route index element={<CategoryLanding />} />
+        <Route path="search" element={<SearchResultsContainer />} />
+        <Route path=":category" element={<CategoryLanding />} />
+        <Route
+          path=":category/:serviceId"
+          element={<ServiceDisplayContainer />}
+        />
       </Route>
       <Route path="/admin" element={<AdminProtectedWrapper />}>
         <Route index element={<AdminLanding />} />
