@@ -13,31 +13,33 @@ import { AuthContext } from "../../context/authContext/AuthContext";
 import AdminServiceReportsMultiple from "../../components/admin/adminServiceReports/adminServiceReportsMultiple/AdminServiceReportsMultiple";
 
 const ServiceDisplayContainer = () => {
-  const myCurrentUrl = useLocation();
+  const location = useLocation();
+  const goBackToSearch = location.state?.returnToSearch;
   const { category } = useParams();
   const { currentUser } = useContext(AuthContext);
   const [themeColor] = useState(categoryThemes.get(category as TCategoryNames));
   const [reportsOpen, setReportsOpen] = useState(false);
 
-  const serviceId = findQueryParam(myCurrentUrl.search, "id");
+  const serviceId = findQueryParam(location.search, "id");
 
   const isAboveMedium = useMediaQuery("(min-width:768px)");
 
   const generatePathForBackClick = useMemo(
     () =>
-      ((): string => {
+      ((): string | number => {
+        if (goBackToSearch) return -1;
         //if we are in the admin section stay in admin section
-        if (myCurrentUrl.pathname.split("/").includes("admin"))
+        if (location.pathname.split("/").includes("admin"))
           return "/admin/services";
         if (isAboveMedium && category) return "/services";
         return `/services/${category}`;
       })(),
-    [myCurrentUrl, isAboveMedium, category]
+    [location, isAboveMedium, category, goBackToSearch]
   );
 
   return (
     <section
-      className="overflow-auto"
+      className="overflow-auto w-full"
       //factor in the navbar height
       style={{ height: "calc(100vh - 2.5rem)" }}
     >

@@ -3,7 +3,7 @@ import { MdReportProblem } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ServiceReportModal from "../serviceReportModal/ServiceReportModal";
 
-type Props = { backClickPath: string; serviceId: string | boolean };
+type Props = { backClickPath: string | number; serviceId: string | boolean };
 
 const ServiceOverlay: FC<Props> = ({ backClickPath, serviceId }) => {
   const [reportModalVis, setReportModalVis] = useState(false);
@@ -12,14 +12,20 @@ const ServiceOverlay: FC<Props> = ({ backClickPath, serviceId }) => {
   const toggleReportModalVis = () => {
     setReportModalVis((prev) => !prev);
   };
+  //when dynamically passing -1 to navigate it is not recognised in the typing
+  const handleBackClick = () => {
+    if (typeof backClickPath === "number") {
+      navigate(-1);
+    } else {
+      navigate(backClickPath);
+    }
+  };
 
   return (
     <div>
       <button
         className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2 top-3 text-stone-800"
-        onClick={() => {
-          navigate(backClickPath);
-        }}
+        onClick={handleBackClick}
       >
         Back
       </button>

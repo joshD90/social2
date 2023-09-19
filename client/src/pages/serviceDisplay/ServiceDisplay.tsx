@@ -12,7 +12,7 @@ import ServiceOverlay from "../../components/serviceOverlay/ServiceOverlay";
 type Props = {
   serviceId: string | boolean;
   themeColor: ThemeColor;
-  backClickPath: string;
+  backClickPath: string | number;
 };
 
 const ServiceDisplay: FC<Props> = ({
