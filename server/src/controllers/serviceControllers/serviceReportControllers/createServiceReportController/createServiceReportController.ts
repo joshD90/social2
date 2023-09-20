@@ -9,7 +9,7 @@ const createServiceReportController = async (
 ): Promise<Response | undefined> => {
   if (!req.user || (req.user as IUser).email === "guest@guest.com")
     return res.status(401).json("You must be signed in to generate a report");
-  console.log(req.body);
+
   if (!req.body.data || !req.body.user || !req.body.serviceId)
     return res.status(400).json("Missing Some Key Information");
   const { data, user, serviceId } = req.body;
@@ -23,7 +23,7 @@ const createServiceReportController = async (
     });
     if (createdEntry instanceof Error)
       throw new Error("There was an issue in creating this entry");
-    console.log(createdEntry, "CREATED ENTRY");
+
     return res
       .status(201)
       .json(

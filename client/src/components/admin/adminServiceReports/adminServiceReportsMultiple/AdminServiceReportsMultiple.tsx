@@ -15,7 +15,7 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
   if (error !== "") return <div>{error}</div>;
   return (
     <section>
-      <table className="bg-stone-300">
+      <table className="bg-stone-300 w-full">
         <thead>
           <tr className="border-2 border-solid border-stone-500">
             <th className="border-x-2 border-stone-500 border-solid">

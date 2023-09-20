@@ -32,6 +32,13 @@
     -Outstanding from the 31.08 ----
     - Need to have some feedback if trying to log in and credentials are working
     - submit in edit form appears to be broken
+      
+
+SEARCH FUNCTIONALITY
+    DONE
+      Need to suss whether it is organising by weight or not, it doesn't appear to be doing so, pass this through in the services. 
+        so with the search we need to add in the go back if in a service from a search - send state "fromSearch" or something if it is then pass -1 else just do  the usual.
+    TOdo
 
 
 
@@ -44,3 +51,6 @@
 
     SEARCH FUNCTIONALITY
     When an individual clicks into the search bar and starts searching we need to implement a debounce, probably with a relatively significant delay so avoid serious calls. On return we need to find a way to sub in the search selection into the outlet, can we redirect to something that has search.  It might be a bit hard to refresh this 
+
+
+  

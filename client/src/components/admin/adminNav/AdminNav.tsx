@@ -30,7 +30,7 @@ const AdminNav = () => {
       >
         <FaUser />
       </div>
-      <div className="absolute right-0 top-full">
+      <div className="absolute right-0 top-full z-50">
         <ProfileNavDropDown
           isVisible={dropDownVisible}
           setIsVisible={setDropDownVisible}

@@ -75,7 +75,6 @@ export class GeneralQueryGenerator {
 
       return result;
     } catch (error) {
-      console.log(error, "this is the error that is thrown");
       return error as Error;
     }
   }

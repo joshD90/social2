@@ -18,6 +18,8 @@ export interface ISearchedService extends RowDataPacket {
 export interface IWeightedSearchedService {
   id: string | number | null;
   name: string;
+  category: TCategoryNames;
+  forwardTo: string;
   weight: number;
   matchingHeaders: TIterableStringObj;
 }

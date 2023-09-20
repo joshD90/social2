@@ -30,6 +30,7 @@ export class DatabaseSearcher {
         data,
         lowerCaseKey
       );
+
       return weightedAndConcatonated.sort((a, b) => b.weight - a.weight);
     } catch (error) {
       return error as Error;
@@ -54,6 +55,7 @@ export class DatabaseSearcher {
           keyword,
           50
         );
+
         if (!searchRangeValue) return;
         returnObj[key] = searchRangeValue;
         weight += this.weighKey(key);
@@ -62,6 +64,8 @@ export class DatabaseSearcher {
       return {
         id: iterableService.id,
         name: iterableService.name as string,
+        category: iterableService.category as TCategoryNames,
+        forwardTo: iterableService.forwardTo as string,
         weight,
         matchingHeaders: { ...returnObj },
       };
@@ -74,14 +78,19 @@ export class DatabaseSearcher {
     value: string,
     range: number
   ): string | undefined {
-    const indexOfValue = stringToSlice.indexOf(value.toLowerCase());
+    const indexOfValue = stringToSlice
+      .toLowerCase()
+      .indexOf(value.toLowerCase());
     if (indexOfValue === -1) return undefined;
     const startIndex = indexOfValue - range < 0 ? 0 : indexOfValue - range;
     const endIndex =
       indexOfValue + value.length + range > stringToSlice.length - 1
         ? stringToSlice.length - 1
         : indexOfValue + range + value.length;
-    return stringToSlice.slice(startIndex, endIndex);
+    const slicedString = stringToSlice.slice(startIndex, endIndex + 1);
+    return `${startIndex > 0 ? "..." : ""}${slicedString}${
+      endIndex < stringToSlice.length - 1 ? "..." : ""
+    }`;
   }
 
   private weighKey(key: string): number {
@@ -116,7 +125,7 @@ export class DatabaseSearcher {
     for (let i = 0; i < 17; i++) {
       replicateArray.push(modifiedSearchParam);
     }
-    console.log(replicateArray);
+
     return replicateArray;
   };
 }

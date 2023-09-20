@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import findQueryParam from "../../utils/queryParams/findQueryParam";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { BsChevronCompactDown } from "react-icons/bs";
 
 import { useMediaQuery } from "../../hooks/useMediaQuery";
@@ -19,6 +19,7 @@ const ServiceDisplayContainer = () => {
   const { currentUser } = useContext(AuthContext);
   const [themeColor] = useState(categoryThemes.get(category as TCategoryNames));
   const [reportsOpen, setReportsOpen] = useState(false);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   const serviceId = findQueryParam(location.search, "id");
 
@@ -36,12 +37,17 @@ const ServiceDisplayContainer = () => {
       })(),
     [location, isAboveMedium, category, goBackToSearch]
   );
+  //scroll to top of section on service change
+  useEffect(() => {
+    containerRef?.current?.scrollTo({ behavior: "smooth", top: 0 });
+  }, [serviceId]);
 
   return (
     <section
       className="overflow-auto w-full"
       //factor in the navbar height
       style={{ height: "calc(100vh - 2.5rem)" }}
+      ref={containerRef}
     >
       <ServiceDisplay
         backClickPath={generatePathForBackClick}
