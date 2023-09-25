@@ -1,4 +1,7 @@
 import express from "express";
+import passport from "passport";
+
+import serviceReportRouter from "./serviceReportRoutes";
 
 import createServiceController from "../controllers/serviceControllers/createServiceController";
 import { findServiceByIdController } from "../controllers/serviceControllers/findServiceByIdController";
@@ -7,12 +10,10 @@ import { findAllInSubCategory } from "../controllers/serviceControllers/findAllI
 import getAllServicesController from "../controllers/serviceControllers/getAllServicesController";
 import deleteServiceByIdController from "../controllers/serviceControllers/deleteServiceByIdController";
 import updateServiceController from "../controllers/serviceControllers/updateServiceController";
-import passport from "passport";
-import createServiceReportController from "../controllers/serviceControllers/serviceReportControllers/createServiceReportController/createServiceReportController";
-import findAllServiceReportController from "../controllers/serviceControllers/serviceReportControllers/findAllServiceReportController/findAllServiceReportController";
-import findServiceReportController from "../controllers/serviceControllers/serviceReportControllers/findServiceReportController/findServiceReportController";
 
 const router = express.Router();
+
+router.use("/service/reports", serviceReportRouter);
 
 router.get("/", getAllServicesController);
 router.get("/:category", findServicesByCategory);
@@ -21,22 +22,7 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   deleteServiceByIdController
 );
-router.post(
-  "/service/reports",
-  passport.authenticate("jwt", { session: false }),
-  createServiceReportController
-);
-//do i need to change the typings for the name space of express
-router.get(
-  "/service/reports",
-  passport.authenticate("jwt", { session: false }),
-  findAllServiceReportController
-);
-router.get(
-  "service/reports/:id",
-  passport.authenticate("jwt", { session: false }),
-  findServiceReportController
-);
+
 router.get("/service/:serviceId", findServiceByIdController);
 router.get("/subCategories/:subCategory", findAllInSubCategory);
 router.post(

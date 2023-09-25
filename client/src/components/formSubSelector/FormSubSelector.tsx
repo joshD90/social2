@@ -8,6 +8,7 @@ import {
 
 import useGetFetch from "../../hooks/useGetFetch";
 import { createKey } from "../../pages/serviceDisplay/mapSubServiceToISubCategory";
+import envIndex from "../../envIndex/envIndex";
 
 type Props = {
   subCategoryName: SubServiceCategory;
@@ -27,7 +28,7 @@ const FormSubSelector: FC<Props> = ({
 }) => {
   //todo - create a backend endpoint
   const { fetchedData, error } = useGetFetch<IDynamicObject[]>(
-    `http://localhost:3500/service/subCategories/${subCategoryName}`,
+    `${envIndex.urls.baseUrl}/services/subCategories/${subCategoryName}`,
     []
   );
 

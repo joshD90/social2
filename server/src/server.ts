@@ -23,7 +23,7 @@ export const db = new Database();
 
 configurePassport(app);
 
-app.use("/service", serviceRouter);
+app.use("/services", serviceRouter);
 app.use("/categories", categoryRouter);
 app.use("/auth", authRouter);
 app.use("/search", searchRouter);

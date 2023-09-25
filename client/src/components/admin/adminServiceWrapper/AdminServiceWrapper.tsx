@@ -5,6 +5,7 @@ import "../../../assets/themeColors/backgroundGradients.css";
 import findQueryParam from "../../../utils/queryParams/findQueryParam";
 import useDeleteFetch from "../../../hooks/useDeleteFetch";
 import ServiceDisplayContainer from "../../../pages/serviceDisplayContainer/ServiceDisplayContainer";
+import envIndex from "../../../envIndex/envIndex";
 
 const AdminServiceWrapper = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const AdminServiceWrapper = () => {
 
   const handleDelete = async () => {
     const deleteStatus = await fetchDelete(
-      `http://localhost:3500/services/${serviceId}`
+      `${envIndex.urls.baseUrl}/services/${serviceId}`
     );
     if (deleteStatus === "deleted") navigate("/admin/services");
   };

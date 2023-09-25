@@ -12,6 +12,7 @@ import useGetFetch from "../../hooks/useGetFetch";
 import { mapSubServiceToISubCategory } from "../serviceDisplay/mapSubServiceToISubCategory";
 import BaseServiceFormExtras from "../../components/serviceForm/BaseServiceFormExtras";
 import validateServiceForm from "../../utils/formValidation/serviceFormValidation/serviceFormValidation";
+import envIndex from "../../envIndex/envIndex";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -25,7 +26,7 @@ const ServiceForm = () => {
   } = useForm<TIterableService>({});
   const { serviceId } = useParams();
   const { fetchedData } = useGetFetch(
-    serviceId ? `http://localhost:3500/service/service/${serviceId}` : ""
+    serviceId ? `${envIndex.urls.baseUrl}/services/service/${serviceId}` : ""
   );
   const navigate = useNavigate();
 
@@ -96,8 +97,8 @@ const ServiceForm = () => {
     }
 
     const url = serviceId
-      ? `http://localhost:3500/service/${serviceId}`
-      : "http://localhost:3500/service";
+      ? `${envIndex.urls.baseUrl}/services/${serviceId}`
+      : `${envIndex.urls.baseUrl}/services`;
     const method = serviceId ? "PUT" : "POST";
     try {
       const result = await fetch(url, {

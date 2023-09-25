@@ -4,11 +4,12 @@ import AdminServicesListItem from "../../../components/admin/adminServicesListIt
 import useDeleteFetch from "../../../hooks/useDeleteFetch";
 import useGetFetch from "../../../hooks/useGetFetch";
 import { IService } from "../../../types/serviceTypes/Service";
+import envIndex from "../../../envIndex/envIndex";
 
 const AdminServicesView = () => {
   const { fetchedData, loading, error, setFetchedData } = useGetFetch<
     IService[]
-  >("http://localhost:3500/service/");
+  >(`${envIndex.urls.baseUrl}/services/`);
   const navigate = useNavigate();
   const { fetchDelete, error: deleteError } = useDeleteFetch();
   //put into useCallback so that we can pass down to children.  We want to keep the useDeleteFetch's other properties available to the parent so we keep it in this and pass it down

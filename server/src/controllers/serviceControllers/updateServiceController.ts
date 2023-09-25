@@ -21,22 +21,31 @@ const updateServiceController = async (req: Request, res: Response) => {
 
   //this will simply delete the full service record and insert the entire new one.  Decided this will be cleaner and less likely to result in errors
   try {
-    const deleteResult = await db
+    //delete the junction tables so they can be refreshed before updating service base
+    const deleteSubJunctionResult = await db
       .getServiceDB()
-      .deleteServiceAndRelatedEntries(serviceId);
-    if (deleteResult instanceof Error)
-      throw Error("Could not successfully delete Service Record");
+      .getSubCategoryDB()
+      .deleteJunctionTablesForService(serviceId);
+    if (!deleteSubJunctionResult)
+      throw Error("Could not successfully delete junction tables");
+    //update our base table
+    const updateServiceBaseResult = await db
+      .getServiceDB()
+      .getBaseTableQueries()
+      .updateEntriesByMultiple(serviceBase, serviceId, "id");
+    if (updateServiceBaseResult instanceof Error)
+      throw new Error(updateServiceBaseResult.message);
+    //now we need to update the base service and not create the full service entry just create the junction tables
     const createResult = await db
       .getServiceDB()
-      .createFullServiceEntry(serviceBase, subCategories);
-    if (createResult instanceof Error)
+      .getSubCategoryDB()
+      .createAllSubCategories(serviceId, subCategories);
+    if (!createResult)
       throw Error(
         "Service was deleted in preparation however an error occured when trying to add in updated version"
       );
 
-    res
-      .status(200)
-      .json({ id: createResult.insertId, message: "Successfully updated" });
+    res.status(200).json({ id: serviceId, message: "Successfully updated" });
   } catch (error) {
     res.status(500).json((error as Error).message);
   }

@@ -6,6 +6,7 @@ import validateLoginDetails from "../../../utils/formValidation/loginValidation/
 import { useContext, useState } from "react";
 import { TIterableStringObj } from "../../../types/userTypes/UserTypes";
 import { AuthContext } from "../../../context/authContext/AuthContext";
+import envIndex from "../../../envIndex/envIndex";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = "http://localhost:3500/auth/signin";
+    const url = `${envIndex.urls.baseUrl}/auth/signin`;
     const validationObj = await validateLoginDetails(formState);
     if (validationObj instanceof Error) return;
     if (!validationObj.valid || !validationObj.obj)

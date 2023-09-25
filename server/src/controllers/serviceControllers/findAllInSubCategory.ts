@@ -21,7 +21,10 @@ export const findAllInSubCategory = async (req: Request, res: Response) => {
       return res.status(400).json("Wrong Table Name");
   }
 
-  const result = await db.getServiceDB().fetchAllSubCategoryEntries(table);
+  const result = await db
+    .getServiceDB()
+    .getSubCategoryDB()
+    .fetchAllSubCategoryEntries(table);
   if (result instanceof Error)
     return res.status(404).json("Could not Find Resources");
   res.status(200).json(result);

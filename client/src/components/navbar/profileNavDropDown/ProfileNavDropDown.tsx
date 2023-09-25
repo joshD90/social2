@@ -10,6 +10,7 @@ import { AuthContext } from "../../../context/authContext/AuthContext";
 import { AiOutlineLogout } from "react-icons/ai";
 import { PiArrowsCounterClockwise } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import envIndex from "../../../envIndex/envIndex";
 
 type Props = {
   isVisible: boolean;
@@ -29,7 +30,7 @@ const ProfileNavDropDown: FC<Props> = ({
   const dropDownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
-    const url = "http://localhost:3500/auth/signout";
+    const url = `${envIndex.urls.baseUrl}/auth/signout`;
 
     try {
       const response = await fetch(url, { credentials: "include" });

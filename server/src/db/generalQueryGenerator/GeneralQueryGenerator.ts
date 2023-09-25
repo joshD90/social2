@@ -1,6 +1,7 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import { ExtendedRowDataPacket } from "../../types/mySqlTypes/mySqlTypes";
+import { TIterableStringObj } from "../../types/userTypes/UserType";
 
 export class GeneralQueryGenerator {
   private table: string;
@@ -111,6 +112,17 @@ export class GeneralQueryGenerator {
     const keys = Object.keys(updateObject);
     const values = Object.values(updateObject);
 
+    const columnWhiteList = await this.getTableColumnNames(this.table);
+    //sanitize data
+    try {
+      keys.forEach((column) => {
+        if (!columnWhiteList.includes(column)) {
+          throw new Error("Column name does not match approved list");
+        }
+      });
+    } catch (error) {
+      return error as Error;
+    }
     const keysInQuery = keys.map((key) => `${key} = ?`).join(", ");
     //identifier column for where fieldName = "someValue" <-identifier value so we dont update the whole table
     const query = `UPDATE ${this.table} SET ${keysInQuery} WHERE ${identifierColumn} = ?`;
@@ -133,5 +145,20 @@ export class GeneralQueryGenerator {
 
   public getTableName(): string {
     return this.table;
+  }
+
+  public async getTableColumnNames(tableName: string): Promise<any> {
+    const query = `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?`;
+    try {
+      const result = await this.connection.execute<RowDataPacket[]>(query, [
+        tableName,
+      ]);
+      const [onlyColumns] = result;
+      const columnNameArray = onlyColumns.map((row) => row.COLUMN_NAME);
+
+      return columnNameArray;
+    } catch (error) {
+      return Error((error as Error).message);
+    }
   }
 }

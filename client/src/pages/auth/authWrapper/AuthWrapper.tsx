@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "../../../assets/themeColors/backgroundGradients.css";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/authContext/AuthContext";
+import envIndex from "../../../envIndex/envIndex";
 
 const AuthWrapper = () => {
   const { userDispatch } = useContext(AuthContext);
@@ -10,7 +11,7 @@ const AuthWrapper = () => {
   const navigate = useNavigate();
 
   const loginAsGuest = async () => {
-    const url = "http://localhost:3500/auth/signin";
+    const url = `${envIndex.urls.baseUrl}/auth/signin`;
     try {
       const response = await fetch(url, {
         method: "POST",

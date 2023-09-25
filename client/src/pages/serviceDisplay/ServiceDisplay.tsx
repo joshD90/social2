@@ -8,6 +8,7 @@ import SubServiceDisplay from "../../components/subServiceDisplay/SubServiceDisp
 import { mapSubServiceToISubCategory } from "./mapSubServiceToISubCategory";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
 import ServiceOverlay from "../../components/serviceOverlay/ServiceOverlay";
+import envIndex from "../../envIndex/envIndex";
 
 type Props = {
   serviceId: string | boolean;
@@ -24,7 +25,7 @@ const ServiceDisplay: FC<Props> = ({
 
   useEffect(() => {
     if (!serviceId) return;
-    const url = `http://localhost:3500/service/service/${serviceId}`;
+    const url = `${envIndex.urls.baseUrl}/services/service/${serviceId}`;
     const abortController = new AbortController();
 
     (async () => {

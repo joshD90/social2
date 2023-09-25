@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useState } from "react";
+import envIndex from "../../envIndex/envIndex";
 
 const SearchBar = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const SearchBar = () => {
     e.preventDefault();
     const abortController = new AbortController();
     try {
-      const response = await fetch("http://localhost:3500/search", {
+      const response = await fetch(`${envIndex.urls.baseUrl}/search`, {
         credentials: "include",
         body: JSON.stringify({ searchParam: searchQuery }),
         signal: abortController.signal,

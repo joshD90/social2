@@ -11,6 +11,7 @@ import {
 import { IService } from "../../types/serviceTypes/Service";
 
 import "../../assets/themeColors/backgroundGradients.css";
+import envIndex from "../../envIndex/envIndex";
 
 type Props = {
   isAboveMedium: boolean;
@@ -18,13 +19,14 @@ type Props = {
 const ListContainer: FC<Props> = ({ isAboveMedium }) => {
   const { category } = useParams();
   const [listItems, setListItems] = useState<IService[] | ICategory[]>([]);
+  console.log(envIndex.urls.baseUrl, "BASE URL");
 
   //fetch Services / categories
   useEffect(() => {
     //make a different request best on url
     const url = category
-      ? `http://localhost:3500/service/${category}`
-      : "http://localhost:3500/categories";
+      ? `${envIndex.urls.baseUrl}/services/${category}`
+      : `${envIndex.urls.baseUrl}/categories`;
     const abortController = new AbortController();
 
     (async () => {

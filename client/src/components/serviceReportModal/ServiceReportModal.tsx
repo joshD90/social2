@@ -4,6 +4,7 @@ import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
 import useForm from "../../hooks/useServiceForm";
 import { validateServiceReport } from "../../utils/formValidation/serviceReportValidation/serviceReportValidation";
 import { AiOutlineClose } from "react-icons/ai";
+import envIndex from "../../envIndex/envIndex";
 
 type Props = {
   serviceId: string | boolean;
@@ -29,7 +30,7 @@ const ServiceReportModal: FC<Props> = ({ serviceId, setVisible }) => {
       return setGeneralError("There was an Error with Validation");
     if (!validationResult.valid) return setInputError(validationResult.errors);
 
-    const url = "http://localhost:3500/service/service/report";
+    const url = `${envIndex.urls.baseUrl}/services/service/reports`;
     try {
       const response = await fetch(url, {
         credentials: "include",
@@ -42,6 +43,7 @@ const ServiceReportModal: FC<Props> = ({ serviceId, setVisible }) => {
         method: "POST",
       });
       if (!response.ok) throw Error(response.statusText);
+      setGeneralError("");
       setSuccessMessage(
         "You have successfully submitted the request.  Thankyou for being part of making this space better for everyone"
       );

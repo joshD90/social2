@@ -6,6 +6,7 @@ import PrimitiveInput from "../../../microcomponents/inputs/PrimitiveInput";
 import validateUser from "../../../utils/formValidation/userValidation/userValidation";
 import { useState } from "react";
 import { TIterableStringObj } from "../../../types/userTypes/UserTypes";
+import envIndex from "../../../envIndex/envIndex";
 
 const SignUp = () => {
   const [errors, setErrors] = useState<TIterableStringObj>({});
@@ -27,7 +28,7 @@ const SignUp = () => {
     if (!validatedUser.valid) return setErrors(validatedUser.errors);
 
     const abortController = new AbortController();
-    const url = "http://localhost:3500/auth/signup";
+    const url = `${envIndex.urls.baseUrl}/auth/signup`;
     try {
       const result = await fetch(url, {
         method: "POST",

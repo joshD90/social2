@@ -1,6 +1,7 @@
 import React, { FC, createContext, useEffect, useReducer } from "react";
 import { UserContextType } from "../../types/userTypes/AuthTypes";
 import userReducer from "../../reducers/userReducer/userReducer";
+import envIndex from "../../envIndex/envIndex";
 
 type Props = { children?: React.ReactNode };
 
@@ -20,7 +21,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
   });
 
   useEffect(() => {
-    const url = `http://localhost:3500/auth/user-data`;
+    const url = `${envIndex.urls.baseUrl}/auth/user-data`;
     const abortController = new AbortController();
     //when we initially load we check whether our saved token is valid so we dont lose user info everytime that we refresh
     (async () => {

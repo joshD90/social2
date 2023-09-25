@@ -11,49 +11,28 @@ import {
   TNeedsMet,
 } from "../../types/serviceTypes/subServiceCategories";
 import { IService } from "../../types/serviceTypes/ServiceType";
+import { SubCategoryDB } from "./subCategoryDB/SubCategoryDB";
 
 export class ServiceDB {
   private connection: Pool;
   //queries for our Base information
   private ServiceBaseQueries: GeneralQueryGenerator;
-  //Generic Query Class for Sub Tables
-  private needsMetQueries: GeneralQueryGenerator;
-  private clientGroupsQueries: GeneralQueryGenerator;
-  private areasServedQueries: GeneralQueryGenerator;
-  //Generic Query Class for Junction Tables
-  private needsMetJunctionQueries: GeneralQueryGenerator;
-  private clientGroupsJunctionQueries: GeneralQueryGenerator;
-  private areasServedJunctionQueries: GeneralQueryGenerator;
-  //construct fetch queries specific to service
-  private fetchSubTableQueries: Map<string, string>;
+  //Class for SubCategory
+  private SubCategoryDB: SubCategoryDB;
+  //Generic Query Class for Report Table
+  private serviceReportsQueries: GeneralQueryGenerator;
+
   constructor(connection: Pool) {
     this.connection = connection;
     //queries for our Base information
     this.ServiceBaseQueries = new GeneralQueryGenerator("services", connection);
-    //Generic Query Class for Sub Tables
-    this.needsMetQueries = new GeneralQueryGenerator("needsMet", connection);
-    this.clientGroupsQueries = new GeneralQueryGenerator(
-      "clientGroups",
+    //generate our subcategory db class
+    this.SubCategoryDB = new SubCategoryDB(connection);
+    //generate our generic service report queries TODO: create a seperate report class for this
+    this.serviceReportsQueries = new GeneralQueryGenerator(
+      "serviceReports",
       connection
     );
-    this.areasServedQueries = new GeneralQueryGenerator(
-      "areasServed",
-      connection
-    );
-    //Generic Query Class for Junction Tables
-    this.needsMetJunctionQueries = new GeneralQueryGenerator(
-      "service_needs",
-      connection
-    );
-    this.clientGroupsJunctionQueries = new GeneralQueryGenerator(
-      "service_clientGroups",
-      connection
-    );
-    this.areasServedJunctionQueries = new GeneralQueryGenerator(
-      "service_areas",
-      connection
-    );
-    this.fetchSubTableQueries = this.createSubTableFetchQuery();
   }
   //create all our tables if they don't exist already
   public async initialiseServiceRelatedTables(): Promise<void> {
@@ -61,16 +40,6 @@ export class ServiceDB {
       //main tables
       await this.connection.query(initQueryObj.createCategoriesTable);
       await this.connection.query(initQueryObj.createServicesTable);
-      //sub tables
-      await this.connection.query(initQueryObj.createNeedsMetTable);
-      await this.connection.query(initQueryObj.createClientGroupTable);
-      await this.connection.query(initQueryObj.createAreaServedTable);
-      //junction tables
-      await this.connection.query(
-        initQueryObj.createServiceClientGroupJunction
-      );
-      await this.connection.query(initQueryObj.createServiceAreaJunction);
-      await this.connection.query(initQueryObj.createServiceNeedsJunction);
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +51,7 @@ export class ServiceDB {
     subCategories: (TAreasServed | TNeedsMet | TClientGroups)[]
   ): Promise<ResultSetHeader | Error> {
     const connection = await this.connection.getConnection();
-    connection.beginTransaction();
+    await connection.beginTransaction();
     try {
       //make our base table before proceeding
       const baseResult =
@@ -95,144 +64,22 @@ export class ServiceDB {
       const serviceId = baseResult.insertId;
 
       // //now that we have made our base table entry we can create our sub directories
-      const successArray = await Promise.all(
-        subCategories.map((category) => {
-          const specificSubArray = this.generateSubTableVariables(category);
-
-          return this.addFullSubCategory(
-            specificSubArray,
-            Object.values(category)[0],
-            serviceId
-          );
-        })
-      );
-      if (successArray.some((el) => el === "failure")) {
-        // this.deleteAllEntriesRelatedToService(serviceId);
-        throw new Error("could not make the sub categories");
-      }
+      const createSubCategoriesSuccess =
+        await this.SubCategoryDB.createAllSubCategories(
+          serviceId,
+          subCategories
+        );
+      if (!createSubCategoriesSuccess)
+        throw Error("Could not create sub categories");
       //commit all the changes if there are no errors
-      connection.commit();
+      await connection.commit();
 
       return baseResult;
     } catch (error) {
       console.log(error);
-      connection.rollback();
+      await connection.rollback();
       return error as Error;
     }
-  }
-
-  //add all subCategory Entries within a specific type
-  public async addFullSubCategory(
-    specificTableVar: SubCategoryTableSpecific,
-    data: ISubServiceItem[],
-    serviceId: number
-  ): Promise<"success" | "failure"> {
-    const successArray = await Promise.all(
-      data.map((entry) => {
-        return this.addSubCategory(specificTableVar, entry, serviceId);
-      })
-    );
-    if (successArray.some((el) => el === "failure")) return "failure";
-    return "success";
-  }
-
-  //create one subCategory Entry
-  public async addSubCategory(
-    specificTableVar: SubCategoryTableSpecific,
-    data: ISubServiceItem,
-    serviceId: number
-  ): Promise<"success" | "failure"> {
-    const generalTableQuery = specificTableVar.tableQueries;
-    const junctionTableQuery = specificTableVar.junctionTableQueries;
-    const subTable = specificTableVar.tableName;
-    const fieldName = specificTableVar.fieldName;
-    //we need to change the format to fit the general table query.
-    const formattedData = { [fieldName]: data.value };
-
-    try {
-      //see does this entry already exist
-      const existingEntry = await generalTableQuery.findEntryBy(
-        specificTableVar.fieldName,
-        data.value
-      );
-
-      let subId: number;
-      //if it does use this id else create a new entry
-      if (existingEntry instanceof Error) {
-        const result = await generalTableQuery.createTableEntryFromPrimitives(
-          formattedData
-        );
-        if (result instanceof Error)
-          throw new Error("Could not create the Sub Directory");
-        subId = result.insertId;
-      } else if (existingEntry[0]?.id) {
-        subId = parseInt(existingEntry[0].id);
-      } else {
-        throw Error(
-          `Something Unexpected Happenend in checking whether sub category exists ${JSON.stringify(
-            existingEntry
-          )}`
-        );
-      }
-
-      //take the id from the result and use this for the junction table
-      //prepare our data
-      const refColName = this.generateRefColNameJunc(subTable as SubServiceKey);
-      const junctionData = {
-        service_id: serviceId,
-        [refColName]: subId,
-        exclusive: data.exclusive,
-      };
-      //insert into our junction table.
-      const junctionResult =
-        await junctionTableQuery.createTableEntryFromPrimitives(junctionData);
-      if (junctionResult instanceof Error) {
-        throw Error(junctionResult.message);
-      }
-      return "success";
-    } catch (error) {
-      console.log(error);
-      return "failure";
-    }
-  }
-  //create the column name for the junction reference table
-  private generateRefColNameJunc(subTable: SubServiceKey): string {
-    switch (subTable) {
-      case "needsMet":
-        return "need_id";
-      case "clientGroups":
-        return "clientGroup_id";
-      case "areasServed":
-        return "area_id";
-      default:
-        throw Error("not of type SubServiceKey");
-    }
-  }
-  //create the variables based on the type of subCategory we are trying to work with
-  private generateSubTableVariables(
-    subCategory: TAreasServed | TNeedsMet | TClientGroups
-  ): SubCategoryTableSpecific {
-    let tableQueries: GeneralQueryGenerator;
-    let junctionTableQueries: GeneralQueryGenerator;
-    let tableName: SubServiceKey;
-    let fieldName: string;
-    if (Object.keys(subCategory)[0] === "areasServed") {
-      tableQueries = this.areasServedQueries;
-      junctionTableQueries = this.areasServedJunctionQueries;
-      tableName = SubServiceKey.AreasServed;
-      fieldName = "area";
-    } else if (Object.keys(subCategory)[0] === "clientGroups") {
-      tableQueries = this.clientGroupsQueries;
-      junctionTableQueries = this.clientGroupsJunctionQueries;
-      tableName = SubServiceKey.ClientGroups;
-      fieldName = "groupName";
-    } else {
-      tableQueries = this.needsMetQueries;
-      junctionTableQueries = this.needsMetJunctionQueries;
-      tableName = SubServiceKey.NeedsMet;
-      fieldName = "need";
-    }
-    return { tableQueries, junctionTableQueries, tableName, fieldName };
   }
 
   //delete all documents related to a single serviceId
@@ -240,24 +87,30 @@ export class ServiceDB {
     serviceId: number
   ): Promise<true | Error> {
     //we need to seperate all this out to delete in a specific order as they reference each other - junction/ base / subcategories
-    const junctionTablesQuery = [
-      this.areasServedJunctionQueries,
-      this.clientGroupsJunctionQueries,
-      this.needsMetJunctionQueries,
-    ];
 
     //now we delete them in order - we must await the promises to avoid race conditions
     try {
-      //TODO: we should probably throw an error if there is an error returned from deleteBySingleCritera - should probably include connection.commit and revert here as well
-      await Promise.all(
-        junctionTablesQuery.map((tableQuery) => {
-          return tableQuery.deleteBySingleCriteria("service_id", serviceId);
-        })
+      await this.connection.beginTransaction();
+      const deletedJunctionTables =
+        await this.SubCategoryDB.deleteJunctionTablesForService(serviceId);
+      if (!deletedJunctionTables)
+        throw Error("Could Not Delete Junction Tables");
+      const serviceReportDeleteTry =
+        await this.serviceReportsQueries.deleteBySingleCriteria(
+          "serviceId",
+          serviceId
+        );
+      if (serviceReportDeleteTry instanceof Error)
+        throw Error(serviceReportDeleteTry.message);
+      const deleteTry = await this.ServiceBaseQueries.deleteBySingleCriteria(
+        "id",
+        serviceId
       );
-      await this.ServiceBaseQueries.deleteBySingleCriteria("id", serviceId);
-
+      if (deleteTry instanceof Error) throw Error(deleteTry.message);
+      await this.connection.commit();
       return true;
     } catch (error) {
+      await this.connection.rollback();
       if (
         error instanceof Error &&
         error.message === "There was no record matching that criteria"
@@ -275,56 +128,26 @@ export class ServiceDB {
         serviceId
       );
       if (baseService instanceof Error) return null;
-      const [needsMet] = await this.connection.execute<RowDataPacket[][]>(
-        this.fetchSubTableQueries.get("needsMet")!,
-        [serviceId]
+      const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
+        serviceId
       );
-      const [clientGroups] = await this.connection.execute<RowDataPacket[][]>(
-        this.fetchSubTableQueries.get("clientGroups")!,
-        [serviceId]
-      );
-      const [areasServed] = await this.connection.execute<RowDataPacket[][]>(
-        this.fetchSubTableQueries.get("areasServed")!,
-        [serviceId]
-      );
+      if (allSubCategories instanceof Error)
+        throw Error("Error in fetching sub categories");
 
-      return { baseService, needsMet, areasServed, clientGroups };
+      return { baseService, ...allSubCategories };
     } catch (error) {
       return error;
-    }
-  }
-
-  public createSubTableFetchQuery(): Map<string, string> {
-    const queryMap = new Map<string, string>();
-    queryMap.set(
-      "needsMet",
-      "SELECT need, exclusive FROM service_needs JOIN needsMet ON service_needs.need_id = needsMet.id WHERE service_id = ?;"
-    );
-    queryMap.set(
-      "clientGroups",
-      "SELECT groupName, exclusive FROM service_clientGroups JOIN clientGroups ON service_clientGroups.clientGroup_id = clientGroups.id WHERE service_id = ?"
-    );
-    queryMap.set(
-      "areasServed",
-      "SELECT area, exclusive FROM service_areas JOIN areasServed ON service_areas.area_id = areasServed.id WHERE service_id = ?"
-    );
-    return queryMap;
-  }
-
-  //fetch all subCategory possibilities
-  public async fetchAllSubCategoryEntries(tableName: SubServiceKey) {
-    switch (tableName) {
-      case "needsMet":
-        return await this.needsMetQueries.findEntryBy();
-      case "clientGroups":
-        return await this.clientGroupsQueries.findEntryBy();
-      case "areasServed":
-        return await this.areasServedQueries.findEntryBy();
     }
   }
 
   //basic getters and setters
   public getBaseTableQueries(): GeneralQueryGenerator {
     return this.ServiceBaseQueries;
+  }
+  public getSubCategoryDB(): SubCategoryDB {
+    return this.SubCategoryDB;
+  }
+  public getBaseTableColumnNames() {
+    this.ServiceBaseQueries.getTableColumnNames("services");
   }
 }
