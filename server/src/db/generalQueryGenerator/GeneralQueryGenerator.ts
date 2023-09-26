@@ -1,7 +1,11 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import {
+  Pool,
+  PoolConnection,
+  ResultSetHeader,
+  RowDataPacket,
+} from "mysql2/promise";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import { ExtendedRowDataPacket } from "../../types/mySqlTypes/mySqlTypes";
-import { TIterableStringObj } from "../../types/userTypes/UserType";
 
 export class GeneralQueryGenerator {
   private table: string;
@@ -32,7 +36,6 @@ export class GeneralQueryGenerator {
       if (!rows) throw new Error("Could Not Create New Entry");
       return rows;
     } catch (error) {
-      console.log(error, "Error with creating General Entry From String");
       return error as Error;
     }
   }
@@ -71,6 +74,7 @@ export class GeneralQueryGenerator {
       ]);
 
       const [result] = dataBack;
+
       if (result.affectedRows === 0)
         throw Error("There was no record matching that criteria");
 
@@ -98,7 +102,6 @@ export class GeneralQueryGenerator {
 
       return result;
     } catch (error) {
-      console.log(error);
       return error as Error;
     }
   }
@@ -138,7 +141,6 @@ export class GeneralQueryGenerator {
         throw new Error("Could not update this entry");
       return result;
     } catch (error) {
-      console.log(error);
       return error as Error;
     }
   }

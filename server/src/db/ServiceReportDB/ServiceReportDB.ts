@@ -89,4 +89,29 @@ export class ServiceReportDB {
       return error as Error;
     }
   }
+
+  public async updateSingleReportStatus(
+    reportId: number,
+    status: "incomplete" | "declined" | "accepted"
+  ): Promise<boolean | Error> {
+    if (
+      !(
+        status === "accepted" ||
+        status === "declined" ||
+        status === "incomplete"
+      )
+    )
+      return Error("Status value not in correct range");
+    try {
+      const [result] = await this.connection.query<ResultSetHeader>(
+        queryObj.updateRecordStatus,
+        [status, reportId]
+      );
+      if (result.changedRows === 0)
+        throw Error("Unsuccessful update no changes made");
+      return true;
+    } catch (error) {
+      return error as Error;
+    }
+  }
 }

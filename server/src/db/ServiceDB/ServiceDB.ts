@@ -1,11 +1,13 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import {
+  Pool,
+  PoolConnection,
+  ResultSetHeader,
+  RowDataPacket,
+} from "mysql2/promise";
 import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import {
-  ISubServiceItem,
-  SubCategoryTableSpecific,
-  SubServiceKey,
   TAreasServed,
   TClientGroups,
   TNeedsMet,
@@ -76,7 +78,6 @@ export class ServiceDB {
 
       return baseResult;
     } catch (error) {
-      console.log(error);
       await connection.rollback();
       return error as Error;
     }
@@ -86,11 +87,10 @@ export class ServiceDB {
   public async deleteServiceAndRelatedEntries(
     serviceId: number
   ): Promise<true | Error> {
-    //we need to seperate all this out to delete in a specific order as they reference each other - junction/ base / subcategories
-
     //now we delete them in order - we must await the promises to avoid race conditions
+    const connection = await this.connection.getConnection();
     try {
-      await this.connection.beginTransaction();
+      await connection.beginTransaction();
       const deletedJunctionTables =
         await this.SubCategoryDB.deleteJunctionTablesForService(serviceId);
       if (!deletedJunctionTables)
@@ -100,17 +100,21 @@ export class ServiceDB {
           "serviceId",
           serviceId
         );
-      if (serviceReportDeleteTry instanceof Error)
+      if (
+        serviceReportDeleteTry instanceof Error &&
+        serviceReportDeleteTry.message !==
+          "There was no record matching that criteria"
+      )
         throw Error(serviceReportDeleteTry.message);
       const deleteTry = await this.ServiceBaseQueries.deleteBySingleCriteria(
         "id",
         serviceId
       );
       if (deleteTry instanceof Error) throw Error(deleteTry.message);
-      await this.connection.commit();
+      await connection.commit();
       return true;
     } catch (error) {
-      await this.connection.rollback();
+      await connection.rollback();
       if (
         error instanceof Error &&
         error.message === "There was no record matching that criteria"
