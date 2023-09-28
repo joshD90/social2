@@ -92,13 +92,14 @@ export class ServiceReportDB {
 
   public async updateSingleReportStatus(
     reportId: number,
-    status: "incomplete" | "declined" | "accepted"
+    status: "submitted" | "under review" | "declined" | "accepted"
   ): Promise<boolean | Error> {
     if (
       !(
         status === "accepted" ||
         status === "declined" ||
-        status === "incomplete"
+        status === "submitted" ||
+        status === "under review"
       )
     )
       return Error("Status value not in correct range");
@@ -111,6 +112,7 @@ export class ServiceReportDB {
         throw Error("Unsuccessful update no changes made");
       return true;
     } catch (error) {
+      console.log(error, "error in serviceReportStatusChange in db");
       return error as Error;
     }
   }

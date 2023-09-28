@@ -56,7 +56,7 @@ const ServiceDisplayContainer = () => {
       />
       {currentUser?.user?.privileges === "admin" && (
         <div
-          className={`w-full bg-yellow-500 ${
+          className={`w-full bg-yellow-600 bg-opacity-80 ${
             reportsOpen ? "max-h-96 overflow-auto" : "h-10 overflow-hidden"
           }`}
         >

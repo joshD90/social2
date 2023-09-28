@@ -7,7 +7,9 @@ import envIndex from "../../../../envIndex/envIndex";
 type Props = { serviceId: string | boolean };
 
 const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
-  const { fetchedData, error, loading } = useGetFetch<IServiceReportEntry[]>(
+  const { fetchedData, error, loading, setFetchedData } = useGetFetch<
+    IServiceReportEntry[]
+  >(
     `${envIndex.urls.baseUrl}/services/service/reports?serviceId=${serviceId}`,
     []
   );
@@ -31,6 +33,7 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
             <th className="border-x-2 border-stone-500 border-solid">
               User Id
             </th>
+            <th className="border-x-2 border-stone-500 border-solid">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -38,6 +41,7 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
             <AdminServiceREportIndividual
               report={serviceReport}
               key={serviceReport.id}
+              setAllReports={setFetchedData}
             />
           ))}
         </tbody>
