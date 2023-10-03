@@ -1,9 +1,4 @@
-import {
-  Pool,
-  PoolConnection,
-  ResultSetHeader,
-  RowDataPacket,
-} from "mysql2/promise";
+import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import { ExtendedRowDataPacket } from "../../types/mySqlTypes/mySqlTypes";
 

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { IServiceWithSubs } from "../../types/serviceTypes/Service";
 
@@ -9,6 +9,9 @@ import { mapSubServiceToISubCategory } from "./mapSubServiceToISubCategory";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
 import ServiceOverlay from "../../components/serviceOverlay/ServiceOverlay";
 import envIndex from "../../envIndex/envIndex";
+import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { BsGlobe } from "react-icons/bs";
 
 type Props = {
   serviceId: string | boolean;
@@ -86,7 +89,32 @@ const ServiceDisplay: FC<Props> = ({
             )}
             <hr className="w-2/3 ml-auto mr-auto" />
           </div>
-          <div className="p-5 grid lg:grid-cols-2 gap-3">
+          <div className="p-5 grid lg:grid-cols-2 gap-3 text-stone-50">
+            <div className="lg:col-span-2 flex justify-between items-start">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-start gap-5">
+                  <FaPhoneAlt />
+                  <span>{service.contactNumber}</span>
+                </div>
+
+                <div className="flex items-center justify-start gap-5">
+                  <MdEmail />
+                  <span>{service.contactEmail}</span>
+                </div>
+                {service.website && (
+                  <div className="flex items-center justify-start gap-5">
+                    <BsGlobe />
+                    <a href={service.website} target="_blank">
+                      {service.website}
+                    </a>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center justify-start gap-5">
+                <FaMapMarkerAlt />
+                <span>{service.address}</span>
+              </div>
+            </div>
             <DisplayTextInfo
               name="Address"
               value={service.address}

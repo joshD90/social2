@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 
 import serviceReportRouter from "./serviceReportRoutes";
+import serviceCommentRouter from "./commentRoutes";
 
 import createServiceController from "../controllers/serviceControllers/createServiceController";
 import { findServiceByIdController } from "../controllers/serviceControllers/findServiceByIdController";
@@ -14,6 +15,7 @@ import updateServiceController from "../controllers/serviceControllers/updateSer
 const router = express.Router();
 
 router.use("/service/reports", serviceReportRouter);
+router.use("/service/comments", serviceCommentRouter);
 
 router.get("/", getAllServicesController);
 router.get("/:category", findServicesByCategory);
