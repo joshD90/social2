@@ -1,0 +1,32 @@
+import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTypes";
+import { ICommentWithVotes } from "../../types/commentTypes/commentTypes";
+
+export const commentReducer = (
+  state: ICommentWithVotes[],
+  action: TCommentReducerAction
+): ICommentWithVotes[] => {
+  switch (action.type) {
+    case "ADD_COMMENTS": {
+      const updatedComments = [...state, ...action.payload];
+      return updatedComments;
+    }
+    case "REMOVE_COMMENTS_BY_ID": {
+      const updatedComments = state.filter((comment) => {
+        if (!comment.id) return true;
+        return !action.payload.includes(comment.id);
+      });
+      return updatedComments;
+    }
+    case "VOTE_COMMENT": {
+      const updatedComments = state.map((comment) => {
+        if (!comment.id) return comment;
+        if (comment.id === action.payload.commentId) {
+          const totalVotes = comment.total_votes + action.payload.voteDirection;
+          return { ...comment, total_votes: totalVotes };
+        }
+        return comment;
+      });
+      return updatedComments;
+    }
+  }
+};

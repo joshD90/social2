@@ -1,12 +1,16 @@
 const initCommentsTable =
-  "CREATE TABLE IF NOT EXISTS comments(id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, service_id INT NOT NULL, comment VARCHAR(2000) NOT NULL, inReplyTo INT, hasReplies BOOL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (service_id) REFERENCES services(id))";
+  "CREATE TABLE IF NOT EXISTS comments(id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, service_id INT NOT NULL, comment VARCHAR(2000) NOT NULL, inReplyTo INT, hasReplies BOOL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (service_id) REFERENCES services(id))";
 
 const initVotesTable =
   "CREATE TABLE IF NOT EXISTS commentVotes(comment_id INT NOT NULL, user_id INT NOT NULL, vote_value INT NOT NULL, PRIMARY KEY (comment_id, user_id), FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)";
 
 const getParentComments = `
-SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes 
-FROM comments 
+SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes,
+user_details.firstName, user_details.lastName
+  FROM comments 
+  LEFT JOIN 
+  (SELECT id, firstName, lastName FROM users) 
+  AS user_details ON comments.user_id = user_details.id
 LEFT JOIN (
   SELECT comment_id, COUNT(*) AS vote_count
   FROM commentVotes
@@ -18,8 +22,12 @@ LIMIT ?
 OFFSET ?`;
 
 const getReplyComments = `
-SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes 
-FROM comments 
+SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes, 
+user_details.firstName, user_details.lastName
+  FROM comments 
+  LEFT JOIN 
+  (SELECT id, firstName, lastName FROM users) 
+  AS user_details ON comments.user_id = user_details.id
 LEFT JOIN (
   SELECT comment_id, COUNT(*) AS vote_count
   FROM commentVotes

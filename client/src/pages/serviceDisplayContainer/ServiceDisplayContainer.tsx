@@ -11,6 +11,7 @@ import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
 import { TCategoryNames } from "../../types/categoryTypes/CategoryTypes";
 import { AuthContext } from "../../context/authContext/AuthContext";
 import AdminServiceReportsMultiple from "../../components/admin/adminServiceReports/adminServiceReportsMultiple/AdminServiceReportsMultiple";
+import ServiceCommentsContainer from "../serviceCommentsContainer/ServiceCommentsContainer";
 
 const ServiceDisplayContainer = () => {
   const location = useLocation();
@@ -72,6 +73,9 @@ const ServiceDisplayContainer = () => {
           <AdminServiceReportsMultiple serviceId={serviceId} />
         </div>
       )}
+      {typeof serviceId === "string" ? (
+        <ServiceCommentsContainer serviceId={serviceId} />
+      ) : null}
     </section>
   );
 };
