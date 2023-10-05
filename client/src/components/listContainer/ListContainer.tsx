@@ -19,7 +19,6 @@ type Props = {
 const ListContainer: FC<Props> = ({ isAboveMedium }) => {
   const { category } = useParams();
   const [listItems, setListItems] = useState<IService[] | ICategory[]>([]);
-  console.log(envIndex.urls.baseUrl, "BASE URL");
 
   //fetch Services / categories
   useEffect(() => {

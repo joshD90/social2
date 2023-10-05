@@ -21,12 +21,20 @@ export const commentReducer = (
       const updatedComments = state.map((comment) => {
         if (!comment.id) return comment;
         if (comment.id === action.payload.commentId) {
-          const totalVotes = comment.total_votes + action.payload.voteDirection;
+          console.log(typeof comment.total_votes);
+          const totalVotes = comment.total_votes + action.payload.voteValue;
           return { ...comment, total_votes: totalVotes };
         }
         return comment;
       });
       return updatedComments;
+    }
+    case "PREPEND_COMMENT_AFTER_CREATE": {
+      const updatedComments = [action.payload, ...state];
+      return updatedComments;
+    }
+    case "CLEAR_COMMENTS": {
+      return [];
     }
   }
 };

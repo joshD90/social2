@@ -8,5 +8,7 @@ export type TCommentReducerAction =
   | { type: "REMOVE_COMMENTS_BY_ID"; payload: number[] }
   | {
       type: "VOTE_COMMENT";
-      payload: { commentId: number; voteDirection: number };
-    };
+      payload: { commentId: number; voteValue: number };
+    }
+  | { type: "PREPEND_COMMENT_AFTER_CREATE"; payload: ICommentWithVotes }
+  | { type: "CLEAR_COMMENTS" };

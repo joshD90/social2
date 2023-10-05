@@ -1,9 +1,12 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { commentQueryObj } from "./commentsDBQueries";
-import { ICommentBase, IVote } from "../../types/commentTypes/commentTypes";
+import {
+  ICommentBase,
+  ICommentWithVotes,
+  IVote,
+} from "../../types/commentTypes/commentTypes";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
-import { off } from "process";
 
 export class CommentsDB {
   private connection: Pool;
@@ -37,9 +40,10 @@ export class CommentsDB {
 
   public async createNewComment(
     comment: ICommentBase
-  ): Promise<Error | boolean> {
+  ): Promise<Error | number> {
     const currentConnection = await this.connection.getConnection();
     currentConnection.beginTransaction();
+
     try {
       const result =
         await this.commentGenericQueries.createTableEntryFromPrimitives(
@@ -56,9 +60,8 @@ export class CommentsDB {
         if (updateResult instanceof Error)
           throw Error("Couldn't update the parent comment");
       }
-
       currentConnection.commit();
-      return true;
+      return result.insertId;
     } catch (error) {
       currentConnection.rollback();
       return error as Error;
@@ -69,6 +72,7 @@ export class CommentsDB {
     const voteValues = Object.values(vote);
     //This is to allow passing in the update value
     voteValues.push(voteValues[voteValues.length - 1]);
+    console.log(voteValues);
     try {
       const [result] = await this.connection.query<ResultSetHeader>(
         commentQueryObj.voteComment,
@@ -93,11 +97,13 @@ export class CommentsDB {
     const values = parentId
       ? [serviceId, parentId, limit, offset]
       : [serviceId, limit, offset];
+
     try {
       const [result] = await this.connection.query<RowDataPacket[]>(
         query,
         values
       );
+      console.log(typeof (result[0] as ICommentWithVotes).total_votes);
       return result;
     } catch (error) {
       return error as Error;

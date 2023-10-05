@@ -39,6 +39,7 @@ class Database {
       password: db.password,
       connectionLimit: 10,
       waitForConnections: true,
+      decimalNumbers: true,
     });
 
     //setting up pool to accept async await

@@ -12,7 +12,7 @@ user_details.firstName, user_details.lastName
   (SELECT id, firstName, lastName FROM users) 
   AS user_details ON comments.user_id = user_details.id
 LEFT JOIN (
-  SELECT comment_id, COUNT(*) AS vote_count
+  SELECT comment_id, SUM(vote_value) AS vote_count
   FROM commentVotes
   GROUP BY comment_id
 ) AS vote_counts ON comments.id = vote_counts.comment_id 
@@ -29,7 +29,7 @@ user_details.firstName, user_details.lastName
   (SELECT id, firstName, lastName FROM users) 
   AS user_details ON comments.user_id = user_details.id
 LEFT JOIN (
-  SELECT comment_id, COUNT(*) AS vote_count
+  SELECT comment_id, SUM(vote_value) AS vote_count
   FROM commentVotes
   GROUP BY comment_id
 ) AS vote_counts ON comments.id = vote_counts.comment_id 
@@ -39,7 +39,7 @@ LIMIT ?
 OFFSET ?`;
 
 const voteComment =
-  "INSERT INTO comment_votes (comment_id, user_id, vote_value) VALUES (?,?,?) ON DUPLICATE KEY UPDATE vote_value = ?";
+  "INSERT INTO commentVotes (comment_id, user_id, vote_value) VALUES (?,?,?) ON DUPLICATE KEY UPDATE vote_value = ?";
 
 export const commentQueryObj = {
   initCommentsTable,

@@ -17,7 +17,7 @@ export const createCommentController = async (req: Request, res: Response) => {
   const result = await db.getCommentsDB().createNewComment(preparedObject);
   if (result instanceof Error)
     return res.status(500).json("There was a problem in creating your comment");
-  return res.status(201).json("Comment was successfully saved");
+  return res.status(201).json({ newId: result });
 };
 
 const convertToSQLReady = (reqBody: unknown): ICommentBase | false => {

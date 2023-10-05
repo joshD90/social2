@@ -36,7 +36,7 @@ const AdminServiceREportIndividual: FC<Props> = ({ report, setAllReports }) => {
         }
       );
       if (!result.ok) throw Error(result.statusText);
-      console.log(result);
+
       setAllReports((prev) => {
         if (!prev) return prev;
         return prev.map((thisReport) => {
