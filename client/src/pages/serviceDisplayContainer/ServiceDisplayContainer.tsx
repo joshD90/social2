@@ -1,6 +1,13 @@
 import { useLocation, useParams } from "react-router-dom";
 import findQueryParam from "../../utils/queryParams/findQueryParam";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { BsChevronCompactDown } from "react-icons/bs";
 
 import { useMediaQuery } from "../../hooks/useMediaQuery";
@@ -12,6 +19,7 @@ import { TCategoryNames } from "../../types/categoryTypes/CategoryTypes";
 import { AuthContext } from "../../context/authContext/AuthContext";
 import AdminServiceReportsMultiple from "../../components/admin/adminServiceReports/adminServiceReportsMultiple/AdminServiceReportsMultiple";
 import ServiceCommentsContainer from "../serviceCommentsContainer/ServiceCommentsContainer";
+import { commentReducer } from "../../reducers/commentReducer/commentReducer";
 
 const ServiceDisplayContainer = () => {
   const location = useLocation();
@@ -21,7 +29,7 @@ const ServiceDisplayContainer = () => {
   const [themeColor] = useState(categoryThemes.get(category as TCategoryNames));
   const [reportsOpen, setReportsOpen] = useState(false);
   const containerRef = useRef<HTMLElement | null>(null);
-
+  const [serviceComments, commentDispatch] = useReducer(commentReducer, []);
   const serviceId = findQueryParam(location.search, "id");
 
   const isAboveMedium = useMediaQuery("(min-width:768px)");
@@ -74,7 +82,11 @@ const ServiceDisplayContainer = () => {
         </div>
       )}
       {typeof serviceId === "string" ? (
-        <ServiceCommentsContainer serviceId={serviceId} />
+        <ServiceCommentsContainer
+          serviceId={serviceId}
+          commentDispatch={commentDispatch}
+          comments={serviceComments}
+        />
       ) : null}
     </section>
   );

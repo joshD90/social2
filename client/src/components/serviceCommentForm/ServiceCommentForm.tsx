@@ -11,9 +11,14 @@ import { MdSend } from "react-icons/md";
 type Props = {
   serviceId: number;
   commentDispatch: Dispatch<TCommentReducerAction>;
+  parentCommentId?: number;
 };
 
-const ServiceCommentForm: FC<Props> = ({ serviceId, commentDispatch }) => {
+const ServiceCommentForm: FC<Props> = ({
+  serviceId,
+  commentDispatch,
+  parentCommentId,
+}) => {
   const {
     currentUser: { user },
   } = useContext(AuthContext);
@@ -28,6 +33,8 @@ const ServiceCommentForm: FC<Props> = ({ serviceId, commentDispatch }) => {
       service_id: serviceId,
       comment: commentText,
     };
+    if (parentCommentId) commentToSubmit.inReplyTo = parentCommentId;
+
     const url = `${envIndex.urls.baseUrl}/services/service/comments`;
     try {
       const response = await fetch(url, {
