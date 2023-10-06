@@ -7,7 +7,11 @@ export const commentReducer = (
 ): ICommentWithVotes[] => {
   switch (action.type) {
     case "ADD_COMMENTS": {
-      const updatedComments = [...state, ...action.payload];
+      const updatedComments = [...state, ...action.payload].filter(
+        (comment, index, self) => {
+          return self.findIndex((el) => el.id === comment.id) === index;
+        }
+      );
       return updatedComments;
     }
     case "REMOVE_COMMENTS_BY_ID": {
@@ -31,6 +35,12 @@ export const commentReducer = (
     }
     case "PREPEND_COMMENT_AFTER_CREATE": {
       const updatedComments = [action.payload, ...state];
+      if (action.payload.inReplyTo)
+        return updatedComments.map((comment) => {
+          if (action.payload.inReplyTo === comment.id)
+            return { ...comment, hasReplies: true };
+          return comment;
+        });
       return updatedComments;
     }
     case "CLEAR_COMMENTS": {

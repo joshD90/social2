@@ -69,7 +69,7 @@ const ServiceCommentForm: FC<Props> = ({
       <form onSubmit={handleSubmit} className="py-1 text-stone-50">
         <div>
           <label htmlFor="newCommentInput" className="text-sm">
-            Add Your Own Comment
+            {parentCommentId ? "Reply to this comment" : "Add Your Own Comment"}
           </label>
           <div className="w-full flex">
             <input

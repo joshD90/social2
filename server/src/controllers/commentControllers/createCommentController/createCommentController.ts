@@ -7,6 +7,11 @@ export const createCommentController = async (req: Request, res: Response) => {
   if (!req.user || !req.user.hasOwnProperty("id"))
     return res.status(403).json("Need to be Logged In");
 
+  if ((req.user as unknown as IUser).privileges === "none")
+    return res
+      .status(403)
+      .json("You do not have sufficient rights to access this");
+
   const preparedObject = convertToSQLReady(req.body);
   if (!preparedObject)
     return res.status(400).json("Data sent over is incorrect");

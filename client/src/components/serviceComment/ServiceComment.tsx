@@ -1,4 +1,11 @@
-import { Dispatch, FC, useContext, useReducer, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { ICommentWithVotes } from "../../types/commentTypes/commentTypes";
 import { BsHandThumbsDownFill, BsHandThumbsUpFill } from "react-icons/bs";
 import TimeSincePosted from "../../microcomponents/timeSincePosted/TimeSincePosted";
@@ -6,28 +13,24 @@ import envIndex from "../../envIndex/envIndex";
 import { AuthContext } from "../../context/authContext/AuthContext";
 import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTypes";
 import { commentReducer } from "../../reducers/commentReducer/commentReducer";
+import ServiceCommentsContainer from "../../pages/serviceCommentsContainer/ServiceCommentsContainer";
+import ServiceCommentForm from "../serviceCommentForm/ServiceCommentForm";
 
 type Props = {
   comment: ICommentWithVotes;
   commentDispatch: React.Dispatch<TCommentReducerAction>;
-  fetchCommentsCallback: (
-    refresh: boolean,
-    commentDispatch: Dispatch<TCommentReducerAction>,
-    abortController?: AbortController,
-    offSet?: number
-  ) => Promise<void>;
+  serviceId: string;
 };
 
-const ServiceComment: FC<Props> = ({
-  comment,
-  commentDispatch,
-  fetchCommentsCallback,
-}) => {
+const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
   const {
     currentUser: { user },
   } = useContext(AuthContext);
   const [replyComments, replyCommentDispatch] = useReducer(commentReducer, []);
   const [repliesToggled, setRepliesToggled] = useState(false);
+  const [serviceIdNum, setServiceIdNum] = useState(parseInt(serviceId));
+
+  useEffect(() => setServiceIdNum(parseInt(serviceId)), [serviceId]);
 
   const handleVote = async (voteValue: number) => {
     if (!user || !user.id || !comment.id) return;
@@ -55,13 +58,11 @@ const ServiceComment: FC<Props> = ({
   };
 
   const manageReplies = () => {
-    if (!repliesToggled) fetchCommentsCallback(true, replyCommentDispatch);
-    if (!repliesToggled) replyCommentDispatch({ type: "CLEAR_COMMENTS" });
     setRepliesToggled((prev) => !prev);
   };
 
   return (
-    <div className="w-4/5 text-stone-50 mt-5">
+    <div className=" text-stone-50 mt-5">
       <div className="flex gap-4 items-end">
         <p className="font-bold">
           {comment.firstName} {comment.lastName}
@@ -83,11 +84,27 @@ const ServiceComment: FC<Props> = ({
         </button>
         {comment.total_votes < 0 ? <span>{comment.total_votes}</span> : null}
       </div>
-      {comment.hasReplies && (
-        <div>
-          <button onClick={manageReplies}>Show Replies</button>
-        </div>
-      )}
+
+      <div>
+        <button onClick={manageReplies}>Replies</button>
+        {repliesToggled ? (
+          <div className="pl-5">
+            <ServiceCommentForm
+              serviceId={serviceIdNum}
+              commentDispatch={replyCommentDispatch}
+              parentCommentId={comment.id}
+            />
+            {comment.hasReplies ? (
+              <ServiceCommentsContainer
+                serviceId={serviceId}
+                commentDispatch={replyCommentDispatch}
+                comments={replyComments}
+                parentCommentId={comment.id}
+              />
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

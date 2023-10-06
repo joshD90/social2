@@ -61,9 +61,11 @@ export class CommentsDB {
           throw Error("Couldn't update the parent comment");
       }
       currentConnection.commit();
+      currentConnection.release();
       return result.insertId;
     } catch (error) {
       currentConnection.rollback();
+      currentConnection.release();
       return error as Error;
     }
   }
@@ -85,27 +87,30 @@ export class CommentsDB {
     }
   }
 
-  public async fetchComments(
-    serviceId: number,
-    limit: number,
-    offset: number,
-    parentId?: number
-  ): Promise<RowDataPacket[] | Error> {
+  public async fetchComments(params: {
+    serviceId: number;
+    limit: number;
+    offset: number;
+    parentId?: number;
+  }): Promise<RowDataPacket[] | Error> {
+    const { serviceId, limit, offset, parentId } = params;
     const query = parentId
       ? commentQueryObj.getReplyComments
       : commentQueryObj.getParentComments;
     const values = parentId
-      ? [serviceId, parentId, limit, offset]
+      ? [parentId, limit, offset]
       : [serviceId, limit, offset];
-
+    if (parentId) {
+    }
     try {
       const [result] = await this.connection.query<RowDataPacket[]>(
         query,
         values
       );
-      console.log(typeof (result[0] as ICommentWithVotes).total_votes);
+
       return result;
     } catch (error) {
+      console.log(error, "error in fetchComments");
       return error as Error;
     }
   }

@@ -81,7 +81,8 @@ const ServiceDisplayContainer = () => {
           <AdminServiceReportsMultiple serviceId={serviceId} />
         </div>
       )}
-      {typeof serviceId === "string" ? (
+      {typeof serviceId === "string" &&
+      currentUser?.user?.privileges !== "none" ? (
         <ServiceCommentsContainer
           serviceId={serviceId}
           commentDispatch={commentDispatch}
