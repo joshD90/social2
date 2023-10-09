@@ -5,7 +5,7 @@ export interface IUser {
   lastName: string;
   privileges: TUserPrivileges;
   password?: string;
-  organisation: string;
+  organisation: string | number;
   comments?: number[];
 }
 

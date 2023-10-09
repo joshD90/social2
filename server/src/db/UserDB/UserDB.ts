@@ -2,21 +2,30 @@ import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import queryObj from "./userTableQueries";
 import { IUser, UserSearchTuple } from "../../types/userTypes/UserType";
-import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
+import {
+  ExtendedRowDataPacket,
+  IGenericIterableObject,
+} from "../../types/mySqlTypes/mySqlTypes";
 
 class UserDB {
   private connection: Pool;
   private userQueries: GeneralQueryGenerator;
+  private organisationQueries: GeneralQueryGenerator;
 
   constructor(connection: Pool) {
     this.connection = connection;
     this.userQueries = new GeneralQueryGenerator("users", connection);
+    this.organisationQueries = new GeneralQueryGenerator(
+      "organisations",
+      connection
+    );
     this.initialiseUserTable();
   }
 
   private async initialiseUserTable() {
     try {
       await this.connection.query(queryObj.initUserTable);
+      await this.connection.query(queryObj.initOrganisationTable);
     } catch (error) {
       console.log(error);
     }
@@ -26,6 +35,17 @@ class UserDB {
     userInfo: IUser
   ): Promise<ResultSetHeader | Error> {
     try {
+      const organisationResult = await this.organisationQueries.findEntryBy<{
+        id: number;
+        name: string;
+      }>("name", userInfo.organisation);
+      if (
+        organisationResult instanceof Error ||
+        organisationResult.length === 0
+      )
+        throw Error("No organisation in the database matched this query");
+      userInfo.organisation = organisationResult[0].id;
+
       const result = await this.userQueries.createTableEntryFromPrimitives(
         userInfo as unknown as IGenericIterableObject
       );
@@ -51,21 +71,35 @@ class UserDB {
 
   public async findUser(
     criteria: UserSearchTuple
-  ): Promise<RowDataPacket[] | Error> {
+  ): Promise<ExtendedRowDataPacket<IUser>[] | Error> {
+    if (criteria[0] !== "id" && criteria[0] !== "email")
+      throw new Error("Wrong  Crtieria");
+    const query = queryObj.generateFindUserQuery(criteria[0]);
     try {
-      const result = await this.userQueries.findEntryBy<IUser>(
-        criteria[0],
-        criteria[1]
+      const [result] = await this.connection.query<
+        ExtendedRowDataPacket<IUser>[]
+      >(query, criteria[1]);
+      if (result.length === 0) return [];
+      return result;
+    } catch (error) {
+      return error as Error;
+    }
+  }
+
+  public async updatePrivileges(
+    privilege: string,
+    id: number
+  ): Promise<ResultSetHeader | Error> {
+    if (!(privilege === "none" || privilege === "approved"))
+      throw Error(
+        "Only none and approved privileges can be granted at this endpoint"
       );
-      if (result instanceof Error) {
-        if (
-          result.message === "Could not find any Entries matching this criteria"
-        ) {
-          return [];
-        } else {
-          throw Error(result.message);
-        }
-      }
+    try {
+      const [result] = await this.connection.query<ResultSetHeader>(
+        queryObj.updatePrivileges,
+        [privilege, id]
+      );
+      if (result.affectedRows === 0) throw Error("No Affected Rows");
       return result;
     } catch (error) {
       return error as Error;

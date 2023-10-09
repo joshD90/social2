@@ -26,6 +26,13 @@ const authSignupController = async (req: Request, res: Response) => {
   if (password !== passwordConfirm)
     return res.status(400).json("Passwords dont match");
 
+  if (!checkDomainCorrect(email, organisation))
+    return res
+      .status(400)
+      .json(
+        "The organisation does not match your email, please use your work email as an identifier"
+      );
+
   try {
     const hashedPW = await bcrypt.hash(password, 10);
 
@@ -48,6 +55,18 @@ const authSignupController = async (req: Request, res: Response) => {
       return res.status(500).json("There was an error in creating the user");
     res.status(500).json(error);
   }
+};
+
+const checkDomainCorrect = (email: string, organisation: string) => {
+  if (!email.includes(organisation)) return false;
+  const indexofAt = email.indexOf("@");
+
+  const afterAt = email.slice(indexofAt + 1).toLowerCase();
+  const domain = afterAt.slice(0, afterAt.indexOf("."));
+
+  if (domain !== organisation.toLowerCase()) return false;
+
+  return true;
 };
 
 export default authSignupController;
