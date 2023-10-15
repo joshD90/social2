@@ -12,6 +12,7 @@ import AdminServiceWrapper from "./components/admin/adminServiceWrapper/AdminSer
 import CategoryLanding from "./pages/categoryLanding/CategoryLanding";
 import ServiceDisplayContainer from "./pages/serviceDisplayContainer/ServiceDisplayContainer";
 import SearchResultsContainer from "./pages/searchResults/searchResultsContainer/SearchResultsContainer";
+import AdminUsersView from "./pages/admin/adminUsersView/AdminUsersView";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
       </Route>
       <Route path="/admin" element={<AdminProtectedWrapper />}>
         <Route index element={<AdminLanding />} />
+        <Route path="users/" element={<AdminUsersView />} />
         <Route path="services/">
           <Route index element={<AdminServicesView />} />
           <Route path="view" element={<AdminServiceWrapper />} />

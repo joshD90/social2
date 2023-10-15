@@ -68,11 +68,15 @@ class UserDB {
       return Error((error as Error).message);
     }
   }
-
+  //TODO need to change this to work with organisations / search by organisation
   public async findUser(
     criteria: UserSearchTuple
   ): Promise<ExtendedRowDataPacket<IUser>[] | Error> {
-    if (criteria[0] !== "id" && criteria[0] !== "email")
+    if (
+      criteria[0] !== "id" &&
+      criteria[0] !== "email" &&
+      criteria[0] !== "organisation"
+    )
       throw new Error("Wrong  Crtieria");
     const query = queryObj.generateFindUserQuery(criteria[0]);
     try {
@@ -80,6 +84,15 @@ class UserDB {
         ExtendedRowDataPacket<IUser>[]
       >(query, criteria[1]);
       if (result.length === 0) return [];
+      return result;
+    } catch (error) {
+      return error as Error;
+    }
+  }
+  //TODO: need to error handle
+  public async getAllUsers() {
+    try {
+      const [result] = await this.connection.query(queryObj.findAllUsers);
       return result;
     } catch (error) {
       return error as Error;

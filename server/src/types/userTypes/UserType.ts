@@ -11,6 +11,9 @@ export interface IUser {
 
 export type TUserPrivileges = "none" | "approved" | "moderator" | "admin";
 
-export type UserSearchTuple = ["id" | "email", number | string];
+export type UserSearchTuple = [
+  "id" | "email" | "organisation",
+  number | string
+];
 
 export type TIterableStringObj = { [key: string]: string };
