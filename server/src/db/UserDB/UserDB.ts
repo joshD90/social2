@@ -78,22 +78,31 @@ class UserDB {
       criteria[0] !== "organisation"
     )
       throw new Error("Wrong  Crtieria");
+
     const query = queryObj.generateFindUserQuery(criteria[0]);
+
     try {
       const [result] = await this.connection.query<
         ExtendedRowDataPacket<IUser>[]
       >(query, criteria[1]);
       if (result.length === 0) return [];
+
       return result;
     } catch (error) {
       return error as Error;
     }
   }
-  //TODO: need to error handle
+
   public async getAllUsers() {
     try {
-      const [result] = await this.connection.query(queryObj.findAllUsers);
-      return result;
+      const [result] = await this.connection.query<RowDataPacket[]>(
+        queryObj.findAllUsers
+      );
+      const usersWithoutPasswords = result.map((user) => {
+        const { password, ...rest } = user;
+        return rest;
+      });
+      return usersWithoutPasswords;
     } catch (error) {
       return error as Error;
     }
@@ -113,6 +122,18 @@ class UserDB {
         [privilege, id]
       );
       if (result.affectedRows === 0) throw Error("No Affected Rows");
+      return result;
+    } catch (error) {
+      return error as Error;
+    }
+  }
+
+  public async getAllOrganisations() {
+    try {
+      const [result] = await this.connection.query<RowDataPacket[]>(
+        queryObj.getAllOrganisationsNames
+      );
+      console.log(result, "organisation names");
       return result;
     } catch (error) {
       return error as Error;

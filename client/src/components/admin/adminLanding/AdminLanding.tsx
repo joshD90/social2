@@ -13,8 +13,11 @@ const AdminLanding = () => {
         >
           Services
         </button>
-        <button className="bg-stone-400 p-5 shadow-md hover:bg-stone-500 rounded-sm">
-          Other Bits
+        <button
+          className="bg-stone-400 p-5 shadow-md hover:bg-stone-500 rounded-sm"
+          onClick={() => navigate("/admin/users")}
+        >
+          Users
         </button>
       </div>
     </div>

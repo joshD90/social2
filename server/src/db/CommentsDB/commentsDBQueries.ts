@@ -4,36 +4,56 @@ const initCommentsTable =
 const initVotesTable =
   "CREATE TABLE IF NOT EXISTS commentVotes(comment_id INT NOT NULL, user_id INT NOT NULL, vote_value INT NOT NULL, PRIMARY KEY (comment_id, user_id), FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)";
 
+// const getParentCommentss = `
+// SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes,
+// user_details.firstName, user_details.lastName
+//   FROM comments
+//   LEFT JOIN
+//   (SELECT id, firstName, lastName FROM users)
+//   AS user_details ON comments.user_id = user_details.id
+// LEFT JOIN (
+//   SELECT comment_id, SUM(vote_value) AS vote_count
+//   FROM commentVotes
+//   GROUP BY comment_id
+// ) AS vote_counts ON comments.id = vote_counts.comment_id
+// WHERE service_id = ? AND comments.inReplyTo IS NULL
+// ORDER BY total_votes DESC, hasReplies DESC, created_at DESC
+// LIMIT ?
+// OFFSET ?`;
+
 const getParentComments = `
 SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes,
-user_details.firstName, user_details.lastName
-  FROM comments 
-  LEFT JOIN 
-  (SELECT id, firstName, lastName FROM users) 
-  AS user_details ON comments.user_id = user_details.id
+user_details.firstName, user_details.lastName, organisations.name AS organisation
+FROM comments 
+LEFT JOIN 
+(SELECT id, firstName, lastName, organisation FROM users) 
+AS user_details ON comments.user_id = user_details.id
 LEFT JOIN (
   SELECT comment_id, SUM(vote_value) AS vote_count
   FROM commentVotes
   GROUP BY comment_id
 ) AS vote_counts ON comments.id = vote_counts.comment_id 
-WHERE service_id = ? AND comments.inReplyTo IS NULL
+LEFT JOIN organisations ON user_details.organisation = organisations.id
+WHERE service_id = ? AND comments.inReplyTo IS NULL  AND organisations.name = ?
 ORDER BY total_votes DESC, hasReplies DESC, created_at DESC
 LIMIT ?
-OFFSET ?`;
+OFFSET ?;
+`;
 
 const getReplyComments = `
 SELECT comments.*, IFNULL(vote_counts.vote_count, 0) AS total_votes, 
-user_details.firstName, user_details.lastName
+user_details.firstName, user_details.lastName, organisations.name as organisation
   FROM comments 
   LEFT JOIN 
-  (SELECT id, firstName, lastName FROM users) 
+  (SELECT id, firstName, lastName, organisation FROM users) 
   AS user_details ON comments.user_id = user_details.id
 LEFT JOIN (
   SELECT comment_id, SUM(vote_value) AS vote_count
   FROM commentVotes
   GROUP BY comment_id
 ) AS vote_counts ON comments.id = vote_counts.comment_id 
-WHERE comments.inReplyTo = ?
+LEFT JOIN organisations ON user_details.organisation = organisations.id
+WHERE comments.inReplyTo = ? AND organisations.name = ?
 ORDER BY total_votes DESC, hasReplies DESC, created_at DESC
 LIMIT ?
 OFFSET ?`;

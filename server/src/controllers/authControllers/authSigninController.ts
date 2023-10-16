@@ -20,6 +20,7 @@ const authSignInController = (req: Request, res: Response): Response => {
         privileges: user.privileges,
         firstName: user.firstName,
         lastName: user.lastName,
+        organisation: user.organisation,
       },
       envConfig.auth.jwtSecret,
       { expiresIn: "1d" }

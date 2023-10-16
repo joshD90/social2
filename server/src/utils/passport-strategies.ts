@@ -17,6 +17,7 @@ export const configurePassport = (app: Application) => {
         try {
           //find out user in db
           const userFound = await db.getUserDB().findUser(["email", email]);
+
           //if we cant find the user or the user does not have a password return error
           if (
             userFound instanceof Error ||
@@ -24,6 +25,7 @@ export const configurePassport = (app: Application) => {
             !userFound[0].password
           )
             return done(null, false);
+
           //check is password correct
           const passwordMatches = await bcrypt.compare(
             password,
@@ -32,6 +34,7 @@ export const configurePassport = (app: Application) => {
           if (!passwordMatches) return done(null, false);
           //delete sensitive data before returning object
           delete userFound[0].password;
+          console.log(userFound[0]);
           return done(null, userFound[0]);
         } catch (error) {
           console.log(error);

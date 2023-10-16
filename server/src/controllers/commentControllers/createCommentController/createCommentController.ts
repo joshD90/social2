@@ -6,13 +6,15 @@ import { IUser } from "../../../types/userTypes/UserType";
 export const createCommentController = async (req: Request, res: Response) => {
   if (!req.user || !req.user.hasOwnProperty("id"))
     return res.status(403).json("Need to be Logged In");
-
+  console.log(req.user, "req.user");
+  console.log(req.body, "reqbody");
   if ((req.user as unknown as IUser).privileges === "none")
     return res
       .status(403)
       .json("You do not have sufficient rights to access this");
 
   const preparedObject = convertToSQLReady(req.body);
+  console.log(preparedObject, "prepared object");
   if (!preparedObject)
     return res.status(400).json("Data sent over is incorrect");
 

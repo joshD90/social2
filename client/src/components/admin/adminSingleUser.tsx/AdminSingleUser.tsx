@@ -5,7 +5,7 @@ type Props = { user: IUser };
 
 const AdminSingleUser: FC<Props> = ({ user }) => {
   return (
-    <div className="flex">
+    <div className="flex gap-3 flex-wrap bg-stone-700 text-stone-50 p-3">
       <p>{user.email}</p>
       <p>
         {user.firstName} {user.lastName}

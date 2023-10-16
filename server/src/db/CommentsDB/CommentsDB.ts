@@ -49,6 +49,7 @@ export class CommentsDB {
         await this.commentGenericQueries.createTableEntryFromPrimitives(
           comment as unknown as IGenericIterableObject
         );
+
       if (result instanceof Error) throw Error(result.message);
       if (comment.inReplyTo) {
         const updateResult =
@@ -88,20 +89,21 @@ export class CommentsDB {
   }
 
   public async fetchComments(params: {
+    organisation: string;
     serviceId: number;
     limit: number;
     offset: number;
     parentId?: number;
   }): Promise<RowDataPacket[] | Error> {
-    const { serviceId, limit, offset, parentId } = params;
+    const { serviceId, limit, offset, parentId, organisation } = params;
+
     const query = parentId
       ? commentQueryObj.getReplyComments
       : commentQueryObj.getParentComments;
     const values = parentId
-      ? [parentId, limit, offset]
-      : [serviceId, limit, offset];
-    if (parentId) {
-    }
+      ? [parentId, organisation, limit, offset]
+      : [serviceId, organisation, limit, offset];
+    console.log(values);
     try {
       const [result] = await this.connection.query<RowDataPacket[]>(
         query,

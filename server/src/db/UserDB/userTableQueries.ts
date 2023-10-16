@@ -6,10 +6,15 @@ const initOrganisationTable =
 
 const generateFindUserQuery = (
   columnName: "id" | "email" | "organisation"
-): string =>
-  `SELECT * FROM users JOIN organisations ON users.organisation = organisations.id WHERE ${columnName} = ?`;
+): string => {
+  const modifiedColName =
+    columnName === "organisation" ? "organisations.name" : columnName;
+  return `SELECT users.id, users.email, users.firstName, users.lastName, users.privileges, users.password, organisations.name AS organisation FROM users JOIN organisations ON users.organisation = organisations.id WHERE ${modifiedColName} = ?`;
+};
 
 const findAllUsers = `SELECT firstName, lastName, email, privileges, organisations.name AS organisation FROM users JOIN organisations ON users.organisation = organisations.id`;
+
+const getAllOrganisationsNames = "SELECT name FROM organisations";
 
 const updatePrivileges = "UPDATE users SET privileges = ? WHERE id = ?";
 
@@ -19,4 +24,5 @@ export default {
   generateFindUserQuery,
   updatePrivileges,
   findAllUsers,
+  getAllOrganisationsNames,
 };

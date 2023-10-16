@@ -19,18 +19,27 @@ export const getCommentsForServiceController = async (
       .status(400)
       .json("Request body is not appropriate for fetching comments");
 
+  let organisation = "";
+  const { queryorg } = req.query;
+
+  organisation = (req.user as IUser).organisation?.toString();
+  if ((req.user as IUser).organisation === "admin" && queryorg)
+    organisation = queryorg?.toString() || "admin";
   const serviceId = parseInt(req.query.serviceId);
   if (typeof serviceId !== "number")
     return res.status(400).json("serviceId must be of type number");
   const queryOffset = parseInt(req.query.offset as string);
 
   const paramsToPass: {
+    organisation: string;
     serviceId: number;
     limit: number;
     offset: number;
     parentId?: number;
   } = {
+    organisation,
     serviceId,
+
     limit: 5,
     offset: queryOffset ? queryOffset : 0,
   };
