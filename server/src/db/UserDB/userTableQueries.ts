@@ -5,14 +5,14 @@ const initOrganisationTable =
   "CREATE TABLE IF NOT EXISTS organisations(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) UNIQUE NOT NULL)";
 
 const generateFindUserQuery = (
-  columnName: "id" | "email" | "organisation"
+  columnName: "users.id" | "email" | "organisation"
 ): string => {
   const modifiedColName =
     columnName === "organisation" ? "organisations.name" : columnName;
   return `SELECT users.id, users.email, users.firstName, users.lastName, users.privileges, users.password, organisations.name AS organisation FROM users JOIN organisations ON users.organisation = organisations.id WHERE ${modifiedColName} = ?`;
 };
 
-const findAllUsers = `SELECT firstName, lastName, email, privileges, organisations.name AS organisation FROM users JOIN organisations ON users.organisation = organisations.id`;
+const findAllUsers = `SELECT users.id, firstName, lastName, email, privileges, organisations.name AS organisation FROM users JOIN organisations ON users.organisation = organisations.id`;
 
 const getAllOrganisationsNames = "SELECT name FROM organisations";
 

@@ -12,7 +12,7 @@ export interface IUser {
 export type TUserPrivileges = "none" | "approved" | "moderator" | "admin";
 
 export type UserSearchTuple = [
-  "id" | "email" | "organisation",
+  "users.id" | "email" | "organisation",
   number | string
 ];
 

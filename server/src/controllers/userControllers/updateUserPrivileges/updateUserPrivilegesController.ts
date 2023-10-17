@@ -26,7 +26,10 @@ const updateUserPrivilegesController = async (
     return res.status(400).json("Your req body is no in right format");
 
   //check is the user within the same organisation if being accessed by moderator
-  const userToChange = await db.getUserDB().findUser(["id", userToUpdateId]);
+  const userToChange = await db
+    .getUserDB()
+    .findUser(["users.id", userToUpdateId]);
+  console.log(userToChange, "user to change in privielege controller");
   if (userToChange instanceof Error)
     return res.status(500).json(userToChange.message);
   if (
@@ -42,7 +45,8 @@ const updateUserPrivilegesController = async (
     .updatePrivileges(newPrivilege, parseInt(userToUpdateId));
 
   if (result instanceof Error) return res.status(500).json(result.message);
-  return res.status(204);
+  console.log("successfully updated");
+  return res.status(200).json("Updated Successfully");
 };
 
 export default updateUserPrivilegesController;

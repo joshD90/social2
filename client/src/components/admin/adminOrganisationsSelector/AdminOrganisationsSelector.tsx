@@ -21,7 +21,9 @@ const AdminOrganisationsSelector: FC<Props> = ({ handleOrgSelection }) => {
         >
           <option value="">None Selected</option>
           {organisationNames?.map((organisation) => (
-            <option value={organisation.name}>{organisation.name}</option>
+            <option value={organisation.name} key={organisation.name}>
+              {organisation.name}
+            </option>
           ))}
         </select>
       </div>

@@ -51,11 +51,21 @@ const AdminUsersView: FC = () => {
           <AdminOrganisationsSelector handleOrgSelection={handleOrgSelection} />
         ) : null}
       </div>
-      <div className=" w-full flex flex-col gap-3">
-        {fetchedData?.map((user) => {
-          return <AdminSingleUser user={user} key={user.email} />;
-        })}
-      </div>
+      <table className="w-full m-5 text-stone-50">
+        <thead className="text-left">
+          <tr className="border-b-stone-400 border-solid border-b-2">
+            <th className="pb-2">Email</th>
+            <th className="pb-2">Name</th>
+            <th className="pb-2">Organisation</th>
+            <th className="pb-2">Privileges</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fetchedData?.map((user) => {
+            return <AdminSingleUser user={user} key={user.email} />;
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

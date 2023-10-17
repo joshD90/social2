@@ -68,12 +68,12 @@ class UserDB {
       return Error((error as Error).message);
     }
   }
-  //TODO need to change this to work with organisations / search by organisation
+
   public async findUser(
     criteria: UserSearchTuple
   ): Promise<ExtendedRowDataPacket<IUser>[] | Error> {
     if (
-      criteria[0] !== "id" &&
+      criteria[0] !== "users.id" &&
       criteria[0] !== "email" &&
       criteria[0] !== "organisation"
     )
@@ -86,7 +86,6 @@ class UserDB {
         ExtendedRowDataPacket<IUser>[]
       >(query, criteria[1]);
       if (result.length === 0) return [];
-
       return result;
     } catch (error) {
       return error as Error;
