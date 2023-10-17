@@ -87,6 +87,7 @@ const ServiceDisplayContainer = () => {
           serviceId={serviceId}
           commentDispatch={commentDispatch}
           comments={serviceComments}
+          adminSelect={currentUser?.user?.privileges === "admin"}
         />
       ) : null}
     </section>

@@ -1,4 +1,4 @@
-import { Dispatch, FC, useCallback, useEffect, useState } from "react";
+import React, { Dispatch, FC, useCallback, useEffect, useState } from "react";
 
 import envIndex from "../../envIndex/envIndex";
 import { ICommentWithVotes } from "../../types/commentTypes/commentTypes";
@@ -6,10 +6,12 @@ import ServiceComment from "../../components/serviceComment/ServiceComment";
 
 import ServiceCommentForm from "../../components/serviceCommentForm/ServiceCommentForm";
 import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTypes";
+import AdminOrganisationsSelector from "../../components/admin/adminOrganisationsSelector/adminOrganisationsSelector";
 
 type Props = {
   serviceId: string;
   parentCommentId?: number;
+  adminSelect?: boolean;
   commentDispatch: Dispatch<TCommentReducerAction>;
   comments: ICommentWithVotes[];
 };
@@ -19,12 +21,12 @@ const ServiceCommentsContainer: FC<Props> = ({
   parentCommentId,
   commentDispatch,
   comments,
+  adminSelect,
 }) => {
-  // const {currentUser:{user}} = useContext(AuthContext);//dont know if i even need this
-
   const [serviceIdNum, setServiceIdNum] = useState<number>(parseInt(serviceId));
   const [offsetCount, setOffsetCount] = useState(0);
   const [loadMoreActive, setLoadMoreActive] = useState(true);
+  const [adminOrgSelect, setAdminOrgSelect] = useState("");
 
   //convert to number format any time serviceId changes
   useEffect(() => setServiceIdNum(() => parseInt(serviceId)), [serviceId]);
@@ -41,12 +43,12 @@ const ServiceCommentsContainer: FC<Props> = ({
             envIndex.urls.baseUrl
           }/services/service/comments?serviceId=${serviceIdNum}&offset=${
             offSet ? offSet : 0
-          }`
+          }${adminOrgSelect !== "" ? `&queryorg=${adminOrgSelect}` : null}`
         : `${
             envIndex.urls.baseUrl
           }/services/service/comments?serviceId=${serviceIdNum}&parentCommentId=${parentCommentId}&offset=${
             offSet ? offSet : 0
-          }`;
+          }${adminOrgSelect !== "" ? `&queryorg=${adminOrgSelect}` : null}`;
       try {
         const response = await fetch(url, {
           signal: abortController ? abortController.signal : null,
@@ -65,7 +67,7 @@ const ServiceCommentsContainer: FC<Props> = ({
         console.log(error, "error in fetching the comments");
       }
     },
-    [serviceIdNum, parentCommentId]
+    [serviceIdNum, parentCommentId, adminOrgSelect]
   );
 
   useEffect(() => {
@@ -80,9 +82,22 @@ const ServiceCommentsContainer: FC<Props> = ({
     setOffsetCount((prev) => prev + 5);
   };
 
+  const handleAdminOrgChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setAdminOrgSelect(e.target.value);
+  };
+
   return (
     <section className={`w-full ${!parentCommentId ? "px-5" : ""} pb-5 `}>
-      {!parentCommentId && <h2 className="text-stone-50 text-xl">Comments</h2>}
+      <div className="flex justify-between items-center">
+        {!parentCommentId && (
+          <h2 className="text-stone-50 text-xl">Comments</h2>
+        )}
+        {adminSelect && (
+          <AdminOrganisationsSelector
+            handleOrgSelection={handleAdminOrgChange}
+          />
+        )}
+      </div>
       {!parentCommentId && (
         <ServiceCommentForm
           commentDispatch={commentDispatch}

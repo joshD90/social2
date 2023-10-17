@@ -39,7 +39,6 @@ export const getCommentsForServiceController = async (
   } = {
     organisation,
     serviceId,
-
     limit: 5,
     offset: queryOffset ? queryOffset : 0,
   };
