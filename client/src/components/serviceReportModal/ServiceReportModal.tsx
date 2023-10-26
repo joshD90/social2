@@ -55,7 +55,7 @@ const ServiceReportModal: FC<Props> = ({ serviceId, setVisible }) => {
 
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-stone-50 bg-opacity-20">
-      <div className="max-h-screen overflow-y-auto p-5 bg-blue-950 w-1/2 rounded-md shadow-lg">
+      <div className="max-h-screen overflow-y-auto p-5 bg-blue-950 w-11/12 md:w-2/3 lg:w-1/2 rounded-md shadow-lg">
         {generalError !== "" && <p className="text-red-400">{generalError}</p>}
         {successMessage !== "" && (
           <p className="text-green-400">{successMessage}</p>

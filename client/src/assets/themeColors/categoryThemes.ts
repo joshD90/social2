@@ -10,3 +10,6 @@ categoryThemes.set("shelter", ThemeColor.voilet);
 categoryThemes.set("medical", ThemeColor.fuchsia);
 categoryThemes.set("mentalHealth", ThemeColor.teal);
 categoryThemes.set("financial", ThemeColor.emerald);
+categoryThemes.set("educationEmployment", ThemeColor.pink);
+categoryThemes.set("minorities", ThemeColor.lime);
+categoryThemes.set("lgbt", ThemeColor.indigo);

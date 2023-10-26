@@ -6,7 +6,10 @@ export type TCategoryNames =
   | "medical"
   | "financial"
   | "shelter"
-  | "addiction";
+  | "addiction"
+  | "lgbt"
+  | "minorities"
+  | "educationEmployment";
 
 export interface IListItemBase {
   id?: number | string;

@@ -6,4 +6,7 @@ export enum ThemeColor {
   cyan = "cyan",
   voilet = "violet",
   fuchsia = "fuchsia",
+  lime = "lime",
+  indigo = "indigo",
+  pink = "pink",
 }

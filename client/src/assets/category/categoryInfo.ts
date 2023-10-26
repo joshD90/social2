@@ -13,6 +13,9 @@ const categorySelectInfo: ICategory[] = [
   { name: "Financial", forwardTo: "financial" },
   { name: "Shelter", forwardTo: "shelter" },
   { name: "Addiction", forwardTo: "addiction" },
+  { name: "LGBTQI+", forwardTo: "lgbt" },
+  { name: "Minorities", forwardTo: "minorities" },
+  { name: "Education and Employment", forwardTo: "educationEmployment" },
 ];
 
 export const mappedCategorySelectInfo = categorySelectInfo.map((category) => ({

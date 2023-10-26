@@ -10,6 +10,9 @@ const categoryArray = [
   "financial",
   "shelter",
   "addiction",
+  "lgbt",
+  "minorities",
+  "educationEmployment",
 ];
 
 const validationSchema = Yup.object().shape({

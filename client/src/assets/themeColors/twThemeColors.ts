@@ -7,6 +7,9 @@ export const twThemeColors = {
     cyan: "bg-cyan-800",
     violet: "bg-violet-800",
     fuchsia: "bg-fuchsia-800",
+    lime: "bg-lime-800",
+    indigo: "bg-indigo-800",
+    pink: "bg-pink-800",
   },
   bgGradientHover: {
     blue: "hover:from-blue-700 hover:to-blue-700",
@@ -16,6 +19,9 @@ export const twThemeColors = {
     cyan: "hover:from-cyan-700 hover:to-cyan-700",
     violet: "hover:from-violet-700 hover:to-violet-700",
     fuchsia: "hover:from-fuchsia-700 hover:to-fuchsia-700",
+    lime: "hover:from-lime-700 hover:to-lime-700",
+    indigo: "hover:from-indigo-700 hover:to-indigo-700",
+    pink: "hover:from-pink-700 hover:to-pink-700",
   },
   border: {
     blue: "border-blue-500",
@@ -25,6 +31,9 @@ export const twThemeColors = {
     cyan: "border-cyan-500",
     violet: "border-violet-500",
     fuchsia: "border-fuchsia-500",
+    lime: "border-lime-500",
+    indigo: "border-indigo-500",
+    pink: "border-pink-500",
   },
   bgGradient: {
     blue: "bg-gradient-to-b from-blue-700 to-blue-800",
@@ -34,6 +43,9 @@ export const twThemeColors = {
     cyan: "bg-gradient-to-b from-cyan-700 to-cyan-800",
     violet: "bg-gradient-to-b from-violet-700 to-violet-800",
     fuchsia: "bg-gradient-to-b from-fuchsia-700 to-fuchsia-800",
+    lime: "bg-gradient-to-b from-lime-700 to-lime-800",
+    indigo: "bg-gradient-to-b from-indigo-700 to-indigo-800",
+    pink: "bg-gradient-to-b from-pink-700 to-pink-800",
   },
   textDarker: {
     blue: "text-blue-800",
@@ -43,6 +55,9 @@ export const twThemeColors = {
     cyan: "text-cyan-800",
     violet: "text-violet-800",
     fuchsia: "text-fuchsia-800",
+    lime: "text-lime-800",
+    indigo: "text-indigo-800",
+    pink: "text-pink-800",
   },
   bgDarkGradient: {
     blue: "bg-gradient-to-b from-stone-950 to-blue-950",
@@ -52,5 +67,8 @@ export const twThemeColors = {
     cyan: "bg-gradient-to-b from-stone-950 to-cyan-950",
     violet: "bg-gradient-to-b from-stone-950 to-violet-950",
     fuchsia: "bg-gradient-to-b from-stone-950 to-fuchsia-950",
+    lime: "bg-gradient-to-b from-stone-950 to-lime-950",
+    indigo: "bg-gradient-to-b from-stone-950 to-indigo-950",
+    pink: "bg-gradient-to-b from-stone-950 to-pink-950",
   },
 };

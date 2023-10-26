@@ -8,7 +8,10 @@ export type TCategoryNames =
   | "medical"
   | "financial"
   | "shelter"
-  | "addiction";
+  | "addiction"
+  | "lgbt"
+  | "minorities"
+  | "educationEmployment";
 
 export type TCategory = {
   name: string;
