@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export interface IUser {
   id?: number;
   email: string;
@@ -15,5 +17,9 @@ export type UserSearchTuple = [
   "users.id" | "email" | "organisation",
   number | string
 ];
+
+export interface AuthenticatedRequest extends Request {
+  user: IUser;
+}
 
 export type TIterableStringObj = { [key: string]: string };

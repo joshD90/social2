@@ -117,6 +117,13 @@ export class CommentsDB {
     }
   }
 
+  public async deleteComment(id: number): Promise<Error | true> {
+    const deleteResult =
+      await this.commentGenericQueries.deleteBySingleCriteria("id", id);
+    if (deleteResult instanceof Error) return Error(deleteResult.message);
+    return true;
+  }
+
   public async deleteVote(
     userId: number,
     commentId: number
@@ -131,5 +138,9 @@ export class CommentsDB {
     } catch (error) {
       return error as Error;
     }
+  }
+
+  public getCommentsGeneric(): GeneralQueryGenerator {
+    return this.commentGenericQueries;
   }
 }
