@@ -1,12 +1,12 @@
-### Expand Categories List
+### Expand Categories List [x]
 
 - Include - Minorities / Education and Employment / LGBT+
-  1. Change Theme Types to Include new Category forwardTo
-  2. Add in additional theme colors and all the different variations
-  3. Add new themeColorTypes to enum
-  4. Set new Theme Colors in categoryThemes.ts Map
-  5. Change categoryTypes on server
-  6. Manually add categories to db
+  1. Change Theme Types to Include new Category forwardTo [x]
+  2. Add in additional theme colors and all the different variations [x]
+  3. Add new themeColorTypes to enum [x]
+  4. Set new Theme Colors in categoryThemes.ts Map [x]
+  5. Change categoryTypes on server [x]
+  6. Manually add categories to db [x]
 
 ### Include Email Verification -
 
