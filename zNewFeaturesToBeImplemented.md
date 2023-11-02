@@ -21,7 +21,7 @@ Will need to add a new category of verified but not approved.
   1. This should just be a case of creating some new endpoints.
   2. Update the actual DB to reflect a new updatedAt and updatedByWho (should reference users table)
   3. Make changes to comment fetch to include the potential updatedAt and updatedByWho(will have to join this on)
-  4. Add delete end point. This should be straightforward due to cascade delete. [x]
+  4. Add delete end point. This should be straightforward due to cascade delete.
   5. Add in edit opportunities - can I reuse the comment box but just prepopulate it with text? Will need to change the endpoint depending on whether reply / comment / edit - have this only be available for moderator / admin / own user
   6. Add in delete opportunities - have this only be available for moderator /admin /own user
 
@@ -46,12 +46,3 @@ Will need to add a new category of verified but not approved.
   6. Create a type for numbers
   7. On the frontend make changes to service base type to reflect change in number.
   8. On the frontend make changes to Service Display - Should this be a drop down or just a list?
-
-### Change how DB Class event handling is done.
-
-- Let the errors throw and handle this within the controllers or other functions that consume them. No error handling within the DB classes.
-- Will need to remove the rrors as well as how all consuming functions process errors
-
-### Change controllers to reflect updated typescripting namespace
-
--remove things such as casting, unnecessary type checking etc.

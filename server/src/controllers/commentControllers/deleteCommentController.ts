@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 
-import { db } from "../../../server";
-import { IUser } from "../../../types/userTypes/UserType";
+import { db } from "../../server";
+import { IUser } from "../../types/userTypes/UserType";
 
 const deleteCommentController = async (req: Request, res: Response) => {
-  //cant get the declarations to work at this point so am casting this as IUser.
   const user = req.user as IUser;
   if (!user)
     return res.status(401).json("Need to be logged in to perform this action");
