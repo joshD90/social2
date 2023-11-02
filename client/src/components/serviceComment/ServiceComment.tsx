@@ -15,6 +15,8 @@ import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTy
 import { commentReducer } from "../../reducers/commentReducer/commentReducer";
 import ServiceCommentsContainer from "../../pages/serviceCommentsContainer/ServiceCommentsContainer";
 import ServiceCommentForm from "../serviceCommentForm/ServiceCommentForm";
+import { MdDelete } from "react-icons/md";
+import ServiceCommentChangeOptions from "../serviceCommentChangeOptions/ServiceCommentChangeOptions";
 
 type Props = {
   comment: ICommentWithVotes;
@@ -63,15 +65,18 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
 
   return (
     <div className=" text-stone-50 mt-5">
-      <div className="flex gap-4 items-end">
-        <p className="font-bold">
-          {comment.firstName} {comment.lastName}
-        </p>
-        {comment.created_at && (
-          <div className="text-xs">
-            <TimeSincePosted dateTime={comment.created_at} />
-          </div>
-        )}
+      <div className="flex gap-4 items-center justify-between">
+        <div className="flex gap-4 items-end">
+          <p className="font-bold">
+            {comment.firstName} {comment.lastName}
+          </p>
+          {comment.created_at && (
+            <div className="text-xs">
+              <TimeSincePosted dateTime={comment.created_at} />
+            </div>
+          )}
+        </div>
+        <ServiceCommentChangeOptions user={user} comment={comment} />
       </div>
       <p className="mb-1">{comment.comment}</p>
       <div className="flex gap-2">

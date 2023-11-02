@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
 
-import { db } from "../../server";
-import { IUser } from "../../types/userTypes/UserType";
+import { db } from "../../../server";
+import { IUser } from "../../../types/userTypes/UserType";
 
 const deleteCommentController = async (req: Request, res: Response) => {
   const user = req.user as IUser;
   if (!user)
     return res.status(401).json("Need to be logged in to perform this action");
 
-  const commentId = req.body.commentId;
-  if (!commentId)
+  const commentId = parseInt(req.params.commentId);
+  console.log(commentId, "commentId in deleteCommentController");
+  if (!commentId || typeof commentId !== "number")
     return res.status(400).json("Needs a commentId to delete the comment");
   const commentToDelete = await db
     .getCommentsDB()
