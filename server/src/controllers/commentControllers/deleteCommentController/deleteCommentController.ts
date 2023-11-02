@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 
-import { db } from "../../server";
+import { db } from "../../../server";
+import { IUser } from "../../../types/userTypes/UserType";
 
 const deleteCommentController = async (req: Request, res: Response) => {
-  if (!req.user)
+  //cant get the declarations to work at this point so am casting this as IUser.
+  const user = req.user as IUser;
+  if (!user)
     return res.status(401).json("Need to be logged in to perform this action");
 
   const commentId = req.body.commentId;
@@ -15,17 +18,13 @@ const deleteCommentController = async (req: Request, res: Response) => {
     .findEntryBy("id", commentId);
   if (!commentToDelete || commentToDelete instanceof Error)
     return res.status(404).json("Could not find this comment to delete");
-  if (req.user.privileges === "admin")
-    return handleDeleteHelper(res, commentId);
+  if (user.privileges === "admin") return handleDeleteHelper(res, commentId);
   if (
-    req.user.privileges === "moderator" &&
-    req.user.organisation === commentToDelete[0]?.organisation
+    user.privileges === "moderator" &&
+    user.organisation === commentToDelete[0]?.organisation
   )
     return handleDeleteHelper(res, commentId);
-  if (
-    req.user.privileges === "approved" &&
-    req.user.id === commentToDelete[0]?.user_id
-  )
+  if (user.privileges === "approved" && user.id === commentToDelete[0]?.user_id)
     return handleDeleteHelper(res, commentId);
 
   return res
