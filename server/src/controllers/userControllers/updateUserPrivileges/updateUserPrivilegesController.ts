@@ -29,7 +29,7 @@ const updateUserPrivilegesController = async (
   const userToChange = await db
     .getUserDB()
     .findUser(["users.id", userToUpdateId]);
-  console.log(userToChange, "user to change in privielege controller");
+
   if (userToChange instanceof Error)
     return res.status(500).json(userToChange.message);
   if (

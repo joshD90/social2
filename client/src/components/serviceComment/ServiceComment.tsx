@@ -7,7 +7,11 @@ import {
   useState,
 } from "react";
 import { ICommentWithVotes } from "../../types/commentTypes/commentTypes";
-import { BsHandThumbsDownFill, BsHandThumbsUpFill } from "react-icons/bs";
+import {
+  BsChevronDoubleDown,
+  BsHandThumbsDownFill,
+  BsHandThumbsUpFill,
+} from "react-icons/bs";
 import TimeSincePosted from "../../microcomponents/timeSincePosted/TimeSincePosted";
 import envIndex from "../../envIndex/envIndex";
 import { AuthContext } from "../../context/authContext/AuthContext";
@@ -15,7 +19,7 @@ import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTy
 import { commentReducer } from "../../reducers/commentReducer/commentReducer";
 import ServiceCommentsContainer from "../../pages/serviceCommentsContainer/ServiceCommentsContainer";
 import ServiceCommentForm from "../serviceCommentForm/ServiceCommentForm";
-import { MdDelete } from "react-icons/md";
+import { MdArrowDownward, MdDelete } from "react-icons/md";
 import ServiceCommentChangeOptions from "../serviceCommentChangeOptions/ServiceCommentChangeOptions";
 
 type Props = {
@@ -31,6 +35,7 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
   const [replyComments, replyCommentDispatch] = useReducer(commentReducer, []);
   const [repliesToggled, setRepliesToggled] = useState(false);
   const [serviceIdNum, setServiceIdNum] = useState(parseInt(serviceId));
+  const [viewAnyway, setViewAnyway] = useState(false);
 
   useEffect(() => setServiceIdNum(parseInt(serviceId)), [serviceId]);
 
@@ -62,6 +67,19 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
   const manageReplies = () => {
     setRepliesToggled((prev) => !prev);
   };
+
+  if (comment.total_votes <= -envIndex.comments.downVoteCutOff && !viewAnyway)
+    return (
+      <div className="flex flex-col text-stone-50 py-2">
+        <p>This comment has been hidden as it has too many downvotes</p>
+        <button
+          onClick={() => setViewAnyway(true)}
+          className="w-fit flex items-center gap-2"
+        >
+          <span>View Anyway</span> <BsChevronDoubleDown />
+        </button>
+      </div>
+    );
 
   return (
     <div className=" text-stone-50 mt-5">

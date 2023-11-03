@@ -6,7 +6,7 @@ import ServiceComment from "../../components/serviceComment/ServiceComment";
 
 import ServiceCommentForm from "../../components/serviceCommentForm/ServiceCommentForm";
 import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTypes";
-import AdminOrganisationsSelector from "../../components/admin/adminOrganisationsSelector/adminOrganisationsSelector";
+import AdminOrganisationsSelector from "../../components/admin/adminOrganisationsSelector/AdminOrganisationsSelector";
 
 type Props = {
   serviceId: string;
@@ -56,6 +56,7 @@ const ServiceCommentsContainer: FC<Props> = ({
         });
         if (!response.ok) throw Error(response.statusText);
         const responseComments = await response.json();
+
         if (responseComments.length < 5) setLoadMoreActive(false);
 
         refresh && commentDispatch({ type: "CLEAR_COMMENTS" });

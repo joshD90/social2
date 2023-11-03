@@ -25,7 +25,6 @@ export const commentReducer = (
       const updatedComments = state.map((comment) => {
         if (!comment.id) return comment;
         if (comment.id === action.payload.commentId) {
-          console.log(typeof comment.total_votes);
           const totalVotes = comment.total_votes + action.payload.voteValue;
           return { ...comment, total_votes: totalVotes };
         }

@@ -16,7 +16,7 @@ const AdminSingleUser: FC<Props> = ({ user }) => {
       userToUpdateId: user.id,
       newPrivilege: approvedValue ? "approved" : "none",
     };
-    console.log("just before await");
+
     try {
       const response = await fetch(url, {
         method: "PUT",
@@ -26,7 +26,7 @@ const AdminSingleUser: FC<Props> = ({ user }) => {
       });
       console.log(response);
       if (!response.ok) throw Error(response.statusText);
-      console.log(approvedValue);
+
       setApproved(approvedValue);
     } catch (error) {
       console.log(error);

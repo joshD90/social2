@@ -16,14 +16,20 @@ Will need to add a new category of verified but not approved.
 
 ### Comments
 
+- Allow for deletion of comments by self or by admin / moderator
+
+  1. Create endpoint that deletes comments -include checks to see if appropriate user does this [x]
+  2. Create delete button for deletion of comments frontend [x]
+  3. Have this delete the comment from state on success [x]
+  4. Put in error messaging into comments - Determine where to hold this information [x]
+
 - Allow for editing and deletion of comments by self or by admin / moderator
 
   1. This should just be a case of creating some new endpoints.
   2. Update the actual DB to reflect a new updatedAt and updatedByWho (should reference users table)
   3. Make changes to comment fetch to include the potential updatedAt and updatedByWho(will have to join this on)
-  4. Add delete end point. This should be straightforward due to cascade delete.
-  5. Add in edit opportunities - can I reuse the comment box but just prepopulate it with text? Will need to change the endpoint depending on whether reply / comment / edit - have this only be available for moderator / admin / own user
-  6. Add in delete opportunities - have this only be available for moderator /admin /own user
+  4. Add in edit opportunities - can I reuse the comment box but just prepopulate it with text? Will need to change the endpoint depending on whether reply / comment / edit - have this only be available for moderator / admin / own user
+  5. Add in delete opportunities - have this only be available for moderator /admin /own user
 
 - Allow for hiding of comments with enough downvotes
   1. Conditionally render comment based on downvotes and instead placing a "Downvoted too many times" view anyways tab.
