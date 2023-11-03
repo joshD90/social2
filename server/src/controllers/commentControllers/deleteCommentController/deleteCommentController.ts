@@ -9,7 +9,7 @@ const deleteCommentController = async (req: Request, res: Response) => {
     return res.status(401).json("Need to be logged in to perform this action");
 
   const commentId = parseInt(req.params.commentId);
-  console.log(commentId, "commentId in deleteCommentController");
+
   if (!commentId || typeof commentId !== "number")
     return res.status(400).json("Needs a commentId to delete the comment");
   const commentToDelete = await db

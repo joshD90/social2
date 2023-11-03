@@ -132,7 +132,7 @@ class UserDB {
       const [result] = await this.connection.query<RowDataPacket[]>(
         queryObj.getAllOrganisationsNames
       );
-      console.log(result, "organisation names");
+
       return result;
     } catch (error) {
       return error as Error;

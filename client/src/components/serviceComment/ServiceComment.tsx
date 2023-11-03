@@ -76,7 +76,11 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
             </div>
           )}
         </div>
-        <ServiceCommentChangeOptions user={user} comment={comment} />
+        <ServiceCommentChangeOptions
+          user={user}
+          comment={comment}
+          commentsDispatch={commentDispatch}
+        />
       </div>
       <p className="mb-1">{comment.comment}</p>
       <div className="flex gap-2">
