@@ -19,7 +19,7 @@ import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTy
 import { commentReducer } from "../../reducers/commentReducer/commentReducer";
 import ServiceCommentsContainer from "../../pages/serviceCommentsContainer/ServiceCommentsContainer";
 import ServiceCommentForm from "../serviceCommentForm/ServiceCommentForm";
-import { MdArrowDownward, MdDelete } from "react-icons/md";
+
 import ServiceCommentChangeOptions from "../serviceCommentChangeOptions/ServiceCommentChangeOptions";
 
 type Props = {

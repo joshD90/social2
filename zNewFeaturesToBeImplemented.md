@@ -16,7 +16,7 @@ Will need to add a new category of verified but not approved.
 
 ### Comments
 
-- Allow for deletion of comments by self or by admin / moderator
+- Allow for deletion of comments by self or by admin / moderator [x]
 
   1. Create endpoint that deletes comments -include checks to see if appropriate user does this [x]
   2. Create delete button for deletion of comments frontend [x]
@@ -29,15 +29,24 @@ Will need to add a new category of verified but not approved.
   2. Update the actual DB to reflect a new updatedAt and updatedByWho (should reference users table)
   3. Make changes to comment fetch to include the potential updatedAt and updatedByWho(will have to join this on)
   4. Add in edit opportunities - can I reuse the comment box but just prepopulate it with text? Will need to change the endpoint depending on whether reply / comment / edit - have this only be available for moderator / admin / own user
-  5. Add in delete opportunities - have this only be available for moderator /admin /own user
 
 - Allow for hiding of comments with enough downvotes
-  1. Conditionally render comment based on downvotes and instead placing a "Downvoted too many times" view anyways tab.
-  2. Create state that will keep track of viewable flag
+  1. Conditionally render comment based on downvotes and instead placing a "Downvoted too many times" view anyways tab. [x]
+  2. Create state that will keep track of viewable flag [x]
+  3. Set env variable to determine limit [x]
 
 ### Child / Parent Services
 
-    - Change services to allow for a service to be linked to a parent service.
+- Change services to allow for a service to be linked to a parent service.
+
+1. Update services table to include parent id. [x]
+2. Update base service type on backend to include parent id as possible.[x]
+3. Update overall service type to include an array of children
+4. Update the ServiceDB Creation -ACTUALLY dont think I need this.
+5. Update service fetch query to include a list of id's and names - look at search functionality for how to do this
+6. Include any parent services in this fetch
+7. Update Service Display to have a dropdown if there are children. Have these link to another service.
+8. Display parent information on service display and have this link to the parent.
 
 ### Multiple Contacts
 

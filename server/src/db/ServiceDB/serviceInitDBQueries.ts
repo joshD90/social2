@@ -13,7 +13,7 @@ const createAreaServedTable =
 //create our services table. We have created our categories first so we can reference this table first
 
 const createServicesTable =
-  "CREATE TABLE IF NOT EXISTS services (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description VARCHAR(2000), category VARCHAR(255), organisation VARCHAR(255), maxAge INT, minAge INT, contactNumber VARCHAR(255), contactEmail VARCHAR(255), website VARCHAR(255), referralPathway VARCHAR(1000), address VARCHAR(500), imageUrl VARCHAR(255), forwardTo VARCHAR(255) UNIQUE NOT NULL, FOREIGN KEY (category) REFERENCES categories(forwardTo), maxCapacity INT, threshold VARCHAR(10), minRequirementsToAccess VARCHAR(1000))";
+  "CREATE TABLE IF NOT EXISTS services (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description VARCHAR(2000), category VARCHAR(255), organisation VARCHAR(255), maxAge INT, minAge INT, contactNumber VARCHAR(255), contactEmail VARCHAR(255), website VARCHAR(255), referralPathway VARCHAR(1000), address VARCHAR(500), imageUrl VARCHAR(255), forwardTo VARCHAR(255) UNIQUE NOT NULL, FOREIGN KEY (category) REFERENCES categories(forwardTo), maxCapacity INT, threshold VARCHAR(10), minRequirementsToAccess VARCHAR(1000), parent_service INT, FOREIGN KEY (parent_service) REFERENCES services(id) ON DELETE SET NULL)";
 
 //set up our junction tables for our many to many relationships
 const createServiceNeedsJunction =

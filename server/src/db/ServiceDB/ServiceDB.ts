@@ -1,11 +1,13 @@
-import {
-  Pool,
-  PoolConnection,
-  ResultSetHeader,
-  RowDataPacket,
-} from "mysql2/promise";
+import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+
 import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries";
+import {
+  fetchAllChildrenServices,
+  fetchAllServicesMinimal,
+} from "./serviceSQLQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
+import { SubCategoryDB } from "./subCategoryDB/SubCategoryDB";
+
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import {
   TAreasServed,
@@ -13,7 +15,6 @@ import {
   TNeedsMet,
 } from "../../types/serviceTypes/subServiceCategories";
 import { IService } from "../../types/serviceTypes/ServiceType";
-import { SubCategoryDB } from "./subCategoryDB/SubCategoryDB";
 
 export class ServiceDB {
   private connection: Pool;
@@ -137,11 +138,29 @@ export class ServiceDB {
       );
       if (allSubCategories instanceof Error)
         throw Error("Error in fetching sub categories");
+      const allChildren = await this.fetchAllChildrenServices(serviceId);
 
-      return { baseService, ...allSubCategories };
+      return { baseService, children: allChildren, ...allSubCategories };
     } catch (error) {
       return error;
     }
+  }
+
+  public async fetchAllChildrenServices(
+    parent_id: number
+  ): Promise<RowDataPacket[]> {
+    const [result] = await this.connection.execute<RowDataPacket[]>(
+      fetchAllChildrenServices,
+      [parent_id]
+    );
+    return result;
+  }
+
+  public async fetchServicesMinimal() {
+    const [result] = await this.connection.execute<RowDataPacket[]>(
+      fetchAllServicesMinimal
+    );
+    return result;
   }
 
   //basic getters and setters

@@ -4,6 +4,7 @@ import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
 import { mappedCategorySelectInfo } from "../../assets/category/categoryInfo";
+import SelectParentService from "./selectParentService/SelectParentService";
 
 type Props = {
   formState: TIterableService;
@@ -95,6 +96,12 @@ const BaseServiceForm: FC<Props> = ({
         updateField={updatePrimitiveField}
         optionArray={mappedCategorySelectInfo}
         value={formState.category as string}
+        inputError={inputErrors}
+        setInputError={setInputErrors}
+      />
+      <SelectParentService
+        updateField={updatePrimitiveField}
+        value={formState.parent as string}
         inputError={inputErrors}
         setInputError={setInputErrors}
       />

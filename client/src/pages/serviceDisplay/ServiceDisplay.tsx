@@ -1,6 +1,9 @@
 import { FC, useEffect, useState } from "react";
 
-import { IServiceWithSubs } from "../../types/serviceTypes/Service";
+import {
+  IServiceWithChildren,
+  IServiceWithSubs,
+} from "../../types/serviceTypes/Service";
 
 import DisplayTextInfo from "../../microcomponents/displayInfo/DisplayTextInfo";
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
@@ -12,6 +15,7 @@ import envIndex from "../../envIndex/envIndex";
 import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { BsGlobe } from "react-icons/bs";
+import ServiceChildContainer from "../../components/serviceChildContainer/ServiceChildContainer";
 
 type Props = {
   serviceId: string | boolean;
@@ -24,7 +28,7 @@ const ServiceDisplay: FC<Props> = ({
   themeColor,
   backClickPath,
 }) => {
-  const [service, setService] = useState<IServiceWithSubs | null>(null);
+  const [service, setService] = useState<IServiceWithChildren | null>(null);
 
   useEffect(() => {
     if (!serviceId) return;
@@ -41,6 +45,7 @@ const ServiceDisplay: FC<Props> = ({
         const data = await result.json();
         const formattedData = {
           ...data.baseService[0],
+          children: data.children,
           needsMet: mapSubServiceToISubCategory(data.needsMet, "needsMet"),
           clientGroups: mapSubServiceToISubCategory(
             data.clientGroups,
@@ -115,6 +120,7 @@ const ServiceDisplay: FC<Props> = ({
                 <span>{service.address}</span>
               </div>
             </div>
+
             <DisplayTextInfo
               name="Address"
               value={service.address}
@@ -140,11 +146,14 @@ const ServiceDisplay: FC<Props> = ({
               value={service.referralPathway}
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
-            <DisplayTextInfo
-              name="Parent Organisation"
-              value={service.organisation}
-              themeColor={themeColor ? themeColor : ThemeColor.blue}
-            />
+            {service.parent_service ? (
+              <DisplayTextInfo
+                name="Parent Organisation"
+                value={service.parent_service}
+                themeColor={themeColor ? themeColor : ThemeColor.blue}
+              />
+            ) : null}
+
             {service.maxCapacity && (
               <DisplayTextInfo
                 name="Maximum Capacity"
@@ -173,6 +182,13 @@ const ServiceDisplay: FC<Props> = ({
                 themeColor={themeColor ? themeColor : ThemeColor.blue}
               />
             )}
+
+            {service.children && service.children.length !== 0 ? (
+              <ServiceChildContainer
+                childServices={service.children}
+                themeColor={themeColor}
+              />
+            ) : null}
           </div>
           <hr className="w-2/3 ml-auto mr-auto" />
           <div className="p-5 grid lg:grid-cols-2 gap-3">

@@ -14,6 +14,7 @@ export const findServiceByIdController = async (
       .fetchServiceAndRelatedEntries(serviceId);
     if (!serviceResult)
       return res.status(404).json("Could not find relevant entry");
+    console.log(serviceResult, "serviceResult");
     if (serviceResult instanceof Error) throw new Error(serviceResult.message);
 
     res.status(200).json(serviceResult);

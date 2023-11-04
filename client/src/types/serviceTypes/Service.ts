@@ -21,6 +21,7 @@ export interface IService extends IListItemBase {
   maxCapacity?: number;
   threshold?: "high" | "low";
   minRequirementsToAccess?: string;
+  parent_service?: number;
 }
 
 //Service with subsections
@@ -29,3 +30,14 @@ export interface IServiceWithSubs extends IService {
   areasServed: ISubServiceCategory[];
   clientGroups: ISubServiceCategory[];
 }
+
+export interface IServiceWithChildren extends IServiceWithSubs {
+  children?: ChildService[];
+}
+
+export type ChildService = {
+  id: number;
+  name: string;
+  forwardTo: string;
+  category: string;
+};

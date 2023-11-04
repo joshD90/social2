@@ -65,5 +65,4 @@ ORDER BY weighting DESC
 LIMIT 100;
 `;
 
-// You can now use the sqlQuery variable in your JavaScript code.
 export default { searchServicesQuery };
