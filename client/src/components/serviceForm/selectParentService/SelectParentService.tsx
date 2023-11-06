@@ -29,8 +29,8 @@ const SelectParentService: FC<Props> = ({
         name: service.name,
         value: service.id,
       }))}
-      label="Parent Service"
-      name="parent_service"
+      label="Parent Service Id"
+      name="parent_service_id"
       updateField={updateField}
       value={value}
       inputError={inputError}

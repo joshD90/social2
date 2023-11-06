@@ -21,7 +21,11 @@ export interface IService extends IListItemBase {
   maxCapacity?: number;
   threshold?: "high" | "low";
   minRequirementsToAccess?: string;
-  parent_service?: number;
+
+  parent_service_id?: number;
+  parent_service_category?: string;
+  parent_service_forwardTo: string;
+  parent_service_name?: string;
 }
 
 //Service with subsections

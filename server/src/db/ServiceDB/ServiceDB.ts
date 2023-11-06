@@ -4,6 +4,7 @@ import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries
 import {
   fetchAllChildrenServices,
   fetchAllServicesMinimal,
+  fetchServiceByIdWithParent,
 } from "./serviceSQLQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { SubCategoryDB } from "./subCategoryDB/SubCategoryDB";
@@ -15,6 +16,7 @@ import {
   TNeedsMet,
 } from "../../types/serviceTypes/subServiceCategories";
 import { IService } from "../../types/serviceTypes/ServiceType";
+import queryObj from "../ServiceReportDB/serviceReportQueries";
 
 export class ServiceDB {
   private connection: Pool;
@@ -128,11 +130,11 @@ export class ServiceDB {
   //fetch service and related sub categories
   public async fetchServiceAndRelatedEntries(serviceId: number) {
     try {
-      const baseService = await this.ServiceBaseQueries.findEntryBy(
-        "id",
-        serviceId
+      const baseService = await this.connection.execute<RowDataPacket[]>(
+        fetchServiceByIdWithParent,
+        [serviceId]
       );
-      if (baseService instanceof Error) return null;
+
       const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
         serviceId
       );

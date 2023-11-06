@@ -146,10 +146,10 @@ const ServiceDisplay: FC<Props> = ({
               value={service.referralPathway}
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
-            {service.parent_service ? (
+            {service.parent_service_id ? (
               <DisplayTextInfo
                 name="Parent Organisation"
-                value={service.parent_service}
+                value={service.parent_service_id}
                 themeColor={themeColor ? themeColor : ThemeColor.blue}
               />
             ) : null}
