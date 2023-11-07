@@ -41,12 +41,12 @@ Will need to add a new category of verified but not approved.
 
 1. Update services table to include parent id. [x]
 2. Update base service type on backend to include parent id as possible.[x]
-3. Update overall service type to include an array of children
-4. Update the ServiceDB Creation -ACTUALLY dont think I need this.
-5. Update service fetch query to include a list of id's and names - look at search functionality for how to do this
-6. Include any parent services in this fetch
-7. Update Service Display to have a dropdown if there are children. Have these link to another service.
-8. Display parent information on service display and have this link to the parent.
+3. Update overall service type to include an array of children [x]
+4. Update the ServiceDB Creation [x]
+5. Update service fetch query to include a list of id's and names - look at search functionality for how to do this [x]
+6. Include any parent services in this fetch [x]
+7. Update Service Display to have a dropdown if there are children. Have these link to another service. [x]
+8. Display parent information on service display and have this link to the parent. THIS HAS BEEN DONE HOWEVER NEED TO CHANGE SERVICE FETCH TO JOIN PARENT ORG NAME / ID / FORWARDTO / CATEGORY onto the parent id - may have to completely change the way this is done. 
 
 ### Multiple Contacts
 

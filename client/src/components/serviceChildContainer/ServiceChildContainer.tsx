@@ -30,7 +30,7 @@ const ServiceChildContainer: FC<Props> = ({ childServices, themeColor }) => {
       </label>
       <select
         id="serviceChildren"
-        className="text-stone-800 bg-stone-50 h-full"
+        className="text-stone-800 bg-stone-50 py-1 h-full"
         defaultValue={"selectService"}
         onChange={handleNavigate}
       >

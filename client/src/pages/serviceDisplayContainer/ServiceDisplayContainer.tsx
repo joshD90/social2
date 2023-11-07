@@ -55,7 +55,7 @@ const ServiceDisplayContainer = () => {
     <section
       className="overflow-auto w-full"
       //factor in the navbar height
-      style={{ height: "calc(100vh - 2.5rem)" }}
+      style={{ height: "calc(100vh - 3rem)" }}
       ref={containerRef}
     >
       <ServiceDisplay

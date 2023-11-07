@@ -43,7 +43,10 @@ const ListContainer: FC<Props> = ({ isAboveMedium }) => {
   }, [category]);
 
   return (
-    <div className="w-full overflow-y-auto h-full border-x-2 border-stone-700 backgroundAllColorDark">
+    <div
+      className="w-full overflow-y-auto  border-x-2 border-stone-700 backgroundAllColorDark"
+      style={{ height: "calc(100vh - 3rem)" }}
+    >
       {listItems.map((item, index) => {
         const themeColor = category
           ? categoryThemes.get(item?.category as TCategoryNames)

@@ -19,7 +19,10 @@ export interface IService {
   maxCapacity?: number;
   threshold?: "low" | "high";
   minRequirementsToAccess?: string;
-  parent_service?: number;
+  parent_service_id?: number;
+  parent_service_category?: string;
+  parent_service_forwardTo: string;
+  parent_service_name?: string;
 }
 
 //typing for the object that is returned from the mySQL database

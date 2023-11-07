@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { AiFillHome, AiOutlineSearch } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import ProfileNavDropDown from "../../../components/navbar/profileNavDropDown/ProfileNavDropDown";
 import { useRef, useState } from "react";
@@ -14,7 +14,7 @@ const PrimaryLayoutNav = () => {
   const navigate = useNavigate();
   const profileToggleRef = useRef(null);
   return (
-    <div className="w-full py-1 px-3 bg-blue-950 p-2 text-stone-50 flex items-center justify-between relative">
+    <div className="w-full h-12 px-3 bg-blue-950 p-2 text-stone-50 flex items-center justify-between relative">
       <div>
         <button
           className="text-2xl flex items-center hover:text-white"

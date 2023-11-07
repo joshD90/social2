@@ -19,7 +19,10 @@ const CategoryLanding = () => {
   //if no category has been selected then we send back our generic categories homepage - may need to break this into a seperate component perhaps
   if (!categoryInfo)
     return (
-      <div className="w-full h-full relative flex flex-col items-center justify-center text-white text-center">
+      <div
+        className="w-full relative flex flex-col items-center justify-center text-white text-center"
+        style={{ height: "calc(100vh - 3rem)" }}
+      >
         <button
           className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2 top-2 text-stone-800"
           onClick={() => navigate("/services")}
@@ -49,6 +52,7 @@ const CategoryLanding = () => {
         background: `linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.5)), url(${categoryInfo.image})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
+        height: "calc(100vh - 3rem)",
       }}
       className="w-full h-full bg-cover text-center p-5 text-stone-50 relative bg-no-repeat"
     >
