@@ -9,7 +9,7 @@ const getAllServicesController = async (req: Request, res: Response) => {
   try {
     let allServices: Error | ExtendedRowDataPacket<unknown>[] | RowDataPacket[];
     if (!minimal) {
-      allServices = await db.getServiceDB().getBaseTableQueries().findEntryBy();
+      allServices = await db.getServiceDB().fetchAllServices();
     } else {
       allServices = await db.getServiceDB().fetchServicesMinimal();
     }

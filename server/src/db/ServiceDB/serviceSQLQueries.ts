@@ -3,7 +3,7 @@ const fetchAllChildrenServices =
 
 const fetchAllServicesMinimal = "SELECT id, name FROM services";
 
-const fetchService = (serviceId: number) => `
+const fetchServices = (serviceId?: number) => `
   SELECT
     s1.id,
     s1.category,
@@ -28,7 +28,7 @@ const fetchService = (serviceId: number) => `
     s2.name AS parent_service_name
   FROM services s1
   LEFT JOIN services s2 ON s1.parent_service_id = s2.id ${
-    serviceId && "WHERE s1.id = ?"
+    serviceId ? "WHERE s1.id = ?" : ""
   }`;
 
-export { fetchAllChildrenServices, fetchAllServicesMinimal, fetchService };
+export { fetchAllChildrenServices, fetchAllServicesMinimal, fetchServices };

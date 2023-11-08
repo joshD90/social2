@@ -67,7 +67,7 @@ const ServiceDisplayContainer = () => {
         <div
           className={`w-full bg-yellow-600 bg-opacity-80 ${
             reportsOpen ? "max-h-96 overflow-auto" : "h-10 overflow-hidden"
-          }`}
+          } my-6`}
         >
           <div className="flex items-center h-10 w-full justify-between px-3">
             <h1 className="justify-self-center">Issue Reports</h1>

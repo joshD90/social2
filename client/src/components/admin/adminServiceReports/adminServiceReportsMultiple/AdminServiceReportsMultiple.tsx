@@ -1,7 +1,7 @@
 import { FC } from "react";
 import useGetFetch from "../../../../hooks/useGetFetch";
 import { IServiceReportEntry } from "../../../../types/serviceTypes/serviceReportTypes";
-import AdminServiceREportIndividual from "../adminServiceReportIIndividual/AdminServiceReportIndividual";
+import AdminServiceReportIndividual from "../adminServiceReportIndividual/AdminServiceReportIndividual";
 import envIndex from "../../../../envIndex/envIndex";
 
 type Props = { serviceId: string | boolean };
@@ -17,7 +17,7 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
   if (loading || !fetchedData) return <div>...Loading</div>;
   if (error !== "") return <div>{error}</div>;
   return (
-    <section>
+    <section className="">
       <table className="bg-stone-300 w-full">
         <thead>
           <tr className="border-2 border-solid border-stone-500">
@@ -38,7 +38,7 @@ const AdminServiceReportsMultiple: FC<Props> = ({ serviceId }) => {
         </thead>
         <tbody>
           {fetchedData.map((serviceReport) => (
-            <AdminServiceREportIndividual
+            <AdminServiceReportIndividual
               report={serviceReport}
               key={serviceReport.id}
               setAllReports={setFetchedData}

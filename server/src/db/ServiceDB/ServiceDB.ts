@@ -4,7 +4,7 @@ import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries
 import {
   fetchAllChildrenServices,
   fetchAllServicesMinimal,
-  fetchService,
+  fetchServices,
 } from "./serviceSQLQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { SubCategoryDB } from "./subCategoryDB/SubCategoryDB";
@@ -131,10 +131,10 @@ export class ServiceDB {
   public async fetchServiceAndRelatedEntries(serviceId: number) {
     try {
       const [baseService] = await this.connection.execute<RowDataPacket[]>(
-        fetchService(serviceId),
+        fetchServices(serviceId),
         [serviceId]
       );
-      console.log(baseService, "base service");
+
       const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
         serviceId
       );
@@ -146,6 +146,13 @@ export class ServiceDB {
     } catch (error) {
       return error;
     }
+  }
+
+  public async fetchAllServices() {
+    const [result] = await this.connection.execute<RowDataPacket[]>(
+      fetchServices()
+    );
+    return result;
   }
 
   public async fetchAllChildrenServices(

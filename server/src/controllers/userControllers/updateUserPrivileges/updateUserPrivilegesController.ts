@@ -45,7 +45,7 @@ const updateUserPrivilegesController = async (
     .updatePrivileges(newPrivilege, parseInt(userToUpdateId));
 
   if (result instanceof Error) return res.status(500).json(result.message);
-  console.log("successfully updated");
+
   return res.status(200).json("Updated Successfully");
 };
 

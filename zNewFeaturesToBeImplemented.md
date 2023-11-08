@@ -23,7 +23,7 @@ Will need to add a new category of verified but not approved.
   3. Have this delete the comment from state on success [x]
   4. Put in error messaging into comments - Determine where to hold this information [x]
 
-- Allow for editing and deletion of comments by self or by admin / moderator
+- Allow for editing of comments by self or by admin / moderator
 
   1. This should just be a case of creating some new endpoints.
   2. Update the actual DB to reflect a new updatedAt and updatedByWho (should reference users table)
@@ -46,7 +46,7 @@ Will need to add a new category of verified but not approved.
 5. Update service fetch query to include a list of id's and names - look at search functionality for how to do this [x]
 6. Include any parent services in this fetch [x]
 7. Update Service Display to have a dropdown if there are children. Have these link to another service. [x]
-8. Display parent information on service display and have this link to the parent. THIS HAS BEEN DONE HOWEVER NEED TO CHANGE SERVICE FETCH TO JOIN PARENT ORG NAME / ID / FORWARDTO / CATEGORY onto the parent id - may have to completely change the way this is done. 
+8. Display parent information on service display and have this link to the parent. [x]
 
 ### Multiple Contacts
 

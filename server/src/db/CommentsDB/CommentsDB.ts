@@ -75,7 +75,7 @@ export class CommentsDB {
     const voteValues = Object.values(vote);
     //This is to allow passing in the update value
     voteValues.push(voteValues[voteValues.length - 1]);
-    console.log(voteValues);
+
     try {
       const [result] = await this.connection.query<ResultSetHeader>(
         commentQueryObj.voteComment,
@@ -103,7 +103,7 @@ export class CommentsDB {
     const values = parentId
       ? [parentId, organisation, limit, offset]
       : [serviceId, organisation, limit, offset];
-    console.log(values);
+
     try {
       const [result] = await this.connection.query<RowDataPacket[]>(
         query,

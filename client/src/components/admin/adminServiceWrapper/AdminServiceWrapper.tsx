@@ -22,7 +22,7 @@ const AdminServiceWrapper = () => {
   };
 
   return (
-    <section className="">
+    <section className="bg-blue-950">
       <div className="w-full flex items-center justify-between p-1 bg-blue-950">
         <button
           className="rounded-md p-2 bg-stone-50 hover:bg-stone-200 text-stone-900"

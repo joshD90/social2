@@ -20,7 +20,7 @@ const findAllServiceReportController = async (
   if (req.query.serviceId) {
     //get all the reports for a particular service if the query param is there
     const serviceId = parseInt(req.query.serviceId as string);
-    console.log(serviceId);
+
     if (isNaN(serviceId))
       return res
         .status(400)
