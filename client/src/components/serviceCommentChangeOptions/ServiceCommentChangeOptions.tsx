@@ -1,7 +1,7 @@
-import { Dispatch, FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { ICommentWithVotes } from "../../types/commentTypes/commentTypes";
 import { IUser } from "../../types/userTypes/UserTypes";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import envIndex from "../../envIndex/envIndex";
 import { TCommentReducerAction } from "../../types/commentTypes/commentReducerTypes";
 
@@ -9,12 +9,15 @@ type Props = {
   user: IUser | null;
   comment: ICommentWithVotes;
   commentsDispatch: Dispatch<TCommentReducerAction>;
+  editing: boolean;
+  setEditing: Dispatch<SetStateAction<boolean>>;
 };
 
 const ServiceCommentChangeOptions: FC<Props> = ({
   user,
   comment,
   commentsDispatch,
+  setEditing,
 }) => {
   const handleDelete = async () => {
     if (!comment.id) return;
@@ -46,9 +49,14 @@ const ServiceCommentChangeOptions: FC<Props> = ({
     return null;
 
   return (
-    <button className="flex" onClick={handleDelete}>
-      <MdDelete />
-    </button>
+    <div className="flex">
+      <button className="flex" onClick={handleDelete}>
+        <MdDelete />
+      </button>
+      <button onClick={() => setEditing((prev) => !prev)}>
+        <MdEdit />
+      </button>
+    </div>
   );
 };
 

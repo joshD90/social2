@@ -111,6 +111,7 @@ export class GeneralQueryGenerator {
     const values = Object.values(updateObject);
 
     const columnWhiteList = await this.getTableColumnNames(this.table);
+
     //sanitize data
     try {
       keys.forEach((column) => {

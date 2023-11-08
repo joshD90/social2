@@ -1,5 +1,5 @@
 const initCommentsTable =
-  "CREATE TABLE IF NOT EXISTS comments(id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, service_id INT NOT NULL, comment VARCHAR(2000) NOT NULL, inReplyTo INT, hasReplies BOOL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (service_id) REFERENCES services(id))";
+  "CREATE TABLE IF NOT EXISTS comments(id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, service_id INT NOT NULL, comment VARCHAR(2000) NOT NULL, inReplyTo INT, hasReplies BOOL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP, updated_by_id INT, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (service_id) REFERENCES services(id), FOREIGN KEY (updated_by_id) REFERENCES users(id))";
 
 const initVotesTable =
   "CREATE TABLE IF NOT EXISTS commentVotes(comment_id INT NOT NULL, user_id INT NOT NULL, vote_value INT NOT NULL, PRIMARY KEY (comment_id, user_id), FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)";

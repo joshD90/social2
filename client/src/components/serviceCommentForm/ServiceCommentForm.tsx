@@ -1,4 +1,4 @@
-import { FC, useContext, useState, Dispatch } from "react";
+import { FC, useContext, useState, Dispatch, SetStateAction } from "react";
 import { AuthContext } from "../../context/authContext/AuthContext";
 import {
   ICommentBase,
@@ -12,52 +12,70 @@ type Props = {
   serviceId: number;
   commentDispatch: Dispatch<TCommentReducerAction>;
   parentCommentId?: number;
+  commentToEdit?: ICommentBase;
+  setEditing?: Dispatch<SetStateAction<boolean>>;
 };
 
 const ServiceCommentForm: FC<Props> = ({
   serviceId,
   commentDispatch,
   parentCommentId,
+  commentToEdit,
+  setEditing,
 }) => {
   const {
     currentUser: { user },
   } = useContext(AuthContext);
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState(commentToEdit?.comment ?? "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const abortController = new AbortController();
     if (!user || !user.id || commentText === "") return;
-    const commentToSubmit: ICommentBase = {
-      user_id: user.id,
-      service_id: serviceId,
-      comment: commentText,
-    };
+    const commentToSubmit: ICommentBase = commentToEdit
+      ? { ...commentToEdit, comment: commentText }
+      : {
+          user_id: user.id,
+          service_id: serviceId,
+          comment: commentText,
+        };
     if (parentCommentId) commentToSubmit.inReplyTo = parentCommentId;
 
-    const url = `${envIndex.urls.baseUrl}/services/service/comments`;
+    const url = !commentToEdit
+      ? `${envIndex.urls.baseUrl}/services/service/comments`
+      : `${envIndex.urls.baseUrl}/services/service/comments/${commentToEdit.id}`;
     try {
       const response = await fetch(url, {
         signal: abortController.signal,
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        method: "POST",
+        method: `${commentToEdit ? "PUT" : "POST"}`,
         body: JSON.stringify(commentToSubmit),
       });
+      console.log(response, "response returned");
       if (!response.ok) throw Error(response.statusText);
       const data = await response.json();
       const createdComment: ICommentWithVotes = {
         ...commentToSubmit,
-        created_at: JSON.stringify(Date.now()),
+        created_at: commentToEdit
+          ? commentToEdit?.created_at
+          : Date.now().toLocaleString(),
         total_votes: 0,
         firstName: user.firstName,
         lastName: user.lastName,
         id: data.newId,
+        updated_at: commentToEdit ? Date.now().toLocaleString() : undefined,
       };
+      console.log(createdComment, "Created Comment");
+      const dispatchType = commentToEdit
+        ? "UPDATE_COMMENT"
+        : "PREPEND_COMMENT_AFTER_CREATE";
+
       commentDispatch({
-        type: "PREPEND_COMMENT_AFTER_CREATE",
+        type: dispatchType,
         payload: createdComment,
       });
+      setEditing && setEditing(false);
       setCommentText("");
     } catch (error) {
       console.log(error);
@@ -69,7 +87,11 @@ const ServiceCommentForm: FC<Props> = ({
       <form onSubmit={handleSubmit} className="py-1 text-stone-50">
         <div>
           <label htmlFor="newCommentInput" className="text-sm">
-            {parentCommentId ? "Reply to this comment" : "Add Your Own Comment"}
+            {!commentToEdit
+              ? parentCommentId
+                ? "Reply to this comment"
+                : "Add Your Own Comment"
+              : ""}
           </label>
           <div className="w-full flex">
             <input

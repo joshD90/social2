@@ -7,6 +7,7 @@ import {
   IVote,
 } from "../../types/commentTypes/commentTypes";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
+import { IUser } from "../../types/userTypes/UserType";
 
 export class CommentsDB {
   private connection: Pool;
@@ -138,6 +139,22 @@ export class CommentsDB {
     } catch (error) {
       return error as Error;
     }
+  }
+
+  public async updateComment(comment: ICommentBase, user: IUser) {
+    if (!comment.id || !user.id) throw Error("Needs a comment.id and a userId");
+    const currentTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const result = await this.commentGenericQueries.updateEntriesByMultiple(
+      {
+        comment: comment.comment,
+        updated_at: currentTime,
+        updated_by_id: user.id,
+      },
+      comment.id,
+      "id"
+    );
+    if (result instanceof Error) throw result;
+    return result;
   }
 
   public getCommentsGeneric(): GeneralQueryGenerator {

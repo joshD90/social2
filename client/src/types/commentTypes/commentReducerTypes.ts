@@ -11,4 +11,5 @@ export type TCommentReducerAction =
       payload: { commentId: number; voteValue: number };
     }
   | { type: "PREPEND_COMMENT_AFTER_CREATE"; payload: ICommentWithVotes }
+  | { type: "UPDATE_COMMENT"; payload: ICommentWithVotes }
   | { type: "CLEAR_COMMENTS" };

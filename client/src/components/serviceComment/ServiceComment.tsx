@@ -36,6 +36,7 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
   const [repliesToggled, setRepliesToggled] = useState(false);
   const [serviceIdNum, setServiceIdNum] = useState(parseInt(serviceId));
   const [viewAnyway, setViewAnyway] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => setServiceIdNum(parseInt(serviceId)), [serviceId]);
 
@@ -98,9 +99,20 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
           user={user}
           comment={comment}
           commentsDispatch={commentDispatch}
+          editing={editing}
+          setEditing={setEditing}
         />
       </div>
-      <p className="mb-1">{comment.comment}</p>
+      {editing ? (
+        <ServiceCommentForm
+          commentDispatch={commentDispatch}
+          serviceId={parseInt(serviceId)}
+          commentToEdit={comment}
+          setEditing={setEditing}
+        />
+      ) : (
+        <p className="mb-1">{comment.comment}</p>
+      )}
       <div className="flex gap-2">
         <button className="hover:text-green-200" onClick={() => handleVote(1)}>
           <BsHandThumbsUpFill />

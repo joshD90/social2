@@ -26,9 +26,10 @@ Will need to add a new category of verified but not approved.
 - Allow for editing of comments by self or by admin / moderator
 
   1. This should just be a case of creating some new endpoints.
-  2. Update the actual DB to reflect a new updatedAt and updatedByWho (should reference users table)
-  3. Make changes to comment fetch to include the potential updatedAt and updatedByWho(will have to join this on)
-  4. Add in edit opportunities - can I reuse the comment box but just prepopulate it with text? Will need to change the endpoint depending on whether reply / comment / edit - have this only be available for moderator / admin / own user
+  2. Update the actual DB to reflect a new updatedAt and updatedByWho (should reference users table) [x]
+  3. Make changes to types on frontend and backend to include extra columns [x]
+  4. Make changes to comment fetch to include the potential updatedAt and updatedByWho(will have to join this on)
+  5. Add in edit opportunities - can I reuse the comment box but just prepopulate it with text? Will need to change the endpoint depending on whether reply / comment / edit - have this only be available for moderator / admin / own user
 
 - Allow for hiding of comments with enough downvotes
   1. Conditionally render comment based on downvotes and instead placing a "Downvoted too many times" view anyways tab. [x]

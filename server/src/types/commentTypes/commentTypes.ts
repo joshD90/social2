@@ -5,6 +5,8 @@ export interface ICommentBase {
   inReplyTo?: number;
   hasReplies?: boolean;
   created_at?: string;
+  updated_at?: string;
+  updated_by_id?: number;
   comment: string;
 }
 
