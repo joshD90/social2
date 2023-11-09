@@ -49,11 +49,14 @@ const ServiceCommentChangeOptions: FC<Props> = ({
     return null;
 
   return (
-    <div className="flex">
-      <button className="flex" onClick={handleDelete}>
+    <div className="flex gap-2">
+      <button className="flex items-center" onClick={handleDelete}>
         <MdDelete />
       </button>
-      <button onClick={() => setEditing((prev) => !prev)}>
+      <button
+        onClick={() => setEditing((prev) => !prev)}
+        className="items-center flex"
+      >
         <MdEdit />
       </button>
     </div>

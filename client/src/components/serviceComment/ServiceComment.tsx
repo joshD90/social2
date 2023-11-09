@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  FC,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { FC, useContext, useEffect, useReducer, useState } from "react";
 import { ICommentWithVotes } from "../../types/commentTypes/commentTypes";
 import {
   BsChevronDoubleDown,
@@ -95,13 +88,20 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
             </div>
           )}
         </div>
-        <ServiceCommentChangeOptions
-          user={user}
-          comment={comment}
-          commentsDispatch={commentDispatch}
-          editing={editing}
-          setEditing={setEditing}
-        />
+        <div className="flex gap-2">
+          {comment.updated_at && (
+            <div>
+              <TimeSincePosted dateTime={comment.updated_at} edited />
+            </div>
+          )}
+          <ServiceCommentChangeOptions
+            user={user}
+            comment={comment}
+            commentsDispatch={commentDispatch}
+            editing={editing}
+            setEditing={setEditing}
+          />
+        </div>
       </div>
       {editing ? (
         <ServiceCommentForm
