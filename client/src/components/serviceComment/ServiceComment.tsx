@@ -90,8 +90,14 @@ const ServiceComment: FC<Props> = ({ comment, commentDispatch, serviceId }) => {
         </div>
         <div className="flex gap-2">
           {comment.updated_at && (
-            <div>
+            <div className="text-xs flex items-center gap-1">
               <TimeSincePosted dateTime={comment.updated_at} edited />
+              <p>
+                By
+                {comment.user_id === comment.updated_by_id
+                  ? ` Creator`
+                  : " Moderator"}
+              </p>
             </div>
           )}
           <ServiceCommentChangeOptions
