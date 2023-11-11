@@ -15,8 +15,12 @@ import {
   TClientGroups,
   TNeedsMet,
 } from "../../types/serviceTypes/subServiceCategories";
-import { IService } from "../../types/serviceTypes/ServiceType";
+import {
+  IService,
+  IServicePhoneContact,
+} from "../../types/serviceTypes/ServiceType";
 import queryObj from "../ServiceReportDB/serviceReportQueries";
+import ServiceContactsDB from "../ServiceContactsDB/ServiceContactsDB";
 
 export class ServiceDB {
   private connection: Pool;
@@ -26,13 +30,16 @@ export class ServiceDB {
   private SubCategoryDB: SubCategoryDB;
   //Generic Query Class for Report Table
   private serviceReportsQueries: GeneralQueryGenerator;
+  //Generic Query Class for Contacts table
+  private serviceContactsDB: ServiceContactsDB;
 
   constructor(connection: Pool) {
     this.connection = connection;
     //queries for our Base information
     this.ServiceBaseQueries = new GeneralQueryGenerator("services", connection);
-    //generate our subcategory db class
+    //generate our subcategory and contacts db class
     this.SubCategoryDB = new SubCategoryDB(connection);
+    this.serviceContactsDB = new ServiceContactsDB(connection);
     //generate our generic service report queries TODO: create a seperate report class for this
     this.serviceReportsQueries = new GeneralQueryGenerator(
       "serviceReports",
@@ -53,6 +60,7 @@ export class ServiceDB {
   //this compacts all the methods involved in creating the multiple tables associated with a service
   public async createFullServiceEntry(
     baseData: IService,
+    contactData: IServicePhoneContact[],
     subCategories: (TAreasServed | TNeedsMet | TClientGroups)[]
   ): Promise<ResultSetHeader | Error> {
     const connection = await this.connection.getConnection();
@@ -68,6 +76,8 @@ export class ServiceDB {
 
       const serviceId = baseResult.insertId;
 
+      //now make our contacts
+      await this.serviceContactsDB.insertPhoneContacts(contactData);
       // //now that we have made our base table entry we can create our sub directories
       const createSubCategoriesSuccess =
         await this.SubCategoryDB.createAllSubCategories(
@@ -135,6 +145,10 @@ export class ServiceDB {
         [serviceId]
       );
 
+      const contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
+        serviceId
+      );
+
       const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
         serviceId
       );
@@ -142,7 +156,12 @@ export class ServiceDB {
         throw Error("Error in fetching sub categories");
       const allChildren = await this.fetchAllChildrenServices(serviceId);
 
-      return { baseService, children: allChildren, ...allSubCategories };
+      return {
+        baseService,
+        children: allChildren,
+        contactNumbers,
+        ...allSubCategories,
+      };
     } catch (error) {
       return error;
     }

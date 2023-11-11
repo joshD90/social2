@@ -48,6 +48,12 @@ class ServiceContactsDB {
         serviceId
       );
     }
+
+    if (
+      results instanceof Error &&
+      results.message === "Could not find any Entries matching this criteria"
+    )
+      return [];
     if (results instanceof Error) throw new Error(results.message);
     return results;
   }
@@ -74,3 +80,5 @@ class ServiceContactsDB {
     await this.connection.execute(queryObj.initServicePhones);
   }
 }
+
+export default ServiceContactsDB;

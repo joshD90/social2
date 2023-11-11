@@ -53,7 +53,8 @@ Will need to add a new category of verified but not approved.
 ### Multiple Contacts
 
 - Allow for services to hold multiple different contact numbers. Each contact number should have a name or details associated with it as well as a number.
-  1. Remove number from the service. - is there a way to retroactively do this to the table maybe just have to do this all again - copy all numbers into text file
+  1. Remove number from the service. - is there a way to retroactively do this to the table maybe just have to do this all again - copy all numbers into text file -
+     Just bluntly get rid of the whole column. And just a have a many to one relationship with this other table. Change type, remove numbers from base service altogether, have it extend between the base service and subcategories (this can be done for the emails)
   2. Create a table for numbers, this should have a id, serviceId, details, number, secret.
      - Add create multiple to our generic class - we should be able to string construct this however it will need to be checked for safety
      - Create a class for serviceNumbersDB - create (should create multiple) / update / delete

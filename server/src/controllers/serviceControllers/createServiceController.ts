@@ -16,10 +16,12 @@ const createServiceController = async (
   const serviceDB = db.getServiceDB();
   const serviceBase = req.body.serviceBase;
   const subCatergories = req.body.subCategories;
+  const contactNumbers = req.body.contactNumbers ?? [];
 
   //create database entry
   const result = await serviceDB.createFullServiceEntry(
     serviceBase,
+    contactNumbers,
     subCatergories
   );
   if (result instanceof Error)

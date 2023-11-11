@@ -10,10 +10,10 @@ export interface IService {
   description: string;
   maxAge: number;
   minAge: number;
-  contactNumber: string | IServicePhoneContact[];
   contactEmail: string;
   referralPathway: string;
   address: string;
+  contactNumber: IServicePhoneContact[];
   imageUrl?: string;
   website?: string;
   maxCapacity?: number;
