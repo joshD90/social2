@@ -2,7 +2,11 @@ import { IListItemBase, TCategoryNames } from "../categoryTypes/CategoryTypes";
 import { ISubServiceCategory } from "./SubServiceCategories";
 
 export interface TIterableService {
-  [key: string]: string | number | ISubServiceCategory[];
+  [key: string]:
+    | string
+    | number
+    | ISubServiceCategory[]
+    | IServicePhoneContact[];
 }
 
 //our basic structure
@@ -11,7 +15,7 @@ export interface IService extends IListItemBase {
   organisation: string;
   maxAge: number;
   minAge: number;
-  contactNumber: string | IServicePhoneContact[];
+  contactNumber: IServicePhoneContact[];
   contactEmail: string;
   referralPathway: string;
   address: string;
@@ -48,7 +52,7 @@ export type ChildService = {
 export interface IServicePhoneContact {
   id?: number;
   details: string;
-  service_id: number;
+  service_id?: number;
   phone_number: string;
   public: boolean;
 }

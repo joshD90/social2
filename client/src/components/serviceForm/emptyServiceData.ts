@@ -6,7 +6,7 @@ export const emptyServiceData: IServiceWithSubs = {
   organisation: "",
   maxAge: 0,
   minAge: 0,
-  contactNumber: "",
+  contactNumber: [],
   contactEmail: "",
   referralPathway: "",
   address: "",

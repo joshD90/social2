@@ -18,12 +18,8 @@ const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
   const [inputError, setInputError] = useState<{ [key: string]: string }>({});
   const [fetchError, setFetchError] = useState("");
-  const {
-    formState,
-    updatePrimitiveField,
-    updateSubCategoryField,
-    setFormState,
-  } = useForm<TIterableService>({});
+  const { formState, updatePrimitiveField, updateArrayFields, setFormState } =
+    useForm<TIterableService>({});
   const { serviceId } = useParams();
   const { fetchedData } = useGetFetch(
     serviceId ? `${envIndex.urls.baseUrl}/services/service/${serviceId}` : ""
@@ -47,6 +43,7 @@ const ServiceForm = () => {
         return (
           <BaseServiceFormEssentials
             updatePrimitiveField={updatePrimitiveField}
+            updateArrayField={updateArrayFields}
             formState={formState}
             inputErrors={inputError}
             setInputErrors={setInputError}
@@ -65,7 +62,7 @@ const ServiceForm = () => {
         return (
           <ServiceSubSectionForm
             formState={formState}
-            updateField={updateSubCategoryField}
+            updateField={updateArrayFields}
           />
         );
     }

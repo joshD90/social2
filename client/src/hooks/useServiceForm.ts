@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { TIterableService } from "../types/serviceTypes/Service";
+import {
+  IServicePhoneContact,
+  TIterableService,
+} from "../types/serviceTypes/Service";
 import { ISubServiceCategory } from "../types/serviceTypes/SubServiceCategories";
 //custom hook focussed on Service Forms - may be able to generalise
 const useForm = <T extends TIterableService>(initialState: T) => {
@@ -13,17 +16,18 @@ const useForm = <T extends TIterableService>(initialState: T) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const updateSubCategoryField = (
+  const updateArrayFields = (
     name: string,
-    value: ISubServiceCategory[]
+    value: ISubServiceCategory[] | IServicePhoneContact[]
   ) => {
+    console.log(`${name} field shouldl be updating`);
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
   return {
     formState,
     updatePrimitiveField,
-    updateSubCategoryField,
+    updateArrayFields,
     setFormState,
   };
 };

@@ -1,10 +1,15 @@
 import { FC, SetStateAction } from "react";
 import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
-import { TIterableService } from "../../types/serviceTypes/Service";
+import {
+  IServicePhoneContact,
+  TIterableService,
+} from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
 import { mappedCategorySelectInfo } from "../../assets/category/categoryInfo";
 import SelectParentService from "./selectParentService/SelectParentService";
+import ServiceContactInput from "./serviceContactInput/ServiceContactInput";
+import { ISubServiceCategory } from "../../types/serviceTypes/SubServiceCategories";
 
 type Props = {
   formState: TIterableService;
@@ -13,6 +18,10 @@ type Props = {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => void;
+  updateArrayField: (
+    name: string,
+    value: ISubServiceCategory[] | IServicePhoneContact[]
+  ) => void;
   inputErrors: { [key: string]: string };
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
@@ -20,6 +29,7 @@ type Props = {
 const BaseServiceForm: FC<Props> = ({
   formState,
   updatePrimitiveField,
+  updateArrayField,
   inputErrors,
   setInputErrors,
 }) => {
@@ -54,7 +64,7 @@ const BaseServiceForm: FC<Props> = ({
           setInputError={setInputErrors}
         />
       </div>
-      <PrimitiveInput
+      {/* <PrimitiveInput
         name="contactNumber"
         label="Contact Number"
         type="text"
@@ -62,7 +72,8 @@ const BaseServiceForm: FC<Props> = ({
         value={formState.contactNumber as string}
         inputError={inputErrors}
         setInputError={setInputErrors}
-      />
+      /> */}
+
       <PrimitiveInput
         name="contactEmail"
         label="Contact Email"
@@ -105,7 +116,13 @@ const BaseServiceForm: FC<Props> = ({
         inputError={inputErrors}
         setInputError={setInputErrors}
       />
-
+      <ServiceContactInput
+        value={
+          (formState.contactNumber as unknown as IServicePhoneContact[]) ?? []
+        }
+        updateField={updateArrayField}
+        fieldName="contactNumber"
+      />
       <TextAreaInput
         size={{ cols: 40, rows: 10 }}
         label="Description of the Service"
