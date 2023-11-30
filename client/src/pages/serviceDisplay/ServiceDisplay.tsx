@@ -16,6 +16,9 @@ import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { BsGlobe } from "react-icons/bs";
 import ServiceChildContainer from "../../components/serviceChildContainer/ServiceChildContainer";
+import ServiceContactDisplay, {
+  serviceContactDummyData,
+} from "../../components/serviceContactDisplay/ServiceContactDisplay";
 
 type Props = {
   serviceId: string | boolean;
@@ -97,10 +100,18 @@ const ServiceDisplay: FC<Props> = ({
           <div className="p-5 grid lg:grid-cols-2 gap-3 text-stone-50">
             <div className="lg:col-span-2 flex justify-between items-start">
               <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-start gap-5">
-                  <FaPhoneAlt />
-                  <span>{service.contactNumber}</span>
-                </div>
+                {/* While we transition to the proper numbers we will keep this in so that we dont have to worr about it breaking for the old services */}
+                {typeof service.contactNumber === "string" ? (
+                  <div className="flex items-center justify-start gap-5">
+                    <FaPhoneAlt />
+                    <span>{service.contactNumber}</span>
+                  </div>
+                ) : null}
+                {typeof service.contactNumber === "object" ? (
+                  <div>
+                    {service.contactNumber.map((number) => number.phone_number)}
+                  </div>
+                ) : null}
 
                 <div className="flex items-center justify-start gap-5">
                   <MdEmail />
@@ -120,7 +131,10 @@ const ServiceDisplay: FC<Props> = ({
                 <span>{service.address}</span>
               </div>
             </div>
-
+            <ServiceContactDisplay
+              numbers={serviceContactDummyData}
+              color={themeColor ? themeColor : ThemeColor.blue}
+            />
             <DisplayTextInfo
               name="Address"
               value={service.address}

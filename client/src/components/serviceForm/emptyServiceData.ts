@@ -2,7 +2,8 @@ import { IServiceWithSubs } from "../../types/serviceTypes/Service";
 
 export const emptyServiceData: IServiceWithSubs = {
   name: "",
-  category: "",
+  category: "addiction",
+  description: "",
   organisation: "",
   maxAge: 0,
   minAge: 0,

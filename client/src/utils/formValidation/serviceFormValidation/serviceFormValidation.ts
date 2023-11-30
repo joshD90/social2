@@ -35,9 +35,7 @@ const validationSchema = Yup.object().shape({
     .positive("Can't be a minus age ya mad yoke")
     .moreThan(0, "Cannot be under 0 years old ya mad yoke")
     .required("Minimum age is required"),
-  contactNumber: Yup.string().required(
-    "Contact Number is Required.  If not applicable enter N/A"
-  ),
+  contactNumber: Yup.array().min(1, "You need to have at least one contact"),
   contactEmail: Yup.string()
     .email("Not a valid Email")
     .required("Email is required"),
@@ -52,6 +50,7 @@ const validationSchema = Yup.object().shape({
   ),
   threshold: Yup.string().oneOf(["low", "high"]),
   minRequirementsToAccess: Yup.string(),
+  someRandomBits: Yup.string().required(),
 });
 
 const validateServiceForm = async (
@@ -61,6 +60,7 @@ const validateServiceForm = async (
   | Error
 > => {
   const errors: { [key: string]: string } = {};
+  console.log(formData);
   try {
     const result = await validationSchema.validate(formData, {
       abortEarly: false,
@@ -72,7 +72,7 @@ const validateServiceForm = async (
         errors[validationError.path ? validationError.path : "null"] =
           validationError.message;
       });
-
+      console.log(errors, "errors");
       return { valid: false, obj: {}, errors };
     } else {
       return error as Error;

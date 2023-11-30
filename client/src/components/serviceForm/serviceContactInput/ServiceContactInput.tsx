@@ -12,7 +12,7 @@ type Props = {
 const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
   const [singleContact, setSingleContact] = useState(singleContactInitialValue);
   const [error, setError] = useState<{ [key: string]: string }>({});
-
+  //updates the single contact currently in form
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === "public")
       return setSingleContact((prev) => ({
@@ -22,15 +22,15 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
     if (e.target.id !== "details" && e.target.id !== "phone_number") return;
     setSingleContact((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
-
+  //add to the overall form state
   const handleAddContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError({});
     const validated = await serviceContactFormValidation(singleContact);
+
     if (validated instanceof Error)
       return setError((prev) => ({ ...prev, general: validated.message }));
-    console.log(Object.keys(validated.errors).length, "length of errors");
-    console.log(validated.errors);
+
     if (Object.keys(validated.errors).length > 0)
       return setError((prev) => ({ ...prev, ...validated.errors }));
 
@@ -57,7 +57,9 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="">Number</label>
-          {error.number ? <p className="text-red-500">{error.number}</p> : null}
+          {error.phone_number ? (
+            <p className="text-red-500">{error.phone_number}</p>
+          ) : null}
           <input
             type="text"
             className="p-1 text-stone-800"
