@@ -81,10 +81,11 @@ const ServiceForm = () => {
     //seperate our form information into two seperate parts
     const serviceToSend = separateService(formState);
 
-    //validate our form
-    const validationResult = await validateServiceForm(
-      serviceToSend.serviceBase
-    );
+    //validate our form - pull the contactNumber back with base Service to match our form validation
+    const validationResult = await validateServiceForm({
+      ...serviceToSend.serviceBase,
+      contactNumber: serviceToSend.contactNumber,
+    });
 
     if (validationResult instanceof Error) return;
     if (!validationResult.valid) {
@@ -92,6 +93,7 @@ const ServiceForm = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    //extract the contactNumbers
 
     const url = serviceId
       ? `${envIndex.urls.baseUrl}/services/${serviceId}`

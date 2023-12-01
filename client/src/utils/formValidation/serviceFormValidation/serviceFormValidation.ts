@@ -35,7 +35,9 @@ const validationSchema = Yup.object().shape({
     .positive("Can't be a minus age ya mad yoke")
     .moreThan(0, "Cannot be under 0 years old ya mad yoke")
     .required("Minimum age is required"),
-  contactNumber: Yup.array().min(1, "You need to have at least one contact"),
+  contactNumber: Yup.array()
+    .required("You need to have a contact number or just write N/A")
+    .min(1, "Should have at least one number"),
   contactEmail: Yup.string()
     .email("Not a valid Email")
     .required("Email is required"),
@@ -50,7 +52,6 @@ const validationSchema = Yup.object().shape({
   ),
   threshold: Yup.string().oneOf(["low", "high"]),
   minRequirementsToAccess: Yup.string(),
-  someRandomBits: Yup.string().required(),
 });
 
 const validateServiceForm = async (
