@@ -7,7 +7,6 @@ const createServiceController = async (
   req: Request,
   res: Response
 ): Promise<Response | undefined> => {
-  console.log(req.user, "req.user in create Service controller");
   if (!req.user || (req.user as IUser).privileges !== "admin")
     return res
       .status(401)
@@ -18,7 +17,8 @@ const createServiceController = async (
   const serviceBase = req.body.serviceBase;
   const subCatergories = req.body.subCategories;
   const contactNumbers = req.body.contactNumber ?? [];
-
+  console.log(serviceBase, subCatergories, contactNumbers);
+  console.log(contactNumbers, "contact numbers specifically");
   //create database entry
   const result = await serviceDB.createFullServiceEntry(
     serviceBase,

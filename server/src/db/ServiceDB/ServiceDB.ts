@@ -77,7 +77,14 @@ export class ServiceDB {
       const serviceId = baseResult.insertId;
 
       //now make our contacts
-      await this.serviceContactsDB.insertPhoneContacts(contactData);
+      const contactDataWithServiceId = contactData.map((contact) => ({
+        ...contact,
+        service_id: serviceId,
+      }));
+      console.log("contact data before trying to create phone contacts");
+      await this.serviceContactsDB.insertPhoneContacts(
+        contactDataWithServiceId
+      );
       // //now that we have made our base table entry we can create our sub directories
       const createSubCategoriesSuccess =
         await this.SubCategoryDB.createAllSubCategories(
@@ -159,7 +166,7 @@ export class ServiceDB {
       return {
         baseService,
         children: allChildren,
-        contactNumbers,
+        contactNumber: contactNumbers,
         ...allSubCategories,
       };
     } catch (error) {

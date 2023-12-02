@@ -46,8 +46,18 @@ const ServiceDisplay: FC<Props> = ({
         });
         if (!result.ok) throw Error(result.statusText);
         const data = await result.json();
+        console.log(
+          data.contactNumber,
+          data.baseService[0].contactNumber,
+          "two contacts"
+        );
+        const contactNumber =
+          Array.isArray(data.contactNumber) && data.contactNumber.length > 0
+            ? data.contactNumber
+            : data.baseService[0].contactNumber;
         const formattedData = {
           ...data.baseService[0],
+          contactNumber: contactNumber,
           children: data.children,
           needsMet: mapSubServiceToISubCategory(data.needsMet, "needsMet"),
           clientGroups: mapSubServiceToISubCategory(
@@ -107,11 +117,6 @@ const ServiceDisplay: FC<Props> = ({
                     <span>{service.contactNumber}</span>
                   </div>
                 ) : null}
-                {typeof service.contactNumber === "object" ? (
-                  <div>
-                    {service.contactNumber.map((number) => number.phone_number)}
-                  </div>
-                ) : null}
 
                 <div className="flex items-center justify-start gap-5">
                   <MdEmail />
@@ -131,10 +136,12 @@ const ServiceDisplay: FC<Props> = ({
                 <span>{service.address}</span>
               </div>
             </div>
-            <ServiceContactDisplay
-              numbers={serviceContactDummyData}
-              color={themeColor ? themeColor : ThemeColor.blue}
-            />
+            {Array.isArray(service.contactNumber) ? (
+              <ServiceContactDisplay
+                numbers={service.contactNumber}
+                color={themeColor ? themeColor : ThemeColor.blue}
+              />
+            ) : null}
             <DisplayTextInfo
               name="Address"
               value={service.address}

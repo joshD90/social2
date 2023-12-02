@@ -25,6 +25,8 @@ class ServiceContactsDB {
   public async insertPhoneContacts(
     contacts: IServicePhoneContact[]
   ): Promise<ResultSetHeader[]> {
+    console.log(contacts, "contacts actually inside my insertPhone contacts");
+
     const allResults = Promise.all(
       contacts.map(async (contact) => {
         return this.phoneGenericQueries.createTableEntryFromPrimitives(
@@ -33,6 +35,7 @@ class ServiceContactsDB {
       })
     );
     const allResultsAwaited = await allResults;
+    console.log(allResultsAwaited, "all results awaited");
     if (allResultsAwaited.find((result) => result instanceof Error))
       throw new Error("Something went wrong with inserting contacts");
     return allResultsAwaited as ResultSetHeader[];
