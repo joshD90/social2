@@ -21,6 +21,7 @@ import {
 } from "../../types/serviceTypes/ServiceType";
 import queryObj from "../ServiceReportDB/serviceReportQueries";
 import ServiceContactsDB from "../ServiceContactsDB/ServiceContactsDB";
+import { IUser } from "../../types/userTypes/UserType";
 
 export class ServiceDB {
   private connection: Pool;
@@ -145,16 +146,26 @@ export class ServiceDB {
   }
 
   //fetch service and related sub categories
-  public async fetchServiceAndRelatedEntries(serviceId: number) {
+  public async fetchServiceAndRelatedEntries(
+    serviceId: number,
+    user: IUser | null
+  ) {
     try {
       const [baseService] = await this.connection.execute<RowDataPacket[]>(
         fetchServices(serviceId),
         [serviceId]
       );
-
-      const contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
+      //get contact numbers but filter out private ones if user is not approved or higher
+      let contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
         serviceId
       );
+      if (
+        user?.privileges !== "admin" &&
+        user?.privileges !== "moderator" &&
+        user?.privileges !== "approved"
+      ) {
+        contactNumbers = contactNumbers.filter((number) => number.public);
+      }
 
       const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
         serviceId

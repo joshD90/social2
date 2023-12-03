@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { IServicePhoneContact } from "../../../types/serviceTypes/Service";
 import serviceContactFormValidation from "../../../utils/formValidation/serviceFormValidation/serviceContactFormValidation/serviceContactFormValidation";
 import { MdAdd } from "react-icons/md";
+import { AiFillMinusCircle } from "react-icons/ai";
 
 type Props = {
   value: IServicePhoneContact[];
@@ -36,6 +37,14 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
 
     updateField(fieldName, [...value, singleContact]);
     setSingleContact(singleContactInitialValue);
+  };
+
+  //remove contact from overall form state
+  const removeContact = (contactNumber: string) => {
+    const updatedArray = value.filter(
+      (contact) => contact.phone_number !== contactNumber
+    );
+    updateField(fieldName, updatedArray);
   };
 
   return (
@@ -83,9 +92,15 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
       </form>
       <div className="text-white-50">
         {value.map((contact) => (
-          <div className="flex items-center">
+          <div
+            className="flex items-center gap-2"
+            key={contact.phone_number + contact.details}
+          >
             <p>{contact.details}</p>
             <p>{contact.phone_number}</p>
+            <button onClick={() => removeContact(contact.phone_number)}>
+              <AiFillMinusCircle />
+            </button>
           </div>
         ))}
       </div>

@@ -24,6 +24,7 @@ const ServiceForm = () => {
   const { fetchedData } = useGetFetch(
     serviceId ? `${envIndex.urls.baseUrl}/services/service/${serviceId}` : ""
   );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const ServiceForm = () => {
 
     const formattedData = generateFormattedData(fetchedData);
     if (!formattedData) return;
-
+    console.log(formattedData, "formattedData");
     setFormState(formattedData);
   }, [fetchedData, serviceId, setFormState]);
 
@@ -178,11 +179,13 @@ const generateFormattedData = (
     "baseService" in fetchedData &&
     "clientGroups" in fetchedData &&
     "needsMet" in fetchedData &&
-    "areasServed" in fetchedData
+    "areasServed" in fetchedData &&
+    "contactNumber" in fetchedData
   ) {
     if (Array.isArray(fetchedData.baseService) && fetchedData.baseService[0]) {
       return {
         ...fetchedData.baseService[0],
+        contactNumber: fetchedData.contactNumber,
         clientGroups: mapSubServiceToISubCategory(
           fetchedData.clientGroups as { [key: string]: string | number }[],
           "clientGroups"

@@ -53,6 +53,7 @@ Will need to add a new category of verified but not approved.
 ### Multiple Contacts
 
 - Allow for services to hold multiple different contact numbers. Each contact number should have a name or details associated with it as well as a number.
+
   1. Remove number from the service. - is there a way to retroactively do this to the table maybe just have to do this all again - copy all numbers into text file -
      Just bluntly get rid of the whole column. And just a have a many to one relationship with this other table. Change type, remove numbers from base service altogether, have it extend between the base service and subcategories (this can be done for the emails)
   2. Create a table for numbers, this should have a id, serviceId, details, number, secret. [x]
@@ -62,6 +63,19 @@ Will need to add a new category of verified but not approved.
   4. Adjust the fetch service builder. At this point should I be looking to just build it as one fetch request, perhaps do this in the async manner or just start building a big SQL query. Unsure. Will have to look at this further. See whether there is a way I can hold the needsMet etc. as an array or not. If not maybe no point in holding it all as a query and just do it in js. Will have to join parent and child onto this as a child will have to reference its parent - join the forwardTo onto this. [x] (this has been done in just javascript rather than SQL query)
   5. Make changes to service base type to reflect number being an empty array. [x]
   6. Create a type for numbers [x]
-  7. On the frontend make changes to service base type to reflect change in number.
-  8. On the frontend make changes to Service Display - Should this be a drop down or just a list?
-  9. Have a way to create a new service number in the service cration form
+  7. On the frontend make changes to service base type to reflect change in number.[x]
+  8. On the frontend make changes to Service Display - Should this be a drop down or just a list?[x]
+  9. Have a way to create a new service number in the service cration form[x]
+  10. Allow numbers to be removed from the create number input once they have been added[x]
+  11. Set up the numbers to be edited[x]
+
+  - we need to pass the value from the main value - see what's being sent back[x]
+  - we need to display the list of numbers within the input form and allow them to be removed and added back in. Actual editing sounds like hassle.[x]
+  - Ensure that server does not serve private services to non approved users []
+
+  ### Multiple Emails - Pretty much the sma kinda job as the contacts
+
+  ### Responsiveness
+
+  - run through the site and check for responsiveness
+  - there are already some issues around sizing when Text Display is at phone width [x]

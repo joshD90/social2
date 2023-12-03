@@ -42,7 +42,7 @@ class ServiceContactsDB {
   }
 
   public async fetchPhoneContacts(serviceId?: number) {
-    let results: Error | ExtendedRowDataPacket<unknown>[];
+    let results: Error | ExtendedRowDataPacket<IServicePhoneContact>[];
     if (!serviceId) {
       results = await this.phoneGenericQueries.findEntryBy();
     } else {

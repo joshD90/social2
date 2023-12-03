@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { db } from "../../server";
+import { IUser } from "../../types/userTypes/UserType";
 
 export const findServiceByIdController = async (
   req: Request,
@@ -11,7 +12,7 @@ export const findServiceByIdController = async (
   try {
     const serviceResult = await db
       .getServiceDB()
-      .fetchServiceAndRelatedEntries(serviceId);
+      .fetchServiceAndRelatedEntries(serviceId, req.user as IUser | null);
     if (!serviceResult)
       return res.status(404).json("Could not find relevant entry");
 
