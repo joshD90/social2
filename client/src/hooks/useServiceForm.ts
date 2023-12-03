@@ -20,14 +20,14 @@ const useForm = <T extends TIterableService>(initialState: T) => {
     name: string,
     value: ISubServiceCategory[] | IServicePhoneContact[]
   ) => {
-    console.log(name, "name is updateArrayFields");
-    console.log(`${name} field shouldl be updating`);
+
     setFormState((prev) => {
       console.log(prev, "prev in setFormState in updateArrayFields");
       return { ...prev, [name]: value };
     });
   };
 
+  
   return {
     formState,
     updatePrimitiveField,
