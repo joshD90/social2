@@ -71,11 +71,22 @@ Will need to add a new category of verified but not approved.
 
   - we need to pass the value from the main value - see what's being sent back[x]
   - we need to display the list of numbers within the input form and allow them to be removed and added back in. Actual editing sounds like hassle.[x]
-  - Ensure that server does not serve private services to non approved users []
+  - Ensure that server does not serve private services to non approved users [x]
 
   ### Multiple Emails - Pretty much the sma kinda job as the contacts
 
-  ### Responsiveness
+1. Create DB class for Email Contacts Table [x]
+2. Create all basic functions for this class [x]
+3. Update ServiceType and create Email type [x]
+4. Update Service Type to reflect change to email [x]
+5. Update create Service in Service DB to add in multiple emails [x]
+6. Update update service in serviceDB to update multiple emails []
+7. Update fetch service and what is returned in the controller [x]
+8. Change frontend types [x]
+9. update service display [x]
+10. update serviceForm [x]
 
-  - run through the site and check for responsiveness
-  - there are already some issues around sizing when Text Display is at phone width [x]
+### Responsiveness
+
+- run through the site and check for responsiveness
+- there are already some issues around sizing when Text Display is at phone width [x]

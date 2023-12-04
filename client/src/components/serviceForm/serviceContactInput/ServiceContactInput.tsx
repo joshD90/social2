@@ -1,17 +1,30 @@
 import { FC, useState } from "react";
-import { IServicePhoneContact } from "../../../types/serviceTypes/Service";
+import {
+  IServiceEmailContact,
+  IServicePhoneContact,
+} from "../../../types/serviceTypes/Service";
 import serviceContactFormValidation from "../../../utils/formValidation/serviceFormValidation/serviceContactFormValidation/serviceContactFormValidation";
 import { MdAdd } from "react-icons/md";
 import { AiFillMinusCircle } from "react-icons/ai";
 
-type Props = {
-  value: IServicePhoneContact[];
-  updateField: (name: string, value: IServicePhoneContact[]) => void;
-  fieldName: string;
-};
+type Props =
+  | {
+      value: IServicePhoneContact[];
+      updateField: (name: string, value: IServicePhoneContact[]) => void;
+      fieldName: "contactNumber";
+    }
+  | {
+      value: IServiceEmailContact[];
+      updateField: (name: string, value: IServiceEmailContact[]) => void;
+      fieldName: "contactEmail";
+    };
 
 const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
-  const [singleContact, setSingleContact] = useState(singleContactInitialValue);
+  const [singleContact, setSingleContact] = useState(
+    fieldName === "contactNumber"
+      ? singleContactInitialValue.phone
+      : singleContactInitialValue.email
+  );
   const [error, setError] = useState<{ [key: string]: string }>({});
   //updates the single contact currently in form
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +33,12 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
         ...prev,
         public: e.target.checked,
       }));
-    if (e.target.id !== "details" && e.target.id !== "phone_number") return;
+    if (
+      e.target.id !== "details" &&
+      e.target.id !== "phone_number" &&
+      e.target.id !== "email"
+    )
+      return;
     setSingleContact((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
   //add to the overall form state
@@ -34,17 +52,39 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
 
     if (Object.keys(validated.errors).length > 0)
       return setError((prev) => ({ ...prev, ...validated.errors }));
+    //typescript not inferring the types properly
+    fieldName === "contactNumber"
+      ? updateField(fieldName, [
+          ...(value as IServicePhoneContact[]),
+          singleContact as IServicePhoneContact,
+        ])
+      : updateField(fieldName, [
+          ...(value as IServiceEmailContact[]),
+          singleContact as IServiceEmailContact,
+        ]);
 
-    updateField(fieldName, [...value, singleContact]);
-    setSingleContact(singleContactInitialValue);
+    setSingleContact(
+      fieldName === "contactNumber"
+        ? singleContactInitialValue.phone
+        : singleContactInitialValue.email
+    );
   };
 
   //remove contact from overall form state
-  const removeContact = (contactNumber: string) => {
-    const updatedArray = value.filter(
-      (contact) => contact.phone_number !== contactNumber
-    );
-    updateField(fieldName, updatedArray);
+  const removeContact = (contactInfo: string) => {
+    //Typescript coud not work with the types for updateField so a branching structure was adopted
+    if (fieldName === "contactNumber") {
+      const updatedArray = value.filter(
+        (contact) => contact.phone_number !== contactInfo
+      ) as IServicePhoneContact[];
+      updateField(fieldName, updatedArray);
+    } else {
+      const updatedArray = value.filter(
+        (contact) => contact.email !== contactInfo
+      ) as IServiceEmailContact[];
+
+      updateField(fieldName, updatedArray);
+    }
   };
 
   return (
@@ -74,7 +114,11 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
             className="p-1 text-stone-800"
             id="phone_number"
             onChange={handleInputChange}
-            value={singleContact.phone_number}
+            value={
+              "phone_number" in singleContact
+                ? singleContact.phone_number
+                : singleContact.email
+            }
           />
         </div>
         <div className="flex gap-2">
@@ -94,11 +138,25 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
         {value.map((contact) => (
           <div
             className="flex items-center gap-2"
-            key={contact.phone_number + contact.details}
+            key={
+              "phone_number" in contact
+                ? contact.phone_number + contact.details
+                : contact.email + contact.details
+            }
           >
             <p>{contact.details}</p>
-            <p>{contact.phone_number}</p>
-            <button onClick={() => removeContact(contact.phone_number)}>
+            <p>
+              {"phone_number" in contact ? contact.phone_number : contact.email}
+            </p>
+            <button
+              onClick={() =>
+                removeContact(
+                  "phone_number" in contact
+                    ? contact.phone_number
+                    : contact.email
+                )
+              }
+            >
               <AiFillMinusCircle />
             </button>
           </div>
@@ -108,9 +166,15 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
   );
 };
 
-const singleContactInitialValue: IServicePhoneContact = {
-  details: "",
-  phone_number: "",
-  public: false,
+const singleContactInitialValue: {
+  phone: IServicePhoneContact;
+  email: IServiceEmailContact;
+} = {
+  phone: {
+    details: "",
+    phone_number: "",
+    public: false,
+  },
+  email: { details: "", email: "", public: false },
 };
 export default ServiceContactInput;

@@ -10,7 +10,7 @@ export interface IService {
   description: string;
   maxAge: number;
   minAge: number;
-  contactEmail: string;
+  contactEmail: IServiceEmailContact[];
   referralPathway: string;
   address: string;
   contactNumber: IServicePhoneContact[];
@@ -46,5 +46,13 @@ export interface IServicePhoneContact {
   details: string;
   service_id: number;
   phone_number: string;
+  public: boolean;
+}
+
+export interface IServiceEmailContact {
+  id?: number;
+  details: string;
+  service_id: number;
+  email: string;
   public: boolean;
 }

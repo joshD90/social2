@@ -1,6 +1,7 @@
 import { FC, SetStateAction } from "react";
 import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import {
+  IServiceEmailContact,
   IServicePhoneContact,
   TIterableService,
 } from "../../types/serviceTypes/Service";
@@ -20,7 +21,10 @@ type Props = {
   ) => void;
   updateArrayField: (
     name: string,
-    value: ISubServiceCategory[] | IServicePhoneContact[]
+    value:
+      | ISubServiceCategory[]
+      | IServicePhoneContact[]
+      | IServiceEmailContact[]
   ) => void;
   inputErrors: { [key: string]: string };
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
@@ -64,25 +68,7 @@ const BaseServiceForm: FC<Props> = ({
           setInputError={setInputErrors}
         />
       </div>
-      {/* <PrimitiveInput
-        name="contactNumber"
-        label="Contact Number"
-        type="text"
-        updateField={updatePrimitiveField}
-        value={formState.contactNumber as string}
-        inputError={inputErrors}
-        setInputError={setInputErrors}
-      /> */}
 
-      <PrimitiveInput
-        name="contactEmail"
-        label="Contact Email"
-        type="email"
-        updateField={updatePrimitiveField}
-        value={formState.contactEmail as string}
-        inputError={inputErrors}
-        setInputError={setInputErrors}
-      />
       <PrimitiveInput
         name="address"
         label="Address"
@@ -122,6 +108,13 @@ const BaseServiceForm: FC<Props> = ({
         }
         updateField={updateArrayField}
         fieldName="contactNumber"
+      />
+      <ServiceContactInput
+        value={
+          (formState.contactEmail as unknown as IServiceEmailContact[]) ?? []
+        }
+        updateField={updateArrayField}
+        fieldName="contactEmail"
       />
       <TextAreaInput
         size={{ cols: 40, rows: 10 }}

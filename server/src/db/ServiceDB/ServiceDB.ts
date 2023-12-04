@@ -17,11 +17,13 @@ import {
 } from "../../types/serviceTypes/subServiceCategories";
 import {
   IService,
+  IServiceEmailContact,
   IServicePhoneContact,
 } from "../../types/serviceTypes/ServiceType";
 import queryObj from "../ServiceReportDB/serviceReportQueries";
 import ServiceContactsDB from "../ServiceContactsDB/ServiceContactsDB";
 import { IUser } from "../../types/userTypes/UserType";
+import { ServiceEmailContactsDB } from "../ServiceEmailsDB/ServiceEmailsDb";
 
 export class ServiceDB {
   private connection: Pool;
@@ -31,8 +33,10 @@ export class ServiceDB {
   private SubCategoryDB: SubCategoryDB;
   //Generic Query Class for Report Table
   private serviceReportsQueries: GeneralQueryGenerator;
-  //Generic Query Class for Contacts table
+  // Phone Contacts DB class
   private serviceContactsDB: ServiceContactsDB;
+  //email contacts DB class
+  private serviceEmailsDB: ServiceEmailContactsDB;
 
   constructor(connection: Pool) {
     this.connection = connection;
@@ -41,6 +45,7 @@ export class ServiceDB {
     //generate our subcategory and contacts db class
     this.SubCategoryDB = new SubCategoryDB(connection);
     this.serviceContactsDB = new ServiceContactsDB(connection);
+    this.serviceEmailsDB = new ServiceEmailContactsDB(connection);
     //generate our generic service report queries TODO: create a seperate report class for this
     this.serviceReportsQueries = new GeneralQueryGenerator(
       "serviceReports",
@@ -61,7 +66,8 @@ export class ServiceDB {
   //this compacts all the methods involved in creating the multiple tables associated with a service
   public async createFullServiceEntry(
     baseData: IService,
-    contactData: IServicePhoneContact[],
+    phoneContactData: IServicePhoneContact[],
+    emailContactData: IServiceEmailContact[],
     subCategories: (TAreasServed | TNeedsMet | TClientGroups)[]
   ): Promise<ResultSetHeader | Error> {
     const connection = await this.connection.getConnection();
@@ -78,13 +84,20 @@ export class ServiceDB {
       const serviceId = baseResult.insertId;
 
       //now make our contacts
-      const contactDataWithServiceId = contactData.map((contact) => ({
+      const phoneContactDataWithServiceId = phoneContactData.map((contact) => ({
         ...contact,
         service_id: serviceId,
       }));
-      console.log("contact data before trying to create phone contacts");
       await this.serviceContactsDB.insertPhoneContacts(
-        contactDataWithServiceId
+        phoneContactDataWithServiceId
+      );
+      //insert our emails
+      const emailContactDataWithServiceId = emailContactData.map((contact) => ({
+        ...contact,
+        service_id: serviceId,
+      }));
+      await this.serviceEmailsDB.insertMultipleEmails(
+        emailContactDataWithServiceId
       );
       // //now that we have made our base table entry we can create our sub directories
       const createSubCategoriesSuccess =
@@ -159,12 +172,17 @@ export class ServiceDB {
       let contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
         serviceId
       );
+      let emailContacts = await this.serviceEmailsDB.fetchEmailContacts(
+        serviceId
+      );
+
       if (
         user?.privileges !== "admin" &&
         user?.privileges !== "moderator" &&
         user?.privileges !== "approved"
       ) {
         contactNumbers = contactNumbers.filter((number) => number.public);
+        emailContacts = emailContacts.filter((email) => email.public);
       }
 
       const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
@@ -178,6 +196,7 @@ export class ServiceDB {
         baseService,
         children: allChildren,
         contactNumber: contactNumbers,
+        emailContacts: emailContacts,
         ...allSubCategories,
       };
     } catch (error) {

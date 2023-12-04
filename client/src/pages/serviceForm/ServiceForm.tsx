@@ -180,12 +180,14 @@ const generateFormattedData = (
     "clientGroups" in fetchedData &&
     "needsMet" in fetchedData &&
     "areasServed" in fetchedData &&
-    "contactNumber" in fetchedData
+    "contactNumber" in fetchedData &&
+    "emailContacts" in fetchedData
   ) {
     if (Array.isArray(fetchedData.baseService) && fetchedData.baseService[0]) {
       return {
         ...fetchedData.baseService[0],
         contactNumber: fetchedData.contactNumber,
+        contactEmail: fetchedData.emailContacts,
         clientGroups: mapSubServiceToISubCategory(
           fetchedData.clientGroups as { [key: string]: string | number }[],
           "clientGroups"

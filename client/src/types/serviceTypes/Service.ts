@@ -6,7 +6,8 @@ export interface TIterableService {
     | string
     | number
     | ISubServiceCategory[]
-    | IServicePhoneContact[];
+    | IServicePhoneContact[]
+    | IServiceEmailContact[];
 }
 
 //our basic structure
@@ -16,7 +17,7 @@ export interface IService extends IListItemBase {
   maxAge: number;
   minAge: number;
   contactNumber: IServicePhoneContact[] | string;
-  contactEmail: string;
+  contactEmail: IServiceEmailContact[] | string;
   referralPathway: string;
   address: string;
   imageUrl: string;
@@ -54,5 +55,13 @@ export interface IServicePhoneContact {
   details: string;
   service_id?: number;
   phone_number: string;
+  public: boolean;
+}
+
+export interface IServiceEmailContact {
+  id?: number;
+  details: string;
+  service_id?: number;
+  email: string;
   public: boolean;
 }

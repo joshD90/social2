@@ -25,8 +25,6 @@ class ServiceContactsDB {
   public async insertPhoneContacts(
     contacts: IServicePhoneContact[]
   ): Promise<ResultSetHeader[]> {
-    console.log(contacts, "contacts actually inside my insertPhone contacts");
-
     const allResults = Promise.all(
       contacts.map(async (contact) => {
         return this.phoneGenericQueries.createTableEntryFromPrimitives(

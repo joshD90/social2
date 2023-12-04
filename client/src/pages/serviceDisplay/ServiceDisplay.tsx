@@ -1,9 +1,6 @@
 import { FC, useEffect, useState } from "react";
 
-import {
-  IServiceWithChildren,
-  IServiceWithSubs,
-} from "../../types/serviceTypes/Service";
+import { IServiceWithChildren } from "../../types/serviceTypes/Service";
 
 import DisplayTextInfo from "../../microcomponents/displayInfo/DisplayTextInfo";
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
@@ -16,9 +13,7 @@ import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { BsGlobe } from "react-icons/bs";
 import ServiceChildContainer from "../../components/serviceChildContainer/ServiceChildContainer";
-import ServiceContactDisplay, {
-  serviceContactDummyData,
-} from "../../components/serviceContactDisplay/ServiceContactDisplay";
+import ServiceContactDisplay from "../../components/serviceContactDisplay/ServiceContactDisplay";
 
 type Props = {
   serviceId: string | boolean;
@@ -55,9 +50,15 @@ const ServiceDisplay: FC<Props> = ({
           Array.isArray(data.contactNumber) && data.contactNumber.length > 0
             ? data.contactNumber
             : data.baseService[0].contactNumber;
+        const contactEmail =
+          Array.isArray(data.contactEmail) && data.contactEmail.length > 0
+            ? data.cotactEmail
+            : data.baseService[0].contactEmail;
+
         const formattedData = {
           ...data.baseService[0],
-          contactNumber: contactNumber,
+          contactNumber,
+          contactEmail,
           children: data.children,
           needsMet: mapSubServiceToISubCategory(data.needsMet, "needsMet"),
           clientGroups: mapSubServiceToISubCategory(
@@ -118,10 +119,13 @@ const ServiceDisplay: FC<Props> = ({
                   </div>
                 ) : null}
 
-                <div className="flex items-center justify-start gap-5">
-                  <MdEmail />
-                  <span>{service.contactEmail}</span>
-                </div>
+                {typeof service.contactEmail === "string" ? (
+                  <div className="flex items-center justify-start gap-5">
+                    <MdEmail />
+                    <span>{service.contactEmail}</span>
+                  </div>
+                ) : null}
+
                 {service.website && (
                   <div className="flex items-center justify-start gap-5">
                     <BsGlobe />
@@ -136,22 +140,26 @@ const ServiceDisplay: FC<Props> = ({
                 <span>{service.address}</span>
               </div>
             </div>
+            {/* Special Contacts */}
             {Array.isArray(service.contactNumber) ? (
               <ServiceContactDisplay
-                numbers={service.contactNumber}
+                contacts={service.contactNumber}
                 color={themeColor ? themeColor : ThemeColor.blue}
               />
             ) : null}
+            {Array.isArray(service.contactEmail) ? (
+              <ServiceContactDisplay
+                contacts={service.contactEmail}
+                color={themeColor ? themeColor : ThemeColor.blue}
+              />
+            ) : null}
+
             <DisplayTextInfo
               name="Address"
               value={service.address}
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
-            <DisplayTextInfo
-              name="Email"
-              value={service.contactEmail}
-              themeColor={themeColor ? themeColor : ThemeColor.blue}
-            />
+
             <DisplayTextInfo
               name="Minimum Age"
               value={service.minAge}

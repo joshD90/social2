@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  IServiceEmailContact,
   IServicePhoneContact,
   TIterableService,
 } from "../types/serviceTypes/Service";
@@ -18,16 +19,16 @@ const useForm = <T extends TIterableService>(initialState: T) => {
 
   const updateArrayFields = (
     name: string,
-    value: ISubServiceCategory[] | IServicePhoneContact[]
+    value:
+      | ISubServiceCategory[]
+      | IServicePhoneContact[]
+      | IServiceEmailContact[]
   ) => {
-
     setFormState((prev) => {
-      console.log(prev, "prev in setFormState in updateArrayFields");
       return { ...prev, [name]: value };
     });
   };
 
-  
   return {
     formState,
     updatePrimitiveField,
