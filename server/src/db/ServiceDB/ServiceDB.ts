@@ -238,4 +238,10 @@ export class ServiceDB {
   public getBaseTableColumnNames() {
     this.ServiceBaseQueries.getTableColumnNames("services");
   }
+  public getContactNumberDB(): ServiceContactsDB {
+    return this.serviceContactsDB;
+  }
+  public getContactEmailDB(): ServiceEmailContactsDB {
+    return this.serviceEmailsDB;
+  }
 }

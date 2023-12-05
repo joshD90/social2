@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   IServiceEmailContact,
   IServicePhoneContact,
@@ -46,12 +46,14 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
     e.preventDefault();
     setError({});
     const validated = await serviceContactFormValidation(singleContact);
-
+    //general errors
     if (validated instanceof Error)
       return setError((prev) => ({ ...prev, general: validated.message }));
-
-    if (Object.keys(validated.errors).length > 0)
+    //errors specifically
+    if (Object.keys(validated.errors).length > 0) {
       return setError((prev) => ({ ...prev, ...validated.errors }));
+    }
+
     //typescript not inferring the types properly
     fieldName === "contactNumber"
       ? updateField(fieldName, [
@@ -69,6 +71,8 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
         : singleContactInitialValue.email
     );
   };
+
+  useEffect(() => console.log(error, "error"), [error]);
 
   //remove contact from overall form state
   const removeContact = (contactInfo: string) => {
@@ -89,6 +93,9 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
 
   return (
     <div className="text-stone-50 col-span-2">
+      <h4 className="font-bold">
+        {fieldName === "contactNumber" ? "Contact Numbers" : "Contact Emails"}
+      </h4>
       {error.general ? <p className="text-red-500">{error.general}</p> : null}
       <form action="" onSubmit={handleAddContact}>
         <div className="flex flex-col">
@@ -105,14 +112,18 @@ const ServiceContactInput: FC<Props> = ({ value, updateField, fieldName }) => {
           />
         </div>
         <div className="flex flex-col">
-          <label htmlFor="">Number</label>
-          {error.phone_number ? (
-            <p className="text-red-500">{error.phone_number}</p>
+          <label htmlFor="">
+            {fieldName === "contactNumber" ? "Number" : "Email"}
+          </label>
+          {error.phone_number || error.email ? (
+            <p className="text-red-500">
+              {fieldName === "contactNumber" ? error.phone_number : error.email}
+            </p>
           ) : null}
           <input
             type="text"
             className="p-1 text-stone-800"
-            id="phone_number"
+            id={"phone_number" in singleContact ? "phone_number" : "email"}
             onChange={handleInputChange}
             value={
               "phone_number" in singleContact

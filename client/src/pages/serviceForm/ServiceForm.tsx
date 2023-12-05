@@ -86,6 +86,7 @@ const ServiceForm = () => {
     const validationResult = await validateServiceForm({
       ...serviceToSend.serviceBase,
       contactNumber: serviceToSend.contactNumber,
+      contactEmail: serviceToSend.contactEmail,
     });
 
     if (validationResult instanceof Error) return;

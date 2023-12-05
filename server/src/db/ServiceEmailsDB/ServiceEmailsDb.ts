@@ -52,7 +52,7 @@ export class ServiceEmailContactsDB {
     return results;
   }
 
-  public async deletePhoneContacts(column: "service_id" | "id", value: number) {
+  public async deleteEmailContacts(column: "service_id" | "id", value: number) {
     const deleteResult = await this.emailGenericQueries.deleteBySingleCriteria(
       column,
       value

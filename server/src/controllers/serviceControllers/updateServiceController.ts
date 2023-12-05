@@ -13,9 +13,16 @@ const updateServiceController = async (req: Request, res: Response) => {
 
   if (!serviceId)
     return res.status(400).json("Needs a Service Id in the form of a number");
-  const { serviceBase, subCategories } = req.body;
+  const { serviceBase, subCategories, contactNumber, contactEmail } = req.body;
 
-  if (!serviceBase || !subCategories) {
+  if (
+    !serviceBase ||
+    !subCategories ||
+    !contactNumber ||
+    !contactEmail ||
+    !Array.isArray(contactNumber) ||
+    !Array.isArray(contactEmail)
+  ) {
     return res.status(400).json("Not in proper format");
   }
 
@@ -27,7 +34,7 @@ const updateServiceController = async (req: Request, res: Response) => {
       .getSubCategoryDB()
       .deleteJunctionTablesForService(serviceId);
     if (!deleteSubJunctionResult)
-      throw Error("Could not successfully delete junction tables");
+      throw Error("Could not successfully delete junction table entries");
     //update our base table
     const updateServiceBaseResult = await db
       .getServiceDB()
@@ -35,6 +42,33 @@ const updateServiceController = async (req: Request, res: Response) => {
       .updateEntriesByMultiple(serviceBase, serviceId, "id");
     if (updateServiceBaseResult instanceof Error)
       throw new Error(updateServiceBaseResult.message);
+    //add in our contact numbers
+    const formattedNumbers = contactNumber.map((contact) => ({
+      ...contact,
+      service_id: serviceId,
+    }));
+    await db
+      .getServiceDB()
+      .getContactNumberDB()
+      .deletePhoneContactsByService("service_id", serviceId);
+    await db
+      .getServiceDB()
+      .getContactNumberDB()
+      .insertPhoneContacts(formattedNumbers);
+    //add in email contacts
+    const formattedEmails = contactEmail.map((contact) => ({
+      ...contact,
+      service_id: serviceId,
+    }));
+    await db
+      .getServiceDB()
+      .getContactEmailDB()
+      .deleteEmailContacts("service_id", serviceId);
+    await db
+      .getServiceDB()
+      .getContactEmailDB()
+      .insertMultipleEmails(formattedEmails);
+
     //now we need to update the base service and not create the full service entry just create the junction tables
     const createResult = await db
       .getServiceDB()

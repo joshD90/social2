@@ -24,7 +24,9 @@ const ServiceContactDisplay: FC<Props> = ({ contacts, color }) => {
       <div
         className={`flex border-2 text-stone-800 ${twThemeColors.border[color]}`}
       >
-        <p className="bg-stone-400 p-2 w-36">Contact Number</p>
+        <p className="bg-stone-400 p-2 w-36">
+          Contact {"phone_number" in contacts[0] ? "Number" : "Email"}
+        </p>
         <div className="flex gap-2 items-center p-2 flex-grow bg-stone-50">
           <p>{contacts[0].details}</p>
           <p>
@@ -59,7 +61,7 @@ const ServiceContactDisplay: FC<Props> = ({ contacts, color }) => {
           <thead>
             <tr className="text-left">
               <th>Details</th>
-              <th>Number</th>
+              <th>{"phone_number" in contacts[0] ? "Number" : "Email"}</th>
             </tr>
           </thead>
           <tbody>
