@@ -95,7 +95,6 @@ const ServiceForm = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    //extract the contactNumbers
 
     const url = serviceId
       ? `${envIndex.urls.baseUrl}/services/${serviceId}`
@@ -185,8 +184,14 @@ const generateFormattedData = (
     "emailContacts" in fetchedData
   ) {
     if (Array.isArray(fetchedData.baseService) && fetchedData.baseService[0]) {
+      const {
+        parent_service_category,
+        parent_service_forwardTo,
+        parent_service_name,
+        ...strippedBaseService
+      } = fetchedData.baseService[0];
       return {
-        ...fetchedData.baseService[0],
+        ...strippedBaseService,
         contactNumber: fetchedData.contactNumber,
         contactEmail: fetchedData.emailContacts,
         clientGroups: mapSubServiceToISubCategory(

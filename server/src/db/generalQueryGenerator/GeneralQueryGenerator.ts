@@ -116,6 +116,7 @@ export class GeneralQueryGenerator {
     try {
       keys.forEach((column) => {
         if (!columnWhiteList.includes(column)) {
+          console.log(column, "column in sanitze data");
           throw new Error("Column name does not match approved list");
         }
       });

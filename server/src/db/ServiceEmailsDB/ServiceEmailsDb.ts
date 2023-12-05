@@ -27,7 +27,12 @@ export class ServiceEmailContactsDB {
     );
     const awaitedResults = await Promise.all(emailResultsArray);
 
-    if (awaitedResults.find((result) => result instanceof Error))
+    if (
+      awaitedResults.find((result) => {
+        console.log(result);
+        return result instanceof Error;
+      })
+    )
       throw new Error("There was an Error in creating your email contacts");
     return awaitedResults as ResultSetHeader[];
   }
@@ -57,7 +62,13 @@ export class ServiceEmailContactsDB {
       column,
       value
     );
-    if (deleteResult instanceof Error) throw deleteResult.message;
+
+    if (
+      deleteResult instanceof Error &&
+      deleteResult.message !== "There was no record matching that criteria"
+    ) {
+      throw deleteResult.message;
+    }
   }
 
   public async updateEmailContact(

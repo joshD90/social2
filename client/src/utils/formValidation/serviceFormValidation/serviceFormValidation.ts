@@ -38,9 +38,11 @@ const validationSchema = Yup.object().shape({
   contactNumber: Yup.array()
     .required("You need to have a contact number or just write N/A")
     .min(1, "Should have at least one number"),
-  contactEmail: Yup.string()
-    .email("Not a valid Email")
-    .required("Email is required"),
+  contactEmail: Yup.array()
+    .required(
+      "You need to have at least one email entry even if it is just 'N/A'"
+    )
+    .min(1, "Should have at least one email contact"),
   referralPathway: Yup.string().required(
     "referralPathway is required even if it's just mimimal information"
   ),
