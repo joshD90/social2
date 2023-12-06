@@ -13,10 +13,12 @@ import CategoryLanding from "./pages/categoryLanding/CategoryLanding";
 import ServiceDisplayContainer from "./pages/serviceDisplayContainer/ServiceDisplayContainer";
 import SearchResultsContainer from "./pages/searchResults/searchResultsContainer/SearchResultsContainer";
 import AdminUsersView from "./pages/admin/adminUsersView/AdminUsersView";
+import UploadImageS3Test from "./pages/uploadImageS3Test/UploadImageS3Test";
 
 const App = () => {
   return (
     <Routes>
+      <Route path="/image" element={<UploadImageS3Test />} />
       <Route path="/auth" element={<AuthWrapper />}>
         <Route path="signup" element={<SignUp />} />
         <Route path="signin" element={<SignIn />} />

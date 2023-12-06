@@ -80,7 +80,7 @@ Will need to add a new category of verified but not approved.
 3. Update ServiceType and create Email type [x]
 4. Update Service Type to reflect change to email [x]
 5. Update create Service in Service DB to add in multiple emails [x]
-6. Update update service in serviceDB to update multiple emails []
+6. Update update service in serviceDB to update multiple emails [x]
 7. Update fetch service and what is returned in the controller [x]
 8. Change frontend types [x]
 9. update service display [x]
@@ -88,5 +88,12 @@ Will need to add a new category of verified but not approved.
 
 ### Responsiveness
 
-- run through the site and check for responsiveness
+- run through the site and check for responsiveness []
+- there seems to be some issue with how the contact-data is being laid out [x]
 - there are already some issues around sizing when Text Display is at phone width [x]
+
+### Uploading Images To S3
+
+- Set up an AWS account []
+- Get the most simple version up and running []
+-

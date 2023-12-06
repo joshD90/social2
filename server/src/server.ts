@@ -11,6 +11,7 @@ import categoryRouter from "./routes/categoryRoutes";
 import authRouter from "./routes/authRoutes";
 import searchRouter from "./routes/searchRoutes";
 import userRouter from "./routes/userRoutes";
+import imageRouter from "./routes/imageRoutes";
 
 import { configurePassport } from "./utils/passport-strategies";
 //configure server app
@@ -23,7 +24,7 @@ app.use(cookieParser());
 export const db = new Database();
 
 configurePassport(app);
-
+app.use("/images", imageRouter);
 app.use("/services", serviceRouter);
 app.use("/categories", categoryRouter);
 app.use("/auth", authRouter);

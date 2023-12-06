@@ -22,7 +22,7 @@ const ServiceContactDisplay: FC<Props> = ({ contacts, color }) => {
   if (contacts.length === 1) {
     return (
       <div
-        className={`flex border-2 text-stone-800 ${twThemeColors.border[color]}`}
+        className={`flex border-2 text-stone-800 ${twThemeColors.border[color]} `}
       >
         <p className="bg-stone-400 p-2 w-36">
           Contact {"phone_number" in contacts[0] ? "Number" : "Email"}
@@ -47,14 +47,15 @@ const ServiceContactDisplay: FC<Props> = ({ contacts, color }) => {
         className="w-full flex justify-between bg-stone-400 p-2"
         onClick={toggleContacts}
       >
-        Contact Numbers <MdArrowDownward />
+        {"phone_number" in contacts[0] ? "Contact Numbers" : "Contact Emails"}
+        <MdArrowDownward />
       </div>
       <div
         className={`${
           !contactsDropped && "h-0"
         } overflow-hidden transition-all absolute top-full border-2 border-t-0 ${
           twThemeColors.border[color]
-        }`}
+        } ${contactsDropped ? "z-100" : "z-0"}`}
         style={{ width: "calc(100% + 4px", left: "-2px" }}
       >
         <table className="w-full bg-stone-50">

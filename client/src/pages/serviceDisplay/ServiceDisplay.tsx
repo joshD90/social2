@@ -41,18 +41,15 @@ const ServiceDisplay: FC<Props> = ({
         });
         if (!result.ok) throw Error(result.statusText);
         const data = await result.json();
-        console.log(
-          data.contactNumber,
-          data.baseService[0].contactNumber,
-          "two contacts"
-        );
+
+        console.log(data, "data fresh off the boat");
         const contactNumber =
           Array.isArray(data.contactNumber) && data.contactNumber.length > 0
             ? data.contactNumber
             : data.baseService[0].contactNumber;
         const contactEmail =
-          Array.isArray(data.contactEmail) && data.contactEmail.length > 0
-            ? data.cotactEmail
+          Array.isArray(data.emailContacts) && data.emailContacts.length > 0
+            ? data.emailContacts
             : data.baseService[0].contactEmail;
 
         const formattedData = {
@@ -109,7 +106,7 @@ const ServiceDisplay: FC<Props> = ({
             <hr className="w-2/3 ml-auto mr-auto" />
           </div>
           <div className="p-5 grid lg:grid-cols-2 gap-3 text-stone-50">
-            <div className="lg:col-span-2 flex justify-between items-start">
+            <div className="lg:col-span-2 flex justify-between items-start flex-col sm:flex-row">
               <div className="flex flex-col gap-2">
                 {/* While we transition to the proper numbers we will keep this in so that we dont have to worr about it breaking for the old services */}
                 {typeof service.contactNumber === "string" ? (
