@@ -1,7 +1,12 @@
 import { Request, Response, Router } from "express";
+
 import { generateUploadURL } from "../utils/s3/s3";
 
+import multer from "multer";
+
 const router = Router();
+
+const upload = multer({ dest: "uploads/" });
 
 router.get("/s3url", async (req: Request, res: Response) => {
   console.log("You have looked for the secure url");
@@ -17,8 +22,10 @@ router.get("/s3url", async (req: Request, res: Response) => {
 router.get("/", (req: Request, res: Response) => {
   console.log("You have hit get endpoint");
 });
-router.post("/", (req: Request, res: Response) => {
-  console.log("You have hit the post endpoint");
+router.post("/", upload.single("image"), (req: Request, res: Response) => {
+  console.log(req.body, "req.body");
+  console.log(req.file, "should be req.file");
+  res.status(200).json("WEll done");
 });
 
 export default router;

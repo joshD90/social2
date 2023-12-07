@@ -15,7 +15,12 @@ const s3 = new aws.S3({
 
 export const generateUploadURL = async () => {
   const imageName = crypto.randomUUID();
-  const params = { Bucket: bucketName, Key: imageName, Expires: 60 };
+  const params = {
+    Bucket: bucketName,
+    Key: imageName,
+    Expires: 60,
+    ContentType: "multipart/form-data",
+  };
 
   const uploadUrl = await s3.getSignedUrlPromise("putObject", params);
   return uploadUrl;

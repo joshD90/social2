@@ -37,9 +37,26 @@ const UploadImageS3Test = () => {
     }
   };
 
+  const handleServerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedFile) return;
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    try {
+      const response = await fetch(`${envIndex.urls.baseUrl}/images`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) throw Error(response.statusText);
+      const data = response.json();
+      console.log(data, "data in handleServer Submit");
+    } catch (error) {
+      console.log(error, "error for Server Submit");
+    }
+  };
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-stone-800 text-white">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleServerSubmit}>
         <div className="flex flex-col">
           <label htmlFor="">Upload Select Image</label>
           <input type="file" onChange={handleSelectFile} />
