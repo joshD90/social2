@@ -8,6 +8,7 @@ export type UploadedImage = {
   service_id?: number;
   fileName: string;
   url: string;
+  bucket_name: string;
 };
 
 export class ImagesDB {
