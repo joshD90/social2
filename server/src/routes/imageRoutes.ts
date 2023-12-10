@@ -3,6 +3,8 @@ import { Request, Response, Router } from "express";
 import { generateUploadURL } from "../utils/s3/s3";
 
 import multer from "multer";
+import { uploadFile } from "../utils/s3/s3Server";
+import { db } from "../server";
 
 const router = Router();
 
@@ -22,10 +24,24 @@ router.get("/s3url", async (req: Request, res: Response) => {
 router.get("/", (req: Request, res: Response) => {
   console.log("You have hit get endpoint");
 });
-router.post("/", upload.single("image"), (req: Request, res: Response) => {
-  console.log(req.body, "req.body");
-  console.log(req.file, "should be req.file");
-  res.status(200).json("WEll done");
-});
+router.post(
+  "/",
+  upload.single("image"),
+  async (req: Request, res: Response): Promise<Response> => {
+    const file = req.file;
+    try {
+      const uploadResult = await uploadFile(file);
+      console.log(uploadResult, "upload result");
+      await db.getImagesDB().addImage({
+        fileName: uploadResult.Key,
+        url: uploadResult.Location,
+      });
+      return res.status(200).json(uploadResult);
+    } catch (error) {
+      console.log(error, "error in post image endpoint");
+      return res.status(500).json(error);
+    }
+  }
+);
 
 export default router;

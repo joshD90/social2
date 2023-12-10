@@ -48,7 +48,7 @@ const UploadImageS3Test = () => {
         body: formData,
       });
       if (!response.ok) throw Error(response.statusText);
-      const data = response.json();
+      const data = await response.json();
       console.log(data, "data in handleServer Submit");
     } catch (error) {
       console.log(error, "error for Server Submit");

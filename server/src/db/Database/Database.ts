@@ -7,6 +7,7 @@ import UserDB from "../UserDB/UserDB";
 import { ServiceReportDB } from "../ServiceReportDB/ServiceReportDB";
 import { DatabaseSearcher } from "../../search/DatabaseSearcher/DatabaseSearcher";
 import { CommentsDB } from "../CommentsDB/CommentsDB";
+import { ImagesDB } from "../imageDB/ImageDB";
 
 const { db } = envConfig;
 //our overarching database class
@@ -18,6 +19,7 @@ class Database {
   private serviceReportDB: ServiceReportDB;
   private databaseSearcher: DatabaseSearcher;
   private commentsDB: CommentsDB;
+  private imagesDB: ImagesDB;
 
   constructor() {
     this.connection = this.initDatabase();
@@ -28,6 +30,7 @@ class Database {
     this.serviceReportDB = new ServiceReportDB(this.connection);
     this.databaseSearcher = new DatabaseSearcher(this.connection);
     this.commentsDB = new CommentsDB(this.connection);
+    this.imagesDB = new ImagesDB(this.connection);
   }
   //connection initialises within the constructor of the database
   private initDatabase(): Pool {
@@ -69,6 +72,9 @@ class Database {
   }
   public getCommentsDB(): CommentsDB {
     return this.commentsDB;
+  }
+  public getImagesDB(): ImagesDB {
+    return this.imagesDB;
   }
 }
 
