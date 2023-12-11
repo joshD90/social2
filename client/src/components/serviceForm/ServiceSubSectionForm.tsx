@@ -5,7 +5,7 @@ import FormSubSelector from "../formSubSelector/FormSubSelector";
 
 type Props = {
   formState: TIterableService;
-  updateField: (name: string, value: ISubServiceCategory[]) => void;
+  updateField: <T>(name: string, value: T[]) => void;
 };
 
 const ServiceSubSectionForm: FC<Props> = ({ updateField, formState }) => {

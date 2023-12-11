@@ -3,6 +3,7 @@ import passport from "passport";
 
 import serviceReportRouter from "./serviceReportRoutes";
 import serviceCommentRouter from "./commentRoutes";
+import imageRouter from "./imageRoutes";
 
 import createServiceController from "../controllers/serviceControllers/createServiceController";
 import { findServiceByIdController } from "../controllers/serviceControllers/findServiceByIdController";
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.use("/service/reports", serviceReportRouter);
 router.use("/service/comments", serviceCommentRouter);
+router.use("/images", imageRouter);
 
 router.get("/", getAllServicesController);
 router.get("/:category", findServicesByCategory);

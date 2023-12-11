@@ -13,6 +13,7 @@ import { mapSubServiceToISubCategory } from "../serviceDisplay/mapSubServiceToIS
 import BaseServiceFormExtras from "../../components/serviceForm/BaseServiceFormExtras";
 import validateServiceForm from "../../utils/formValidation/serviceFormValidation/serviceFormValidation";
 import envIndex from "../../envIndex/envIndex";
+import uploadImages from "../../components/serviceForm/selectServiceImages/UploadImages";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -24,6 +25,7 @@ const ServiceForm = () => {
   const { fetchedData } = useGetFetch(
     serviceId ? `${envIndex.urls.baseUrl}/services/service/${serviceId}` : ""
   );
+  const [images, setImages] = useState<File[]>([]);
 
   const navigate = useNavigate();
 
@@ -57,6 +59,9 @@ const ServiceForm = () => {
             updatePrimitiveField={updatePrimitiveField}
             inputErrors={inputError}
             setInputErrors={setInputError}
+            images={images}
+            setImages={setImages}
+            uploadImages={submitImages}
           />
         );
       case 2:
@@ -77,6 +82,11 @@ const ServiceForm = () => {
       return newAmount;
     });
   };
+  //upload images
+  const submitImages = () => {
+    uploadImages(images, updateArrayFields, setInputError);
+  };
+
   //could this all be abstracted into a custom hook / function? probably just easiest to seperate into a function maybe
   const submitForm = async () => {
     //seperate our form information into two seperate parts

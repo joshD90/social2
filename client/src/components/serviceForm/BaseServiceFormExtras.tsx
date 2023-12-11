@@ -3,6 +3,7 @@ import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
+import SelectServiceImages from "./selectServiceImages/SelectServiceImages";
 
 const thresholdOptions = [
   { value: "low", name: "Low" },
@@ -18,6 +19,9 @@ type Props = {
   ) => void;
   inputErrors: { [key: string]: string };
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
+  images: File[];
+  setImages: React.Dispatch<SetStateAction<File[]>>;
+  uploadImages: () => void;
 };
 
 const BaseServiceFormExtras: FC<Props> = ({
@@ -25,6 +29,9 @@ const BaseServiceFormExtras: FC<Props> = ({
   updatePrimitiveField,
   inputErrors,
   setInputErrors,
+  images,
+  setImages,
+  uploadImages,
 }) => {
   return (
     <div className="w-full grid lg:grid-cols-2 gap-5 p-5">
@@ -81,6 +88,11 @@ const BaseServiceFormExtras: FC<Props> = ({
         updateField={updatePrimitiveField}
         inputError={inputErrors}
         setInputError={setInputErrors}
+      />
+      <SelectServiceImages
+        images={images}
+        setImages={setImages}
+        uploadImages={uploadImages}
       />
     </div>
   );

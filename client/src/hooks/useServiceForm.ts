@@ -17,13 +17,7 @@ const useForm = <T extends TIterableService>(initialState: T) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const updateArrayFields = (
-    name: string,
-    value:
-      | ISubServiceCategory[]
-      | IServicePhoneContact[]
-      | IServiceEmailContact[]
-  ) => {
+  const updateArrayFields = <T>(name: string, value: T[]) => {
     setFormState((prev) => {
       return { ...prev, [name]: value };
     });

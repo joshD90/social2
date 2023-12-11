@@ -19,13 +19,7 @@ type Props = {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => void;
-  updateArrayField: (
-    name: string,
-    value:
-      | ISubServiceCategory[]
-      | IServicePhoneContact[]
-      | IServiceEmailContact[]
-  ) => void;
+  updateArrayField: <T>(name: string, value: T[]) => void;
   inputErrors: { [key: string]: string };
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
 };
