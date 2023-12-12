@@ -21,7 +21,6 @@ type Props = {
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
   images: File[];
   setImages: React.Dispatch<SetStateAction<File[]>>;
-  uploadImages: () => void;
 };
 
 const BaseServiceFormExtras: FC<Props> = ({
@@ -31,7 +30,6 @@ const BaseServiceFormExtras: FC<Props> = ({
   setInputErrors,
   images,
   setImages,
-  uploadImages,
 }) => {
   return (
     <div className="w-full grid lg:grid-cols-2 gap-5 p-5">
@@ -89,11 +87,7 @@ const BaseServiceFormExtras: FC<Props> = ({
         inputError={inputErrors}
         setInputError={setInputErrors}
       />
-      <SelectServiceImages
-        images={images}
-        setImages={setImages}
-        uploadImages={uploadImages}
-      />
+      <SelectServiceImages images={images} setImages={setImages} />
     </div>
   );
 };

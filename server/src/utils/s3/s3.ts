@@ -1,4 +1,4 @@
-import fs from "fs";
+import { Readable } from "stream";
 import aws from "aws-sdk";
 
 import envIndex from "../../env/envConfig";
@@ -14,12 +14,13 @@ const s3 = new aws.S3({
 
 //upload through the server
 export const uploadFile = (file: any) => {
-  const fileStream = fs.createReadStream(file.path);
+  console.log(file, "file in uploadfile");
+  const readableStream = Readable.from(file.buffer);
 
   const uploadParams = {
     Bucket: bucketName,
-    Body: fileStream,
-    Key: file.filename,
+    Body: readableStream,
+    Key: file.originalname,
   };
 
   const uploadResult = s3.upload(uploadParams).promise();
@@ -34,15 +35,3 @@ export const generateDownloadUrl = async (key: string) => {
   const downloadUrl = await s3.getSignedUrlPromise("getObject", params);
   return downloadUrl;
 };
-
-// export const generateUploadURL = async () => {
-//   const imageName = crypto.randomUUID();
-//   const params = {
-//     Bucket: bucketName,
-//     Key: imageName,
-//     Expires: 60,
-//     ContentType: "multipart/form-data",
-//   };
-//   const uploadUrl = await s3.getSignedUrlPromise("putObject", params);
-//   return uploadUrl;
-// };

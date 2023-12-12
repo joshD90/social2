@@ -5,6 +5,7 @@ export interface TIterableService {
   [key: string]:
     | string
     | number
+    | string[]
     | ISubServiceCategory[]
     | IServicePhoneContact[]
     | IServiceEmailContact[];
@@ -30,6 +31,7 @@ export interface IService extends IListItemBase {
   parent_service_category?: string;
   parent_service_forwardTo?: string;
   parent_service_name?: string;
+  imageUrls?: string[];
 }
 
 //Service with subsections

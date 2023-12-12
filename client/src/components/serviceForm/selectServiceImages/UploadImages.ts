@@ -4,26 +4,28 @@ import isError from "../../../utils/isError/isError";
 
 const uploadImages = async (
   images: File[],
-  updateField: <T>(name: string, value: T[]) => void,
+  serviceId: number,
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>
 ) => {
   const url = `${envIndex.urls.baseUrl}/services/images`;
   const formData = new FormData();
   images.forEach((img) => formData.append(`images`, img));
+  formData.append("service_id", serviceId.toString());
   try {
     const response = await fetch(url, {
       method: "POST",
       body: formData,
       credentials: "include",
     });
+    console.log(response);
     if (!response.ok)
       throw Error(response.statusText + " for uploading Images");
-    const data = await response.json();
-    const imgUrls = data.images as string[];
-    updateField("images", imgUrls);
+
+    return true;
   } catch (error) {
-    if (isError(error))
-      setInputErrors((prev) => ({ ...prev, images: (error as Error).message }));
+    if (isError(error)) console.log(error);
+    // setInputErrors((prev) => ({ ...prev, images: (error as Error).message }));
+    return false;
   }
 };
 

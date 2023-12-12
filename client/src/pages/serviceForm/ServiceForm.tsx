@@ -35,7 +35,7 @@ const ServiceForm = () => {
 
     const formattedData = generateFormattedData(fetchedData);
     if (!formattedData) return;
-    console.log(formattedData, "formattedData");
+
     setFormState(formattedData);
   }, [fetchedData, serviceId, setFormState]);
 
@@ -61,7 +61,6 @@ const ServiceForm = () => {
             setInputErrors={setInputError}
             images={images}
             setImages={setImages}
-            uploadImages={submitImages}
           />
         );
       case 2:
@@ -81,10 +80,6 @@ const ServiceForm = () => {
       if (newAmount < 0 || newAmount > 2) return prev;
       return newAmount;
     });
-  };
-  //upload images
-  const submitImages = () => {
-    uploadImages(images, updateArrayFields, setInputError);
   };
 
   //could this all be abstracted into a custom hook / function? probably just easiest to seperate into a function maybe
@@ -121,6 +116,15 @@ const ServiceForm = () => {
       if (!result.ok)
         throw new Error(`Request failed with status code of ${result.status}`);
       const data = await result.json();
+      //finally assuming all goes well, upload the images - have this last to avoid unnecessary AWS interaction - TODO: needs to be adjusted for updating not just creating
+      console.log(
+        data.id,
+        typeof data.id,
+        "data.id when returned from creating service"
+      );
+      const imageResponse = await uploadImages(images, data.id, setInputError);
+      if (!imageResponse)
+        throw new Error("There was an issue with uploading the images");
       navigate(`/admin/services/view?id=${data.id}`);
     } catch (error) {
       if (error instanceof Error) {

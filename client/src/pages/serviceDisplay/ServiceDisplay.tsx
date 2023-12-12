@@ -66,6 +66,7 @@ const ServiceDisplay: FC<Props> = ({
             data.areasServed,
             "areasServed"
           ),
+          imageUrls: data.images ?? [],
         };
 
         setService(formattedData);
@@ -233,6 +234,13 @@ const ServiceDisplay: FC<Props> = ({
               subServices={service.clientGroups}
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
+          </div>
+          <div className="flex w-full">
+            {service.imageUrls
+              ? service.imageUrls.map((url) => (
+                  <img src={url} key={url} className="w-1/3" />
+                ))
+              : null}
           </div>
         </div>
       ) : (

@@ -18,8 +18,7 @@ const createServiceController = async (
   const subCatergories = req.body.subCategories;
   const contactNumbers = req.body.contactNumber ?? [];
   const emailContacts = req.body.emailContacts ?? [];
-  console.log(serviceBase, subCatergories, contactNumbers);
-  console.log(contactNumbers, "contact numbers specifically");
+
   //create database entry
   const result = await serviceDB.createFullServiceEntry(
     serviceBase,

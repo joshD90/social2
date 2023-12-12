@@ -33,7 +33,7 @@ class ServiceContactsDB {
       })
     );
     const allResultsAwaited = await allResults;
-    console.log(allResultsAwaited, "all results awaited");
+
     if (allResultsAwaited.find((result) => result instanceof Error))
       throw new Error("Something went wrong with inserting contacts");
     return allResultsAwaited as ResultSetHeader[];

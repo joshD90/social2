@@ -1,17 +1,16 @@
-import { FC, SetStateAction } from "react";
-import { AiFillPlusCircle } from "react-icons/ai";
+import { FC, SetStateAction, useEffect, useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
 
 type Props = {
   images: File[];
   setImages: React.Dispatch<SetStateAction<File[]>>;
-  uploadImages: () => void;
 };
 
-const SelectServiceImages: FC<Props> = ({
-  images,
-  setImages,
-  uploadImages,
-}) => {
+const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
+  const [imageUrls, setImageUrls] = useState<
+    { blobUrl: string; name: string }[]
+  >([]);
+
   const updateImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (!fileList) return;
@@ -23,27 +22,55 @@ const SelectServiceImages: FC<Props> = ({
     setImages([...images, ...filteredImages]);
   };
 
-  const handleImageSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    uploadImages();
+  useEffect(() => {
+    const imageUrls = images.map((image) => {
+      const blob = new Blob([image], { type: image.type });
+      const blobUrl = URL.createObjectURL(blob);
+      return { blobUrl, name: image.name };
+    });
+    setImageUrls(imageUrls);
+  }, [images]);
+
+  const removeImage = (imgName: string) => {
+    setImages((prev) => prev.filter((file) => file.name !== imgName));
   };
 
   return (
-    <div className="text-white flex">
-      <form action="" onSubmit={handleImageSubmit} className="flex">
-        <div>
-          <label htmlFor="images"></label>
-          <input type="file" id="images" multiple onChange={updateImages} />
-        </div>
-        <button type="submit">
-          <AiFillPlusCircle />
-        </button>
-      </form>
-      <div>
-        {images.map((image) => (
-          <img src={""} />
+    <div className="text-white">
+      <h4>Upload Images of Service</h4>
+      <div className="mb-2 flex gap-2">
+        {imageUrls.map((img) => (
+          <div className="relative h-10">
+            <img
+              src={img.blobUrl}
+              className="w-10 h-full object-cover cursor-pointer"
+            />
+            <button
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-80 text-3xl"
+              onClick={() => removeImage(img.name)}
+            >
+              <AiFillDelete />
+            </button>
+          </div>
         ))}
       </div>
+      <form action="" className="flex">
+        <div className="h-12 w-full relative">
+          <label
+            htmlFor="images"
+            className="w-full h-full flex items-center justify-center bg-stone-200 text-stone-800 text-center text-xl"
+          >
+            <span>Select Image</span>
+          </label>
+          <input
+            type="file"
+            id="images"
+            multiple
+            onChange={updateImages}
+            className="opacity-0 w-full h-full absolute top-0 left-0 cursor-pointer"
+          />
+        </div>
+      </form>
     </div>
   );
 };
