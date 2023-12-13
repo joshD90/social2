@@ -17,7 +17,6 @@ export const uploadImageController = async (req: Request, res: Response) => {
         "No Files Uploaded there was an issue with multer or no service id provided"
       );
 
-  console.log(req.files, "req.files in uploadImageController");
   const service_id = req.body.service_id ?? null;
   try {
     //we need to do the uploading here

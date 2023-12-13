@@ -5,7 +5,8 @@ import isError from "../../../utils/isError/isError";
 const uploadImages = async (
   images: File[],
   serviceId: number,
-  setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>
+  setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>,
+  method: "PUT" | "POST"
 ) => {
   const url = `${envIndex.urls.baseUrl}/services/images`;
   const formData = new FormData();
@@ -13,7 +14,7 @@ const uploadImages = async (
   formData.append("service_id", serviceId.toString());
   try {
     const response = await fetch(url, {
-      method: "POST",
+      method: method,
       body: formData,
       credentials: "include",
     });

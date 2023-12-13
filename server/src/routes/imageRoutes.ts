@@ -8,6 +8,8 @@ import { db } from "../server";
 
 import passport from "passport";
 import { uploadImageController } from "../controllers/serviceControllers/serviceImageControllers/uploadImageController/uploadImageController";
+import { getSignedImgUrlController } from "../controllers/serviceControllers/serviceImageControllers/getSignedImgUrlController/getSignedImgUrlController";
+import updateImagesForServiceController from "../controllers/serviceControllers/serviceImageControllers/updateImagesForServiceController/updateImagesForServiceController";
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -15,18 +17,12 @@ const upload = multer({ storage });
 
 router.use(passport.authenticate("jwt", { session: false }));
 
-router.get("/:serviceId", async (req: Request, res: Response) => {
-  const serviceId = parseInt(req.params.serviceId);
-  try {
-    const signedUrls = await db
-      .getImagesDB()
-      .getImageSignedUrlsByService(serviceId);
-    res.status(200).json({ urls: signedUrls });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
+router.get("/:serviceId", getSignedImgUrlController);
+router.put(
+  "/:serviceId",
+  upload.array("images", 5),
+  updateImagesForServiceController
+);
 router.post("/", upload.array("images", 5), uploadImageController);
 
 export default router;

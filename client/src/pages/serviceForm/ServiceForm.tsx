@@ -122,7 +122,12 @@ const ServiceForm = () => {
         typeof data.id,
         "data.id when returned from creating service"
       );
-      const imageResponse = await uploadImages(images, data.id, setInputError);
+      const imageResponse = await uploadImages(
+        images,
+        data.id,
+        setInputError,
+        method
+      );
       if (!imageResponse)
         throw new Error("There was an issue with uploading the images");
       navigate(`/admin/services/view?id=${data.id}`);

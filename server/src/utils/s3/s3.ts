@@ -35,3 +35,10 @@ export const generateDownloadUrl = async (key: string) => {
   const downloadUrl = await s3.getSignedUrlPromise("getObject", params);
   return downloadUrl;
 };
+
+export const deleteImage = async (key: string) => {
+  const params = { Bucket: bucketName, Key: key };
+
+  const deleteResponse = await s3.deleteObject(params).promise();
+  return deleteResponse.DeleteMarker;
+};
