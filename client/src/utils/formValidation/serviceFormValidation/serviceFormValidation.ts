@@ -63,7 +63,7 @@ const validateServiceForm = async (
   | Error
 > => {
   const errors: { [key: string]: string } = {};
-  console.log(formData);
+
   try {
     const result = await validationSchema.validate(formData, {
       abortEarly: false,

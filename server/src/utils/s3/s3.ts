@@ -14,7 +14,6 @@ const s3 = new aws.S3({
 
 //upload through the server
 export const uploadFile = (file: any) => {
-  console.log(file, "file in uploadfile");
   const readableStream = Readable.from(file.buffer);
 
   const uploadParams = {
@@ -30,6 +29,7 @@ export const uploadFile = (file: any) => {
 
 //use signed url to fetch from frontend
 export const generateDownloadUrl = async (key: string) => {
+  console.log("generateDownloadUrl has been called");
   const params = { Bucket: bucketName, Key: key, Expires: 60 };
 
   const downloadUrl = await s3.getSignedUrlPromise("getObject", params);
@@ -40,6 +40,6 @@ export const deleteImage = async (key: string) => {
   const params = { Bucket: bucketName, Key: key };
 
   const deleteResponse = await s3.deleteObject(params).promise();
-  console.log(deleteResponse, "deleteResponse");
+
   return deleteResponse;
 };

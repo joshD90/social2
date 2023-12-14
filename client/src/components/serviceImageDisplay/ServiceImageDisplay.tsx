@@ -10,13 +10,7 @@ type Props = { images: string[] };
 
 const ServiceImageDisplay: FC<Props> = ({ images }) => {
   return (
-    <Swiper
-      modules={[Navigation]}
-      onSlideChange={() => console.log("slide changing")}
-      height={72}
-      navigation
-      loop={true}
-    >
+    <Swiper modules={[Navigation]} height={72} navigation loop={true}>
       {images.map((img) => (
         <SwiperSlide key={img}>
           <div className="h-full w-full flex items-center justify-center">

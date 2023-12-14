@@ -12,7 +12,7 @@ const UploadImageS3Test = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(selectedFile, "selected file");
+
     if (!selectedFile) return;
     //get a secure url from our server
     try {
@@ -27,15 +27,11 @@ const UploadImageS3Test = () => {
         headers: { "Content-Type": "multipart/form-data" },
         body: selectedFile,
       });
-      console.log(uploadResponse, "secondary upload response");
+
       if (!uploadResponse.ok) throw Error(uploadResponse.statusText);
       const uploadResult = await uploadResponse.text();
-      console.log(
-        uploadResult,
-        "this is the response  data that has come back from AWS"
-      );
+
       const imageUrl = uploadResult.split("?")[0];
-      console.log(imageUrl, "final image url");
 
       //once saved to s3 post request to my server to get any extra data
     } catch (error) {

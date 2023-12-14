@@ -169,7 +169,7 @@ export class ServiceDB {
         fetchServices(serviceId),
         [serviceId]
       );
-      console.log(baseService, "baseService in service db fetch");
+
       //get contact numbers but filter out private ones if user is not approved or higher
       let contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
         serviceId
@@ -193,17 +193,11 @@ export class ServiceDB {
       if (allSubCategories instanceof Error)
         throw Error("Error in fetching sub categories");
       const allChildren = await this.fetchAllChildrenServices(serviceId);
-      console.log(
-        allChildren,
-        "allchildren in fetch service + related entries"
-      );
+
       const serviceImages = await db
         .getImagesDB()
         .getImageSignedUrlsByService(serviceId);
-      console.log(
-        serviceImages,
-        "services images in fetch service and realted entries"
-      );
+
       return {
         baseService,
         children: allChildren,

@@ -52,7 +52,7 @@ const ServiceCommentForm: FC<Props> = ({
         method: `${commentToEdit ? "PUT" : "POST"}`,
         body: JSON.stringify(commentToSubmit),
       });
-      console.log(response, "response returned");
+
       if (!response.ok) throw Error(response.statusText);
       const data = await response.json();
       const createdComment: ICommentWithVotes = {

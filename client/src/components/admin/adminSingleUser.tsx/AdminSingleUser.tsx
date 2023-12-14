@@ -24,7 +24,7 @@ const AdminSingleUser: FC<Props> = ({ user }) => {
         body: JSON.stringify(body),
         credentials: "include",
       });
-      console.log(response);
+
       if (!response.ok) throw Error(response.statusText);
 
       setApproved(approvedValue);

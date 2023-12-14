@@ -20,7 +20,6 @@ const emailValidationSchema = Yup.object().shape({
 const serviceContactFormValidation = async (
   contact: IServicePhoneContact | IServiceEmailContact
 ) => {
-  console.log(contact, "contact in form validation for contact");
   const validationSchema =
     "phone_number" in contact ? phoneValidationSchema : emailValidationSchema;
   try {

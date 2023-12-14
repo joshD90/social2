@@ -14,7 +14,7 @@ export const findServiceByIdController = async (
     const serviceResult = await db
       .getServiceDB()
       .fetchServiceAndRelatedEntries(serviceId, req.user as IUser | null);
-    console.log(serviceResult, "serviceResult");
+
     if (!serviceResult)
       return res.status(404).json("Could not find relevant entry");
 

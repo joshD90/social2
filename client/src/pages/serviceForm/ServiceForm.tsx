@@ -128,6 +128,7 @@ const ServiceForm = () => {
         setInputError,
         method
       );
+      console.log(imageResponse, "image response in submit form");
       if (!imageResponse)
         throw new Error("There was an issue with uploading the images");
       navigate(`/admin/services/view?id=${data.id}`);

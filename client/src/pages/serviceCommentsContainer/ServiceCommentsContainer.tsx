@@ -79,7 +79,7 @@ const ServiceCommentsContainer: FC<Props> = ({
 
   const loadMoreComments = () => {
     fetchCommentsCallback(false, commentDispatch, undefined, offsetCount + 5);
-    console.log(offsetCount);
+
     setOffsetCount((prev) => prev + 5);
   };
 

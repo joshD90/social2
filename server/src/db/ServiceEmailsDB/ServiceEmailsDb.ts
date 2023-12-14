@@ -29,7 +29,6 @@ export class ServiceEmailContactsDB {
 
     if (
       awaitedResults.find((result) => {
-        console.log(result);
         return result instanceof Error;
       })
     )

@@ -35,7 +35,7 @@ const updateServiceController = async (req: Request, res: Response) => {
       .deleteJunctionTablesForService(serviceId);
     if (!deleteSubJunctionResult)
       throw Error("Could not successfully delete junction table entries");
-    console.log("ServiceBase", serviceBase);
+
     //update our base table
     const updateServiceBaseResult = await db
       .getServiceDB()
@@ -43,7 +43,7 @@ const updateServiceController = async (req: Request, res: Response) => {
       .updateEntriesByMultiple(serviceBase, serviceId, "id");
     if (updateServiceBaseResult instanceof Error)
       throw new Error(updateServiceBaseResult.message);
-    console.log("Gotten down to the part where we add in our numbers");
+
     //add in our contact numbers
     const formattedNumbers = contactNumber.map((contact) => ({
       ...contact,
@@ -62,7 +62,7 @@ const updateServiceController = async (req: Request, res: Response) => {
       ...contact,
       service_id: serviceId,
     }));
-    console.log("got down to the email bit");
+
     await db
       .getServiceDB()
       .getContactEmailDB()

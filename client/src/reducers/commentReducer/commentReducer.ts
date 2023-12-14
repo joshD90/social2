@@ -43,7 +43,6 @@ export const commentReducer = (
       return updatedComments;
     }
     case "UPDATE_COMMENT": {
-      console.log("trying to update comments");
       const updatedComments = state.map((comment) => {
         if (comment.id === action.payload.id) return action.payload;
         return comment;

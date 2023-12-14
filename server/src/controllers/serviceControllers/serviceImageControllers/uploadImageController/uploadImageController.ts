@@ -36,7 +36,7 @@ export const uploadImageController = async (req: Request, res: Response) => {
         return db.getImagesDB().addImage(dbImage);
       })
     );
-    console.log(dbInsertResultsArray, "dbInsert results");
+
     res.status(201).json({ imageDBEntries: dbInsertResultsArray });
   } catch (error) {
     console.log(error);

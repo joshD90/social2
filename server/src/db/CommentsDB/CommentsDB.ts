@@ -113,7 +113,6 @@ export class CommentsDB {
 
       return result;
     } catch (error) {
-      console.log(error, "error in fetchComments");
       return error as Error;
     }
   }

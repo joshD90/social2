@@ -8,7 +8,7 @@ const uploadImages = async (
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>,
   method: "PUT" | "POST"
 ) => {
-  const url = `${envIndex.urls.baseUrl}/services/images`;
+  const url = `${envIndex.urls.baseUrl}/services/images/${serviceId}`;
   const formData = new FormData();
   images.forEach((img) => formData.append(`images`, img));
   formData.append("service_id", serviceId.toString());
@@ -18,7 +18,7 @@ const uploadImages = async (
       body: formData,
       credentials: "include",
     });
-    console.log(response);
+    console.log(response, "response in upload image");
     if (!response.ok)
       throw Error(response.statusText + " for uploading Images");
 
