@@ -14,6 +14,7 @@ import { MdEmail } from "react-icons/md";
 import { BsGlobe } from "react-icons/bs";
 import ServiceChildContainer from "../../components/serviceChildContainer/ServiceChildContainer";
 import ServiceContactDisplay from "../../components/serviceContactDisplay/ServiceContactDisplay";
+import ServiceImageDisplay from "../../components/serviceImageDisplay/ServiceImageDisplay";
 
 type Props = {
   serviceId: string | boolean;
@@ -96,6 +97,11 @@ const ServiceDisplay: FC<Props> = ({
                 className="rounded-sm"
                 style={{ maxHeight: "15rem" }}
               />
+            </div>
+          )}
+          {service.imageUrls && (
+            <div className="w-full sm:px-10">
+              <ServiceImageDisplay images={service.imageUrls} />
             </div>
           )}
           <div className="flex flex-col items-center">

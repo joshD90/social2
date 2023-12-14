@@ -40,5 +40,6 @@ export const deleteImage = async (key: string) => {
   const params = { Bucket: bucketName, Key: key };
 
   const deleteResponse = await s3.deleteObject(params).promise();
-  return deleteResponse.DeleteMarker;
+  console.log(deleteResponse, "deleteResponse");
+  return deleteResponse;
 };

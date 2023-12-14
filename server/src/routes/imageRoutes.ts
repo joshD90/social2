@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 
-import { generateDownloadUrl } from "../utils/s3/s3";
+import { deleteImage, generateDownloadUrl } from "../utils/s3/s3";
 
 import multer from "multer";
 
@@ -15,7 +15,7 @@ const router = Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.use(passport.authenticate("jwt", { session: false }));
+// router.use(passport.authenticate("jwt", { session: false }));
 
 router.get("/:serviceId", getSignedImgUrlController);
 router.put(
@@ -23,6 +23,20 @@ router.put(
   upload.array("images", 5),
   updateImagesForServiceController
 );
+router.delete("/:imageKey", async (req: Request, res: Response) => {
+  try {
+    const deleteResult = await deleteImage(req.params.imageKey);
+    console.log(deleteResult);
+    const deleteFromDB = await db
+      .getImagesDB()
+      .genericQueries.deleteBySingleCriteria("fileName", req.params.imageKey);
+    console.log(deleteFromDB);
+
+    return res.status(200).json({ deleteResult, deleteFromDB });
+  } catch (error) {
+    console.log(error, "error in delete image");
+  }
+});
 router.post("/", upload.array("images", 5), uploadImageController);
 
 export default router;
