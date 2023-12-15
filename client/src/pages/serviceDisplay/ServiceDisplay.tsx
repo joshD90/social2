@@ -90,7 +90,7 @@ const ServiceDisplay: FC<Props> = ({
           <h1 className="w-full flex justify-center text-2xl text-stone-50">
             {service.name}
           </h1>
-          {service.imageUrl && (
+          {!service.imageUrls && service.imageUrl && (
             <div className="w-full flex justify-center my-5">
               <img
                 src={service.imageUrl}
@@ -241,16 +241,11 @@ const ServiceDisplay: FC<Props> = ({
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
           </div>
-          <div className="flex w-full">
-            {service.imageUrls
-              ? service.imageUrls.map((url) => (
-                  <img src={url} key={url} className="w-1/3" />
-                ))
-              : null}
-          </div>
         </div>
       ) : (
-        "Searching for Service"
+        <div className="w-screen h-screen flex items-center justify-center">
+          Looking for Service...
+        </div>
       )}
     </section>
   );

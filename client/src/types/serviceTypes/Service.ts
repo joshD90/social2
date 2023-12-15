@@ -67,3 +67,7 @@ export interface IServiceEmailContact {
   email: string;
   public: boolean;
 }
+
+export interface IFileWithPrimary extends File {
+  primary?: boolean;
+}

@@ -1,14 +1,15 @@
 import { FC, SetStateAction, useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
+import { IFileWithPrimary } from "../../../types/serviceTypes/Service";
 
 type Props = {
-  images: File[];
-  setImages: React.Dispatch<SetStateAction<File[]>>;
+  images: IFileWithPrimary[];
+  setImages: React.Dispatch<SetStateAction<IFileWithPrimary[]>>;
 };
 
 const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
   const [imageUrls, setImageUrls] = useState<
-    { blobUrl: string; name: string }[]
+    { blobUrl: string; name: string; primary?: boolean }[]
   >([]);
 
   const updateImages = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +27,7 @@ const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
     const imageUrls = images.map((image) => {
       const blob = new Blob([image], { type: image.type });
       const blobUrl = URL.createObjectURL(blob);
-      return { blobUrl, name: image.name };
+      return { blobUrl, name: image.name, primary: !!image.primary };
     });
     setImageUrls(imageUrls);
   }, [images]);
@@ -35,15 +36,24 @@ const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
     setImages((prev) => prev.filter((file) => file.name !== imgName));
   };
 
+  const setPriority = (imgName: string) => {
+    setImages((prev) =>
+      prev.map((img) => {
+        img.primary = imgName === img.name;
+        return img;
+      })
+    );
+  };
+
   return (
     <div className="text-white">
       <h4>Upload Images of Service</h4>
       <div className="mb-2 flex gap-2">
         {imageUrls.map((img) => (
-          <div className="relative h-10">
+          <div className="relative flex justify-center flex-col">
             <img
               src={img.blobUrl}
-              className="w-10 h-full object-cover cursor-pointer"
+              className="w-10 h-10 object-cover cursor-pointer"
             />
             <button
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-80 text-3xl"
@@ -51,6 +61,12 @@ const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
             >
               <AiFillDelete />
             </button>
+            <input
+              type="radio"
+              onChange={() => setPriority(img.name)}
+              className="mt-2"
+              checked={img.primary}
+            />
           </div>
         ))}
       </div>

@@ -12,7 +12,9 @@
 
 Will need to add a new category of verified but not approved.
 
-1. do some serious research
+1. do some serious research []
+2. Set up email with Amazon. Verify email and test recipient. []
+3. Alter user table
 
 ### Comments
 
@@ -99,4 +101,6 @@ Will need to add a new category of verified but not approved.
 - Create ImageDB class [x]
 - Create s3 ability to put / delete and getSignedUrl [x]
 - Update frontend to allow to update services and create services with multiple images [x]
-- update frontend to display a slide show to view the pictures []
+- update frontend to display a slide show to view the pictures [x]
+- allow for primary image to be selected, allow click to set primary pic. Update SQL table and types. []
+- set display of service to depend on what is available multiple images or just the single outdated version []
