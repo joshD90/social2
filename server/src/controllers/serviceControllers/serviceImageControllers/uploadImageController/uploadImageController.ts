@@ -3,8 +3,10 @@ import { IUser } from "../../../../types/userTypes/UserType";
 import { uploadFile } from "../../../../utils/s3/s3";
 import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
+import { ManagedUpload } from "aws-sdk/clients/s3";
 
 export const uploadImageController = async (req: Request, res: Response) => {
+  console.log("hit upload controller", req.body);
   if (!req.user || (req.user as IUser).privileges !== "admin")
     return res
       .status(401)
@@ -18,12 +20,17 @@ export const uploadImageController = async (req: Request, res: Response) => {
       );
 
   const service_id = req.body.service_id ?? null;
+  const mainPicFileName = req.body.mainPicFileName ?? null;
+
   try {
     //we need to do the uploading here
     const resultsArray = await Promise.all(
-      req.files.map((file) => uploadFile(file))
+      req.files.map(async (file) => ({
+        ...(await uploadFile(file)),
+        main_pic: file.originalname === mainPicFileName,
+      }))
     );
-    console.log(resultsArray, "array of resulting uploads");
+
     //then we need to send the relevant result bits to the database
     const dbInsertResultsArray = await Promise.all(
       resultsArray.map((uploadResult) => {
@@ -32,7 +39,9 @@ export const uploadImageController = async (req: Request, res: Response) => {
           url: uploadResult.Location,
           bucket_name: uploadResult.Bucket,
           service_id,
+          main_pic: uploadResult.main_pic,
         };
+
         return db.getImagesDB().addImage(dbImage);
       })
     );

@@ -27,7 +27,7 @@ const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
     const imageUrls = images.map((image) => {
       const blob = new Blob([image], { type: image.type });
       const blobUrl = URL.createObjectURL(blob);
-      return { blobUrl, name: image.name, primary: !!image.primary };
+      return { blobUrl, name: image.name, main_pic: !!image.main_pic };
     });
     setImageUrls(imageUrls);
   }, [images]);
@@ -36,10 +36,10 @@ const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
     setImages((prev) => prev.filter((file) => file.name !== imgName));
   };
 
-  const setPriority = (imgName: string) => {
+  const setMainPic = (imgName: string) => {
     setImages((prev) =>
       prev.map((img) => {
-        img.primary = imgName === img.name;
+        img.main_pic = imgName === img.name;
         return img;
       })
     );
@@ -63,7 +63,7 @@ const SelectServiceImages: FC<Props> = ({ images, setImages }) => {
             </button>
             <input
               type="radio"
-              onChange={() => setPriority(img.name)}
+              onChange={() => setMainPic(img.name)}
               className="mt-2"
               checked={img.primary}
             />

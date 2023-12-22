@@ -56,3 +56,7 @@ export interface IServiceEmailContact {
   email: string;
   public: boolean;
 }
+
+export interface IImageWithPriority extends File {
+  main_pic: boolean;
+}

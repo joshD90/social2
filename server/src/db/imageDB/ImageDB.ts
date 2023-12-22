@@ -10,6 +10,7 @@ export type UploadedImage = {
   fileName: string;
   url: string;
   bucket_name: string;
+  main_pic?: boolean;
 };
 
 export class ImagesDB {

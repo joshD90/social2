@@ -69,5 +69,5 @@ export interface IServiceEmailContact {
 }
 
 export interface IFileWithPrimary extends File {
-  primary?: boolean;
+  main_pic?: boolean;
 }

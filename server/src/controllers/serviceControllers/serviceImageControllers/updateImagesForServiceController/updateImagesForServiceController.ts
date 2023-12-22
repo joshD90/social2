@@ -8,6 +8,7 @@ const updateImagesForServiceController = async (
   req: Request,
   res: Response
 ) => {
+  console.log("hit update controller", req.body);
   if (!req.user || (req.user as IUser).privileges !== "admin")
     return res.status(401).json("You are not authorised to make these changes");
 

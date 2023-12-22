@@ -37,7 +37,7 @@ const PrimaryLayout = () => {
         >
           <ListContainer isAboveMedium />
         </div>
-        <div className="w-full flex justify-center items-center">
+        <div className="w-2/3 flex justify-center items-center flex-grow">
           <Outlet />
         </div>
       </div>
