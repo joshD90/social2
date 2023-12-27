@@ -19,6 +19,7 @@ const app = express();
 
 app.use(cors({ origin: envConfig.server.clientServer, credentials: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 export const db = new Database();

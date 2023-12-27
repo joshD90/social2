@@ -43,7 +43,6 @@ const ServiceDisplay: FC<Props> = ({
         if (!result.ok) throw Error(result.statusText);
         const data = await result.json();
 
-        console.log(data, "data fresh off the boat");
         const contactNumber =
           Array.isArray(data.contactNumber) && data.contactNumber.length > 0
             ? data.contactNumber

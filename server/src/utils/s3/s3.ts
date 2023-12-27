@@ -29,7 +29,6 @@ export const uploadFile = (file: any) => {
 
 //use signed url to fetch from frontend
 export const generateDownloadUrl = async (key: string) => {
-  console.log("generateDownloadUrl has been called");
   const params = { Bucket: bucketName, Key: key, Expires: 60 };
 
   const downloadUrl = await s3.getSignedUrlPromise("getObject", params);

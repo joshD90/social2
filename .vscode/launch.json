@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Debug Typescript",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/server.ts",
+      "program": "${workspaceFolder}/server/src/server.ts",
       "runtimeArgs": [
         "-r",
         "ts-node/register",
@@ -17,7 +17,8 @@
         "tsconfig-paths/register"
       ],
       "console": "integratedTerminal",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      "outFiles": ["${workspaceFolder}/server/dist/**/*.js"],
+      "cwd": "${workspaceFolder}/server"
     }
   ]
 }

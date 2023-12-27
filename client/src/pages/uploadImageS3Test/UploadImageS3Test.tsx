@@ -19,7 +19,6 @@ const UploadImageS3Test = () => {
       const response = await fetch(`${envIndex.urls.baseUrl}/images/s3url`);
       if (!response.ok) throw Error(JSON.stringify(response));
       const uploadUrl = await response.text();
-      console.log(uploadUrl, "uploadurl");
 
       //post the image directly to s3 bucket
       const uploadResponse = await fetch(uploadUrl, {
