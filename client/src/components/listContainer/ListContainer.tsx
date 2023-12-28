@@ -12,6 +12,7 @@ import { IService } from "../../types/serviceTypes/Service";
 
 import "../../assets/themeColors/backgroundGradients.css";
 import envIndex from "../../envIndex/envIndex";
+import "./listContainer.css";
 
 type Props = {
   isAboveMedium: boolean;
@@ -44,7 +45,7 @@ const ListContainer: FC<Props> = ({ isAboveMedium }) => {
 
   return (
     <div
-      className="w-full overflow-y-auto  border-x-2 border-stone-700 backgroundAllColorDark"
+      className="w-full overflow-y-auto  border-x-2 border-stone-700 backgroundAllColorDark scrollable-div"
       style={{ height: "calc(100vh - 3rem)" }}
     >
       {listItems.map((item, index) => {

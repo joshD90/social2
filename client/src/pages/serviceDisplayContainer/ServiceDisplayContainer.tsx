@@ -21,6 +21,8 @@ import AdminServiceReportsMultiple from "../../components/admin/adminServiceRepo
 import ServiceCommentsContainer from "../serviceCommentsContainer/ServiceCommentsContainer";
 import { commentReducer } from "../../reducers/commentReducer/commentReducer";
 
+import "../../components/listContainer/listContainer.css";
+
 const ServiceDisplayContainer = () => {
   const location = useLocation();
   const goBackToSearch = location.state?.returnToSearch;
@@ -53,7 +55,7 @@ const ServiceDisplayContainer = () => {
 
   return (
     <section
-      className="overflow-auto w-full"
+      className="overflow-auto w-full scrollable-div"
       //factor in the navbar height
       style={{ height: "calc(100vh - 3rem)" }}
       ref={containerRef}
