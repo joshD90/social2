@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 
-import { deleteImage, generateDownloadUrl } from "../utils/s3/s3";
+import { deleteImage } from "../utils/s3/s3";
 
 import multer from "multer";
 
@@ -36,6 +36,6 @@ router.delete("/:imageKey", async (req: Request, res: Response) => {
     console.log(error, "error in delete image");
   }
 });
-router.post("/", upload.array("images", 5), uploadImageController);
+router.post("/:serviceId", upload.array("images", 5), uploadImageController);
 
 export default router;

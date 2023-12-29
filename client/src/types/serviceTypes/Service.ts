@@ -31,7 +31,7 @@ export interface IService extends IListItemBase {
   parent_service_category?: string;
   parent_service_forwardTo?: string;
   parent_service_name?: string;
-  imageUrls?: string[];
+  imageUrls?: { main_pic: boolean | undefined; url: string }[];
 }
 
 //Service with subsections

@@ -66,9 +66,17 @@ const ServiceDisplay: FC<Props> = ({
             data.areasServed,
             "areasServed"
           ),
-          imageUrls: data.images ?? [],
+          imageUrls: Array.isArray(data.images)
+            ? (data.images as { main_pic: boolean | undefined }[])?.sort(
+                (a, b) => {
+                  if (a.main_pic && !b.main_pic) return -1;
+                  if (!a.main_pic && b.main_pic) return 1;
+                  return 0;
+                }
+              ) ?? []
+            : [],
         };
-
+        console.log(formattedData.imageUrls);
         setService(formattedData);
       } catch (error) {
         console.log(error);

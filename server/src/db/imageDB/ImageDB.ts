@@ -53,7 +53,10 @@ export class ImagesDB {
       throw imageEntries.message;
     }
     const imgUrls = await Promise.all(
-      imageEntries.map((img) => generateDownloadUrl(img.fileName))
+      imageEntries.map(async (img) => ({
+        main_pic: img.main_pic,
+        url: await generateDownloadUrl(img.fileName),
+      }))
     );
     return imgUrls;
   }

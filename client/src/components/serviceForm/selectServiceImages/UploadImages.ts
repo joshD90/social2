@@ -9,19 +9,20 @@ const uploadImages = async (
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>,
   method: "PUT" | "POST"
 ) => {
-  const mainPicFileName = images.find((img) => img.main_pic)?.name;
+  const mainPicIndex = images.findIndex((img) => img.main_pic);
   const url = `${envIndex.urls.baseUrl}/services/images/${serviceId}`;
   const formData = new FormData();
   images.forEach((img) => formData.append(`images`, img));
   formData.append("service_id", serviceId.toString());
-  mainPicFileName && formData.append("mainPicFileName", mainPicFileName);
+  mainPicIndex && formData.append("mainPicIndex", mainPicIndex.toString());
+  console.log(method);
   try {
     const response = await fetch(url, {
       method: method,
       body: formData,
       credentials: "include",
     });
-
+    console.log(response);
     if (!response.ok)
       throw Error(response.statusText + " for uploading Images");
 

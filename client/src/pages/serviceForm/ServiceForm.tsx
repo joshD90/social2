@@ -116,12 +116,7 @@ const ServiceForm = () => {
       if (!result.ok)
         throw new Error(`Request failed with status code of ${result.status}`);
       const data = await result.json();
-      //finally assuming all goes well, upload the images - have this last to avoid unnecessary AWS interaction - TODO: needs to be adjusted for updating not just creating
-      console.log(
-        data.id,
-        typeof data.id,
-        "data.id when returned from creating service"
-      );
+      //assuming all goes well with the service upload the images
       const imageResponse = await uploadImages(
         images,
         data.id,
