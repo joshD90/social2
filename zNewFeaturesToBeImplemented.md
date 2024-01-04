@@ -96,11 +96,11 @@ Will need to add a new category of verified but not approved.
 
 ### Uploading Images To S3
 
-- Set up an AWS account []
+- Set up an AWS account [x]
 - Get the most simple version up and running [x]
 - Create ImageDB class [x]
 - Create s3 ability to put / delete and getSignedUrl [x]
 - Update frontend to allow to update services and create services with multiple images [x]
 - update frontend to display a slide show to view the pictures [x]
-- allow for primary image to be selected, allow click to set primary pic. Update SQL table and types. []
-- set display of service to depend on what is available multiple images or just the single outdated version []
+- allow for primary image to be selected, allow click to set primary pic. Update SQL table and types. [x]
+- set display of service to depend on what is available multiple images or just the single outdated version [x]
