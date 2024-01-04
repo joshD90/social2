@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 
-import { deleteImage } from "../utils/s3/s3";
+import { deleteImage } from "../utils/AWS/s3/s3";
 
 import multer from "multer";
 

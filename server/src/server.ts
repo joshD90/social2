@@ -12,6 +12,7 @@ import authRouter from "./routes/authRoutes";
 import searchRouter from "./routes/searchRoutes";
 import userRouter from "./routes/userRoutes";
 import imageRouter from "./routes/imageRoutes";
+import mailRouter from "./routes/mailRoutes";
 
 import { configurePassport } from "./utils/passport-strategies";
 //configure server app
@@ -31,6 +32,7 @@ app.use("/categories", categoryRouter);
 app.use("/auth", authRouter);
 app.use("/search", searchRouter);
 app.use("/users", userRouter);
+app.use("/mail", mailRouter);
 
 app.listen(envConfig.server.port, () =>
   console.log(`Server is listening on ${envConfig.server.port}`)

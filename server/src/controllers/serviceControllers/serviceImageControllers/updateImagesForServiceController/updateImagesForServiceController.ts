@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
 import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
-import { deleteImage, uploadFile } from "../../../../utils/s3/s3";
+import { deleteImage, uploadFile } from "../../../../utils/AWS/s3/s3";
 
 const updateImagesForServiceController = async (
   req: Request,

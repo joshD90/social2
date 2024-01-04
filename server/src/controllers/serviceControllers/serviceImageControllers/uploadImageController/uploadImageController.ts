@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
-import { uploadFile } from "../../../../utils/s3/s3";
+import { uploadFile } from "../../../../utils/AWS/s3/s3";
 import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
 

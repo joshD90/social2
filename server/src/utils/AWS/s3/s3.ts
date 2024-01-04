@@ -1,7 +1,7 @@
 import { Readable } from "stream";
 import aws from "aws-sdk";
 
-import envIndex from "../../env/envConfig";
+import envIndex from "../../../env/envConfig";
 
 const { region, accessKeyId, secretAccessKey, bucketName } = envIndex.s3.image;
 
