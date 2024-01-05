@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { IUser } from "../../types/userTypes/UserType";
 import { db } from "../../server";
+import sendStoreConfirmationLink from "./emailConfirm/sendStoreConfirmationLink/sendStoreConfirmationLink";
 
 const authSignupController = async (req: Request, res: Response) => {
   const {
@@ -47,12 +48,18 @@ const authSignupController = async (req: Request, res: Response) => {
 
     const result = await db.getUserDB().createNewUser(user);
     if (result instanceof Error) throw Error("Issue with creating the entry");
+    const emailConfirmationKeyResult = await sendStoreConfirmationLink(
+      user.email
+    );
+
     res
       .status(201)
       .json(`New user was created with the id of ${result.insertId}`);
   } catch (error) {
     if (error instanceof Error)
-      return res.status(500).json("There was an error in creating the user");
+      return res
+        .status(500)
+        .json(error.message + "There was an error in creating the user");
     res.status(500).json(error);
   }
 };

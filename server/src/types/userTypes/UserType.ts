@@ -23,3 +23,11 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export type TIterableStringObj = { [key: string]: string };
+
+export interface IEmailConfirmationKey {
+  id?: number;
+  email: string;
+  associated_key: string;
+  creation_time: string;
+  expiry_time: string;
+}

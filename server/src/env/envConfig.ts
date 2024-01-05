@@ -23,4 +23,5 @@ export default {
       secretAccessKey: process.env.S3_SERVER_BUCKET_ACCESS_SECRET as string,
     },
   },
+  frontend: { baseUrl: process.env.FRONTEND_BASE_URL },
 };

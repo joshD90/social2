@@ -12,30 +12,30 @@ AWS.config.update({
 
 const SES = new AWS.SES({ apiVersion: "2010-12-01" });
 
-const params = {
-  Destination: {
-    ToAddresses: ["joshuadancey48@gmail.com"],
-  },
-  Message: {
-    Body: {
-      Text: {
-        Data: "This is my first email",
+const createConfirmEmailParams = (destination: string, magicKey: string) => {
+  const url = `${envIndex.frontend.baseUrl}/auth/mailconfirm?username=${destination}&magickey=${magicKey}`;
+
+  const params = {
+    Destination: {
+      ToAddresses: [destination],
+    },
+    Message: {
+      Body: {
+        Text: {
+          Data: `This email was used to sign up for an account at social2 the Social Carers Website.  If this was not you please ignore this email.  If this was you please click on the below link to be confirm your email address. ${url}`,
+        },
+      },
+      Subject: {
+        Data: "Confirm Your Email With Social2",
       },
     },
-    Subject: {
-      Data: "Your first email from your social2",
-    },
-  },
-  Source: "joshuadancey@hotmail.com",
+    Source: "joshuadancey@hotmail.com",
+  };
+  return params;
 };
 
-export const sendMail = async () => {
-  try {
-    const sentEmail = await SES.sendEmail(params).promise();
-    console.log(sentEmail, "sent email from SES");
-    return sentEmail;
-  } catch (error) {
-    console.log(error, "error in sendMail");
-    throw error;
-  }
+export const sendConfirmMail = async (email: string, magicKey: string) => {
+  const params = createConfirmEmailParams(email, magicKey);
+  const sentEmail = await SES.sendEmail(params).promise();
+  return sentEmail;
 };
