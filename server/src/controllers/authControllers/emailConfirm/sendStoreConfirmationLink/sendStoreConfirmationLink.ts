@@ -3,7 +3,7 @@ import { sendConfirmMail } from "../../../../utils/AWS/SES/SES";
 import { db } from "../../../../server";
 
 const sendStoreConfirmationLink = async (email: string) => {
-  const magicKey = crypto.randomBytes(50).toString();
+  const magicKey = crypto.randomBytes(50).toString("hex");
 
   const insertData = { email, associated_key: magicKey };
 

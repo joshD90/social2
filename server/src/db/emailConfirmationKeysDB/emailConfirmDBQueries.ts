@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS email_confirmation_keys (
     associated_key VARCHAR(255) NOT NULL,
     creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expiry_time TIMESTAMP AS (creation_time + INTERVAL 24 HOUR),
-    FOREIGN KEY (email) REFERENCES users (email)
+    FOREIGN KEY (email) REFERENCES users (email) ON DELETE CASCADE
 );
 `;
 

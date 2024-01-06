@@ -47,7 +47,9 @@ const authSignupController = async (req: Request, res: Response) => {
     };
 
     const result = await db.getUserDB().createNewUser(user);
+
     if (result instanceof Error) throw Error("Issue with creating the entry");
+
     const emailConfirmationKeyResult = await sendStoreConfirmationLink(
       user.email
     );

@@ -16,7 +16,11 @@ const checkEmailKeyController = async (req: Request, res: Response) => {
   try {
     if (!checkEmailConfirmKey(username, magickey))
       return res.status(403).json("No Matching elements ");
-  } catch (error) {}
+    //TODO: We need to update the status of the user to be email authorised
+    return res.status(200).json("Authenticated");
+  } catch (error) {
+    res.status(500).json((error as Error).message);
+  }
 };
 
 export default checkEmailKeyController;
