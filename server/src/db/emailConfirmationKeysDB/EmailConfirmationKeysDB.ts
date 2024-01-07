@@ -26,7 +26,8 @@ class EmailConfirmationKeysDB {
   public async findEmailKeyPair(email: string, key: string) {
     const [result] = await this.connection.execute<
       ExtendedRowDataPacket<IEmailConfirmationKey>[]
-    >(dbQueries.findKeyEmailPair);
+    >(dbQueries.findKeyEmailPair, [email, key]);
+
     return result;
   }
 }

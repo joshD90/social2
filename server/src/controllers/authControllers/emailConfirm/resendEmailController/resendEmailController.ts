@@ -27,7 +27,6 @@ const resendEmailController = async (req: Request, res: Response) => {
       .getEmailConfirmationKeysDB()
       .genericEmailConfirmQueries.deleteBySingleCriteria("email", email);
 
-    console.log(deleteResult, "deleteResult");
     if (deleteResult instanceof Error) throw Error(deleteResult.message);
 
     const newKey = crypto.randomBytes(50).toString("hex");

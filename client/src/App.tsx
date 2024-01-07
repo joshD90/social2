@@ -14,6 +14,8 @@ import ServiceDisplayContainer from "./pages/serviceDisplayContainer/ServiceDisp
 import SearchResultsContainer from "./pages/searchResults/searchResultsContainer/SearchResultsContainer";
 import AdminUsersView from "./pages/admin/adminUsersView/AdminUsersView";
 import UploadImageS3Test from "./pages/uploadImageS3Test/UploadImageS3Test";
+import SignupExplainer from "./pages/auth/signupExplainer/signupExplainer";
+import EmailConfirm from "./pages/auth/emailConfirm/EmailConfirm";
 
 const App = () => {
   return (
@@ -22,6 +24,8 @@ const App = () => {
       <Route path="/auth" element={<AuthWrapper />}>
         <Route path="signup" element={<SignUp />} />
         <Route path="signin" element={<SignIn />} />
+        <Route path="signupexplainer" element={<SignupExplainer />} />
+        <Route path="mailconfirm" element={<EmailConfirm />} />
       </Route>
       <Route path="/services/*" element={<PrimaryLayout />}>
         <Route index element={<CategoryLanding />} />
