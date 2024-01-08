@@ -6,7 +6,11 @@ export const getCommentsForServiceController = async (
   req: Request,
   res: Response
 ) => {
-  if (!req.user || (req.user as unknown as IUser).privileges === "none")
+  if (
+    !req.user ||
+    (req.user as unknown as IUser).privileges === "none" ||
+    (req.user as unknown as IUser).privileges === "emailConfirmed"
+  )
     return res
       .status(403)
       .json("You do not have sufficient rights to access this");

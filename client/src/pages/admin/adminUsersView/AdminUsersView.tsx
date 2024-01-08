@@ -4,7 +4,7 @@ import envIndex from "../../../envIndex/envIndex";
 import useGetFetch from "../../../hooks/useGetFetch";
 import { IUser } from "../../../types/userTypes/UserTypes";
 import AdminSingleUser from "../../../components/admin/adminSingleUser.tsx/AdminSingleUser";
-import AdminOrganisationsSelector from "../../../components/admin/adminOrganisationsSelector/adminOrganisationsSelector";
+import AdminOrganisationsSelector from "../../../components/admin/adminOrganisationsSelector/AdminOrganisationsSelector";
 
 const AdminUsersView: FC = () => {
   const {

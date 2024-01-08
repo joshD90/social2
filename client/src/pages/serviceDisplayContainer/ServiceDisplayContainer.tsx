@@ -84,7 +84,8 @@ const ServiceDisplayContainer = () => {
         </div>
       )}
       {typeof serviceId === "string" &&
-      currentUser?.user?.privileges !== "none" ? (
+      currentUser?.user?.privileges !== "none" &&
+      currentUser?.user?.privileges !== "emailConfirmed" ? (
         <ServiceCommentsContainer
           serviceId={serviceId}
           commentDispatch={commentDispatch}

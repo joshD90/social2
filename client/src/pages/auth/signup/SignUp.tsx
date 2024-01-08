@@ -37,7 +37,9 @@ const SignUp = () => {
         headers: { "Content-Type": "application/json" },
       });
       if (!result.ok) throw Error(`${result.statusText}`);
-      navigate("/auth/signin");
+      navigate("/auth/signupexplainer", {
+        state: { username: formState.email },
+      });
     } catch (error) {
       console.log(error);
     }

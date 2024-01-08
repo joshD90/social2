@@ -111,10 +111,31 @@ class UserDB {
     privilege: string,
     id: number
   ): Promise<ResultSetHeader | Error> {
-    if (!(privilege === "none" || privilege === "approved"))
+    if (
+      !(
+        privilege === "none" ||
+        privilege === "approved" ||
+        privilege === "emailConfirmed"
+      )
+    )
       throw Error(
-        "Only none and approved privileges can be granted at this endpoint"
+        "Only none and approved or emailConfirmed privileges can be granted at this endpoint"
       );
+    //ensure that only legitimate work flows are taking place for authenticating a user
+    const currentUser = await this.userQueries.findEntryBy<IUser>("id", id);
+    if (currentUser instanceof Error) throw Error(currentUser.message);
+    const currentPrivilege = currentUser[0].privileges;
+
+    if (privilege === "approved" && currentPrivilege === "none")
+      throw Error(
+        "You Cannot promote someone to approved without their email being confirmed"
+      );
+    if (
+      (privilege === "emailConfirmed" && currentPrivilege === "none") ||
+      (privilege === "none" && currentPrivilege === "emailConfirmed")
+    )
+      throw Error("You Cannot confirm email or unconfirm email here");
+    //update db
     try {
       const [result] = await this.connection.query<ResultSetHeader>(
         queryObj.updatePrivileges,

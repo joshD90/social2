@@ -11,7 +11,12 @@ export interface IUser {
   comments?: number[];
 }
 
-export type TUserPrivileges = "none" | "approved" | "moderator" | "admin";
+export type TUserPrivileges =
+  | "none"
+  | "emailConfirmed"
+  | "approved"
+  | "moderator"
+  | "admin";
 
 export type UserSearchTuple = [
   "users.id" | "email" | "organisation",

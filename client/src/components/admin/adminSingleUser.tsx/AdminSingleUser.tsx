@@ -5,7 +5,9 @@ import envIndex from "../../../envIndex/envIndex";
 type Props = { user: IUser };
 
 const AdminSingleUser: FC<Props> = ({ user }) => {
-  const [approved, setApproved] = useState(user && user.privileges !== "none");
+  const [approved, setApproved] = useState(
+    user && user.privileges !== "none" && user.privileges !== "emailConfirmed"
+  );
 
   const handlePrivilegeChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -14,7 +16,7 @@ const AdminSingleUser: FC<Props> = ({ user }) => {
     const approvedValue = e.target.checked;
     const body = {
       userToUpdateId: user.id,
-      newPrivilege: approvedValue ? "approved" : "none",
+      newPrivilege: approvedValue ? "approved" : user.privileges,
     };
 
     try {
@@ -50,6 +52,7 @@ const AdminSingleUser: FC<Props> = ({ user }) => {
               type="checkbox"
               onChange={handlePrivilegeChange}
               checked={approved}
+              disabled={user.privileges === "none"}
             />
           </div>
         )}

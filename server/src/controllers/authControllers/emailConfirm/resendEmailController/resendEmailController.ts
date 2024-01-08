@@ -22,7 +22,7 @@ const resendEmailController = async (req: Request, res: Response) => {
         .json(
           "Cant find user associated with this email address.  Try signing up"
         );
-    //overwrite all prevoius entries
+    //overwrite all previous entries
     const deleteResult = await db
       .getEmailConfirmationKeysDB()
       .genericEmailConfirmQueries.deleteBySingleCriteria("email", email);

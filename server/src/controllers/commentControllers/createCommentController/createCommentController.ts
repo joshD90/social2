@@ -7,7 +7,10 @@ export const createCommentController = async (req: Request, res: Response) => {
   if (!req.user || !req.user.hasOwnProperty("id"))
     return res.status(403).json("Need to be Logged In");
 
-  if ((req.user as unknown as IUser).privileges === "none")
+  if (
+    (req.user as unknown as IUser).privileges === "none" ||
+    (req.user as unknown as IUser).privileges === "emailConfirmed"
+  )
     return res
       .status(403)
       .json("You do not have sufficient rights to access this");

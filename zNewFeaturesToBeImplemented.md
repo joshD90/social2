@@ -12,9 +12,16 @@
 
 Will need to add a new category of verified but not approved.
 
-1. do some serious research []
-2. Set up email with Amazon. Verify email and test recipient. []
-3. Alter user table
+1. Set up email with Amazon. Verify email and test recipient. [x]
+2. Set up function to send emails using SDK [x]
+3. Set up email / key database and class [x]
+4. Set up controllers and routers and adjust signup router [x]
+5. Change sign up work flow to have welcome [x]
+6. Set up landing page when coming from email [x]
+7. Set up new type of status (email confirmed in front and backend types) [x]
+8. Ensure that all auth and admin elements are not affected by new possibility [x]
+9. Only allow moderators to approve email confirmed peeps [x]
+10. Set up MYSQL to delete any email / key entries older than 24 hours
 
 ### Comments
 
