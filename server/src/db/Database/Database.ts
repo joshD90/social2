@@ -9,6 +9,7 @@ import { DatabaseSearcher } from "../../search/DatabaseSearcher/DatabaseSearcher
 import { CommentsDB } from "../CommentsDB/CommentsDB";
 import { ImagesDB } from "../imageDB/ImageDB";
 import EmailConfirmationKeysDB from "../emailConfirmationKeysDB/EmailConfirmationKeysDB";
+import ServiceFilesDB from "../ServiceFilesDB/ServiceFilesDB";
 
 const { db } = envConfig;
 //our overarching database class
@@ -22,6 +23,7 @@ class Database {
   private commentsDB: CommentsDB;
   private imagesDB: ImagesDB;
   private emailConfirmationKeysDB: EmailConfirmationKeysDB;
+  private serviceFilesDB: ServiceFilesDB;
 
   constructor() {
     this.connection = this.initDatabase();
@@ -34,6 +36,7 @@ class Database {
     this.commentsDB = new CommentsDB(this.connection);
     this.imagesDB = new ImagesDB(this.connection);
     this.emailConfirmationKeysDB = new EmailConfirmationKeysDB(this.connection);
+    this.serviceFilesDB = new ServiceFilesDB(this.connection);
   }
   //connection initialises within the constructor of the database
   private initDatabase(): Pool {
@@ -81,6 +84,9 @@ class Database {
   }
   public getEmailConfirmationKeysDB(): EmailConfirmationKeysDB {
     return this.emailConfirmationKeysDB;
+  }
+  public getServiceFilesDB(): ServiceFilesDB {
+    return this.serviceFilesDB;
   }
 }
 

@@ -159,6 +159,9 @@ class UserDB {
       return error as Error;
     }
   }
+  public getGenericUserQueries(): GeneralQueryGenerator {
+    return this.userQueries;
+  }
 }
 
 export default UserDB;

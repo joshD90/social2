@@ -23,6 +23,16 @@ const checkEmailKeyController = async (req: Request, res: Response) => {
       [username, magickey]
     );
     //TODO: We need to update the status of the user to be email authorised
+    const updatePrivilegeResult = await db
+      .getUserDB()
+      .getGenericUserQueries()
+      .updateEntriesByMultiple(
+        { privileges: "emailConfirmed" },
+        username,
+        "email"
+      );
+    if (updatePrivilegeResult instanceof Error)
+      throw Error(updatePrivilegeResult.message);
     return res.status(200).json("Authenticated");
   } catch (error) {
     res.status(500).json((error as Error).message);

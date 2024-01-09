@@ -31,7 +31,6 @@ export const uploadImageController = async (req: Request, res: Response) => {
     //then we need to send the relevant result bits to the database
     const dbInsertResultsArray = await Promise.all(
       resultsArray.map((uploadResult) => {
-        console.log(uploadResult, "upload result in uploadImageContorller");
         const dbImage: UploadedImage = {
           fileName: uploadResult.Key,
           url: uploadResult.Location,

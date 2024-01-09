@@ -60,3 +60,12 @@ export interface IServiceEmailContact {
 export interface IImageWithPriority extends File {
   main_pic: boolean;
 }
+
+export interface IServiceFile {
+  id?: number;
+  fileName: string;
+  service_id: number;
+  url: string;
+  bucketName: string;
+  created_at: string;
+}

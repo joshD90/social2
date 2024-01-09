@@ -111,3 +111,10 @@ Will need to add a new category of verified but not approved.
 - update frontend to display a slide show to view the pictures [x]
 - allow for primary image to be selected, allow click to set primary pic. Update SQL table and types. [x]
 - set display of service to depend on what is available multiple images or just the single outdated version [x]
+
+### Upload other files such as application forms etc.
+
+- Create OtherFilesDB class []
+- Create Endpoint to upload file through multer middleware (have this is services)[]
+- Create FileType front and backend []
+-
