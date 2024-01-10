@@ -38,15 +38,9 @@ const updateImagesForServiceController = async (
     const uploadResult = await Promise.all(
       req.files.map((file) => uploadFile(file))
     );
-    const deleteResult = await db
+    await db
       .getImagesDB()
       .genericQueries.deleteBySingleCriteria("service_id", serviceId);
-
-    if (
-      deleteResult instanceof Error &&
-      deleteResult.message !== "There was no record matching that criteria"
-    )
-      throw new Error(deleteResult.message);
 
     //then we need to send the relevant result bits to the database
     const dbInsertResultsArray = await Promise.all(

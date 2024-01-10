@@ -117,11 +117,11 @@ export class CommentsDB {
     }
   }
 
-  public async deleteComment(id: number): Promise<Error | true> {
+  public async deleteComment(id: number): Promise<ResultSetHeader> {
     const deleteResult =
       await this.commentGenericQueries.deleteBySingleCriteria("id", id);
-    if (deleteResult instanceof Error) return Error(deleteResult.message);
-    return true;
+
+    return deleteResult;
   }
 
   public async deleteVote(

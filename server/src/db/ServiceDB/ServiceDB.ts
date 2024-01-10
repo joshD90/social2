@@ -130,22 +130,14 @@ export class ServiceDB {
         await this.SubCategoryDB.deleteJunctionTablesForService(serviceId);
       if (!deletedJunctionTables)
         throw Error("Could Not Delete Junction Tables");
-      const serviceReportDeleteTry =
-        await this.serviceReportsQueries.deleteBySingleCriteria(
-          "serviceId",
-          serviceId
-        );
-      if (
-        serviceReportDeleteTry instanceof Error &&
-        serviceReportDeleteTry.message !==
-          "There was no record matching that criteria"
-      )
-        throw Error(serviceReportDeleteTry.message);
-      const deleteTry = await this.ServiceBaseQueries.deleteBySingleCriteria(
-        "id",
+
+      await this.serviceReportsQueries.deleteBySingleCriteria(
+        "serviceId",
         serviceId
       );
-      if (deleteTry instanceof Error) throw Error(deleteTry.message);
+
+      await this.ServiceBaseQueries.deleteBySingleCriteria("id", serviceId);
+
       await connection.commit();
       return true;
     } catch (error) {

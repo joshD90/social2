@@ -50,17 +50,7 @@ export class ServiceEmailContactsDB {
   }
 
   public async deleteEmailContacts(column: "service_id" | "id", value: number) {
-    const deleteResult = await this.emailGenericQueries.deleteBySingleCriteria(
-      column,
-      value
-    );
-
-    if (
-      deleteResult instanceof Error &&
-      deleteResult.message !== "There was no record matching that criteria"
-    ) {
-      throw deleteResult.message;
-    }
+    await this.emailGenericQueries.deleteBySingleCriteria(column, value);
   }
 
   public async updateEmailContact(

@@ -33,7 +33,7 @@ router.delete("/:imageKey", async (req: Request, res: Response) => {
 
     return res.status(200).json({ deleteResult, deleteFromDB });
   } catch (error) {
-    console.log(error, "error in delete image");
+    res.status(500).json((error as Error).message);
   }
 });
 router.post("/:serviceId", upload.array("images", 5), uploadImageController);

@@ -36,10 +36,16 @@ const handleDeleteHelper = async (
   res: Response,
   commentId: number
 ): Promise<Response> => {
-  const deleteResult = await db.getCommentsDB().deleteComment(commentId);
-  if (deleteResult instanceof Error)
-    return res.status(500).json(deleteResult.message);
-  return res.status(200).json("Deleted Successfully");
+  try {
+    const deleteResult = await db.getCommentsDB().deleteComment(commentId);
+    if (deleteResult.affectedRows === 0)
+      return res
+        .status(404)
+        .json("No Comments by that Id were available to delete");
+    return res.status(200).json("Deleted Successfully");
+  } catch (error) {
+    return res.status(500).json((error as Error).message);
+  }
 };
 
 export default deleteCommentController;

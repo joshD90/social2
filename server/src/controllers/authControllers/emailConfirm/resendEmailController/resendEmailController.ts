@@ -23,18 +23,17 @@ const resendEmailController = async (req: Request, res: Response) => {
           "Cant find user associated with this email address.  Try signing up"
         );
     //overwrite all previous entries
-    const deleteResult = await db
+    await db
       .getEmailConfirmationKeysDB()
       .genericEmailConfirmQueries.deleteBySingleCriteria("email", email);
-
-    if (deleteResult instanceof Error) throw Error(deleteResult.message);
 
     const newKey = crypto.randomBytes(50).toString("hex");
     const sendResult = await sendConfirmMail(
       email as unknown as string,
       newKey
     );
-    return res.status(200).json("Successfully sent email");
+    //do we need to send anything back here
+    return res.status(200).json(sendResult);
   } catch (error) {
     console.log(error);
     res

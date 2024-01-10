@@ -53,23 +53,15 @@ export class GeneralQueryGenerator {
   public async deleteBySingleCriteria(
     column: string,
     value: string | number
-  ): Promise<ResultSetHeader | Error> {
+  ): Promise<ResultSetHeader> {
     const query = `DELETE FROM ${this.table} WHERE ${column} = ?`;
 
-    try {
-      const dataBack = await this.connection.execute<ResultSetHeader>(query, [
-        value,
-      ]);
+    const dataBack = await this.connection.execute<ResultSetHeader>(query, [
+      value,
+    ]);
+    const [result] = dataBack;
 
-      const [result] = dataBack;
-
-      if (result.affectedRows === 0)
-        throw Error("There was no record matching that criteria");
-
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    return result;
   }
 
   //for two column primary keys

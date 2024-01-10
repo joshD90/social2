@@ -59,7 +59,7 @@ class UserDB {
         "id",
         userId
       );
-      if (result instanceof Error) throw new Error(result.message);
+
       return result;
     } catch (error) {
       return Error((error as Error).message);
