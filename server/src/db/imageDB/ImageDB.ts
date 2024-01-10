@@ -33,7 +33,6 @@ export class ImagesDB {
 
   public async fetchImage(id: number) {
     const result = await this.genericQueries.findEntryBy("id", id);
-    if (result instanceof Error) throw Error(result.message);
     const [image] = result;
     return image;
   }
@@ -44,14 +43,6 @@ export class ImagesDB {
       serviceId
     );
 
-    if (imageEntries instanceof Error) {
-      if (
-        imageEntries.message ===
-        "Could not find any Entries matching this criteria"
-      )
-        return [];
-      throw imageEntries.message;
-    }
     const imgUrls = await Promise.all(
       imageEntries.map(async (img) => ({
         main_pic: img.main_pic,

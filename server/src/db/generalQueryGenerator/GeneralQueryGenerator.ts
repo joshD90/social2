@@ -39,22 +39,15 @@ export class GeneralQueryGenerator {
   public async findEntryBy<T>(
     column?: string,
     data?: any
-  ): Promise<ExtendedRowDataPacket<T>[] | Error> {
+  ): Promise<ExtendedRowDataPacket<T>[]> {
     const additionalSearchInfo = column && data ? `WHERE ${column} = ?` : "";
-
     const query = `SELECT * FROM ${this.table} ${additionalSearchInfo}`;
 
-    try {
-      const [result] = await this.connection.execute<
-        ExtendedRowDataPacket<T>[]
-      >(query, data ? [data] : null);
-      if (!result || result.length === 0)
-        throw new Error("Could not find any Entries matching this criteria");
-
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    const [result] = await this.connection.execute<ExtendedRowDataPacket<T>[]>(
+      query,
+      data ? [data] : null
+    );
+    return result;
   }
   //works where the column value either a string or a number and 1 col Primary Key
   public async deleteBySingleCriteria(

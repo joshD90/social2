@@ -151,7 +151,7 @@ export class SubCategoryDB {
 
       let subId: number;
       //if it does use this id else create a new entry
-      if (existingEntry instanceof Error) {
+      if (existingEntry.length === 0) {
         const result = await generalTableQuery.createTableEntryFromPrimitives(
           formattedData
         );

@@ -39,10 +39,7 @@ class UserDB {
         id: number;
         name: string;
       }>("name", userInfo.organisation);
-      if (
-        organisationResult instanceof Error ||
-        organisationResult.length === 0
-      )
+      if (organisationResult.length === 0)
         throw Error("No organisation in the database matched this query");
       userInfo.organisation = organisationResult[0].id;
 
@@ -123,7 +120,7 @@ class UserDB {
       );
     //ensure that only legitimate work flows are taking place for authenticating a user
     const currentUser = await this.userQueries.findEntryBy<IUser>("id", id);
-    if (currentUser instanceof Error) throw Error(currentUser.message);
+    if (currentUser.length === 0) throw Error("No User found");
     const currentPrivilege = currentUser[0].privileges;
 
     if (privilege === "approved" && currentPrivilege === "none")

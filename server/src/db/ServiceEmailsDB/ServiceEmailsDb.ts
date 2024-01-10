@@ -37,7 +37,7 @@ export class ServiceEmailContactsDB {
   }
 
   public async fetchEmailContacts(serviceId?: number) {
-    let results: Error | IServiceEmailContact[];
+    let results: IServiceEmailContact[];
     if (!serviceId) {
       results = await this.emailGenericQueries.findEntryBy();
     } else {
@@ -46,13 +46,6 @@ export class ServiceEmailContactsDB {
         serviceId
       );
     }
-
-    if (
-      results instanceof Error &&
-      results.message === "Could not find any Entries matching this criteria"
-    )
-      return [];
-    if (results instanceof Error) throw new Error(results.message);
     return results;
   }
 

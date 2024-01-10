@@ -40,7 +40,7 @@ class ServiceContactsDB {
   }
 
   public async fetchPhoneContacts(serviceId?: number) {
-    let results: Error | ExtendedRowDataPacket<IServicePhoneContact>[];
+    let results: ExtendedRowDataPacket<IServicePhoneContact>[];
     if (!serviceId) {
       results = await this.phoneGenericQueries.findEntryBy();
     } else {
@@ -49,13 +49,6 @@ class ServiceContactsDB {
         serviceId
       );
     }
-
-    if (
-      results instanceof Error &&
-      results.message === "Could not find any Entries matching this criteria"
-    )
-      return [];
-    if (results instanceof Error) throw new Error(results.message);
     return results;
   }
   //can either delete a single contact number or delete them all based on the service theyre attached to

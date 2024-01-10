@@ -20,12 +20,6 @@ class ServiceFilesDB {
       "service_id",
       serviceId
     );
-    if (
-      entries instanceof Error &&
-      entries.message === "Could not find any Entries matching this criteria"
-    )
-      return [];
-    if (entries instanceof Error) throw Error(entries.message);
 
     const fileUrls = await Promise.all(
       entries.map(async (file) => generateDownloadUrl(file.url))

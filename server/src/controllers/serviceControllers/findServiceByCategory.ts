@@ -17,7 +17,6 @@ export const findServicesByCategory = async (
       .getServiceDB()
       .getBaseTableQueries()
       .findEntryBy("category", category);
-    if (result instanceof Error) throw Error(result.message);
 
     res.status(200).json(result);
   } catch (error) {

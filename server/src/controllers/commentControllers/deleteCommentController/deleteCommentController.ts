@@ -16,7 +16,7 @@ const deleteCommentController = async (req: Request, res: Response) => {
     .getCommentsDB()
     .getCommentsGeneric()
     .findEntryBy("id", commentId);
-  if (!commentToDelete || commentToDelete instanceof Error)
+  if (!commentToDelete || commentToDelete.length === 0)
     return res.status(404).json("Could not find this comment to delete");
   if (user.privileges === "admin") return handleDeleteHelper(res, commentId);
   if (

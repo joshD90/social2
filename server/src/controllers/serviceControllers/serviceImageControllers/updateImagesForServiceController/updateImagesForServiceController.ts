@@ -15,19 +15,11 @@ const updateImagesForServiceController = async (
   if (isNaN(serviceId))
     return res.status(400).json("There was an issue with the service id");
 
-  let keysToDelete = await db
-    .getImagesDB()
-    .genericQueries.findEntryBy<UploadedImage>("service_id", serviceId);
-
-  if (keysToDelete instanceof Error) {
-    if (
-      keysToDelete.message !==
-      "Could not find any Entries matching this criteria"
-    )
-      return res.status(500).json(keysToDelete.message);
-    keysToDelete = [];
-  }
   try {
+    let keysToDelete = await db
+      .getImagesDB()
+      .genericQueries.findEntryBy<UploadedImage>("service_id", serviceId);
+
     const deleteResults = await Promise.all(
       keysToDelete.map((image) => deleteImage(image.fileName))
     );
@@ -39,8 +31,8 @@ const updateImagesForServiceController = async (
       return res
         .status(200)
         .json("Successfully deleted with no images to upload");
+
     //index of the main
-    console.log(req.body.mainPicIndex, "index");
     const mainPicFileName = req.files[req.body.mainPicIndex]?.originalname;
 
     const uploadResult = await Promise.all(

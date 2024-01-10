@@ -53,7 +53,7 @@ export class ServiceReportDB {
           "serviceId",
           id
         );
-      if (result instanceof Error) throw new Error(result.message);
+
       return result;
     } catch (error) {
       return error as Error;
@@ -63,7 +63,7 @@ export class ServiceReportDB {
   public async getAllServiceReportEntries(): Promise<RowDataPacket[] | Error> {
     try {
       const result = await this.genericReportQueries.findEntryBy();
-      if (result instanceof Error) throw new Error(result.message);
+
       return result;
     } catch (error) {
       return error as Error;
@@ -79,10 +79,7 @@ export class ServiceReportDB {
           "id",
           id
         );
-      if (result instanceof Error)
-        throw Error("There was an error retrieving your data");
-      if (result.length === 0)
-        throw Error("There were no records matching this id");
+
       const [firstResult] = result;
       return firstResult;
     } catch (error) {
