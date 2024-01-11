@@ -46,7 +46,6 @@ class UserDB {
       const result = await this.userQueries.createTableEntryFromPrimitives(
         userInfo as unknown as IGenericIterableObject
       );
-      if (result instanceof Error) throw new Error(result.message);
       return result;
     } catch (error) {
       return Error((error as Error).message);

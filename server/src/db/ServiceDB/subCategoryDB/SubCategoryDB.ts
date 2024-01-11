@@ -155,8 +155,7 @@ export class SubCategoryDB {
         const result = await generalTableQuery.createTableEntryFromPrimitives(
           formattedData
         );
-        if (result instanceof Error)
-          throw new Error("Could not create the Sub Directory");
+
         subId = result.insertId;
       } else if (existingEntry[0]?.id) {
         subId = parseInt(existingEntry[0].id);
@@ -179,9 +178,7 @@ export class SubCategoryDB {
       //insert into our junction table.
       const junctionResult =
         await junctionTableQuery.createTableEntryFromPrimitives(junctionData);
-      if (junctionResult instanceof Error) {
-        throw Error(junctionResult.message);
-      }
+
       return "success";
     } catch (error) {
       console.log(error);

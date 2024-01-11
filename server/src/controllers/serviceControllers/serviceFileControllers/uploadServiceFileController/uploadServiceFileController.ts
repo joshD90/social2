@@ -36,8 +36,7 @@ const uploadServiceFileController = async (req: Request, res: Response) => {
           .createTableEntryFromPrimitives(dbFile);
       })
     );
-    if (dbInsertResultsArray.find((el) => el instanceof Error))
-      throw Error("Problem saving to database");
+
     res.status(201).json("Successfully uploaded files");
   } catch (error) {
     console.log(error);

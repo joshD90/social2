@@ -33,7 +33,7 @@ const findAllServiceReportController = async (
 
   if (result instanceof Error)
     return res.status(500).json("There was an error searching the database");
-  if (result.length === 0) res.status(404).json("No Entries found");
+  if (result.length === 0) return res.status(404).json("No Entries found");
   res.status(200).json(result);
 };
 

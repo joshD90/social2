@@ -27,7 +27,7 @@ export class ImagesDB {
     const result = await this.genericQueries.createTableEntryFromPrimitives(
       image
     );
-    if (result instanceof Error) throw Error(result.message);
+
     return result;
   }
 

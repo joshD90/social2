@@ -12,7 +12,6 @@ const sendStoreConfirmationLink = async (email: string) => {
     .getEmailConfirmationKeysDB()
     .genericEmailConfirmQueries.createTableEntryFromPrimitives(insertData);
 
-  if (insertResult instanceof Error) throw Error(insertResult.message);
   //send off the email
   const emailSendResult = await sendConfirmMail(email, magicKey);
 

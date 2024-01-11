@@ -14,7 +14,7 @@ export class GeneralQueryGenerator {
   //will only work with object<string, string>
   public async createTableEntryFromPrimitives(
     data: IGenericIterableObject
-  ): Promise<ResultSetHeader | Error> {
+  ): Promise<ResultSetHeader> {
     const values = Object.values(data);
     const keys = Object.keys(data);
 
@@ -23,16 +23,12 @@ export class GeneralQueryGenerator {
       ", "
     )}) VALUES(${values.map(() => "?").join(", ")})`;
 
-    try {
-      const [rows] = await this.connection.execute<ResultSetHeader>(
-        query,
-        values
-      );
-      if (!rows) throw new Error("Could Not Create New Entry");
-      return rows;
-    } catch (error) {
-      return error as Error;
-    }
+    const [rows] = await this.connection.execute<ResultSetHeader>(
+      query,
+      values
+    );
+    if (!rows) throw new Error("Could Not Create New Entry");
+    return rows;
   }
 
   //find entries of a table by either getting all of them or by specifying a column value

@@ -79,8 +79,6 @@ export class ServiceDB {
         await this.ServiceBaseQueries.createTableEntryFromPrimitives(
           baseData as unknown as IGenericIterableObject
         );
-      if (baseResult instanceof Error)
-        throw new Error("Could not make the base table for service");
 
       const serviceId = baseResult.insertId;
 

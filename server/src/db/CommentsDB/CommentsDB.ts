@@ -51,7 +51,6 @@ export class CommentsDB {
           comment as unknown as IGenericIterableObject
         );
 
-      if (result instanceof Error) throw Error(result.message);
       if (comment.inReplyTo) {
         const updateResult =
           await this.commentGenericQueries.updateEntriesByMultiple(

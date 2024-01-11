@@ -34,8 +34,6 @@ class ServiceContactsDB {
     );
     const allResultsAwaited = await allResults;
 
-    if (allResultsAwaited.find((result) => result instanceof Error))
-      throw new Error("Something went wrong with inserting contacts");
     return allResultsAwaited as ResultSetHeader[];
   }
 

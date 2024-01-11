@@ -33,7 +33,7 @@ export class ServiceReportDB {
     try {
       const newEntry =
         await this.genericReportQueries.createTableEntryFromPrimitives(data);
-      if (newEntry instanceof Error) throw Error();
+
       return newEntry;
     } catch (error) {
       return error as Error;

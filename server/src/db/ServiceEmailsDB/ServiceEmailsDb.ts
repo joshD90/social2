@@ -27,12 +27,6 @@ export class ServiceEmailContactsDB {
     );
     const awaitedResults = await Promise.all(emailResultsArray);
 
-    if (
-      awaitedResults.find((result) => {
-        return result instanceof Error;
-      })
-    )
-      throw new Error("There was an Error in creating your email contacts");
     return awaitedResults as ResultSetHeader[];
   }
 
