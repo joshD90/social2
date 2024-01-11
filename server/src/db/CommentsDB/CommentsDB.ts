@@ -132,7 +132,7 @@ export class CommentsDB {
         ["user_id", "comment_id"],
         [userId, commentId]
       );
-      if (result instanceof Error) throw Error(result.message);
+
       return true;
     } catch (error) {
       return error as Error;

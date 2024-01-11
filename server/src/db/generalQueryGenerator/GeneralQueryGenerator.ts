@@ -65,21 +65,14 @@ export class GeneralQueryGenerator {
   public async deleteByTwoCriteria(
     columns: string[],
     values: (string | number)[]
-  ): Promise<ResultSetHeader | Error> {
+  ): Promise<ResultSetHeader> {
     const query = `DELETE FROM ${this.table} WHERE ${columns[0]} = ? AND ${columns[1]} = ?`;
 
-    try {
-      const [result] = await this.connection.execute<ResultSetHeader>(query, [
-        values,
-      ]);
+    const [result] = await this.connection.execute<ResultSetHeader>(query, [
+      values,
+    ]);
 
-      if (result.affectedRows === 0)
-        throw Error("There was no record matching that criteria");
-
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    return result;
   }
 
   //update table by column and values - works when values are strings
