@@ -1,6 +1,8 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import { ExtendedRowDataPacket } from "../../types/mySqlTypes/mySqlTypes";
+import { PoolConnection } from "mysql2/promise";
+import { Connection } from "mysql2/typings/mysql/lib/Connection";
 
 export class GeneralQueryGenerator {
   private table: string;
@@ -13,7 +15,8 @@ export class GeneralQueryGenerator {
 
   //will only work with object<string, string>
   public async createTableEntryFromPrimitives(
-    data: IGenericIterableObject
+    data: IGenericIterableObject,
+    currentConnection: PoolConnection
   ): Promise<ResultSetHeader> {
     const values = Object.values(data);
     const keys = Object.keys(data);
@@ -23,7 +26,7 @@ export class GeneralQueryGenerator {
       ", "
     )}) VALUES(${values.map(() => "?").join(", ")})`;
 
-    const [rows] = await this.connection.execute<ResultSetHeader>(
+    const [rows] = await currentConnection.execute<ResultSetHeader>(
       query,
       values
     );
@@ -48,11 +51,12 @@ export class GeneralQueryGenerator {
   //works where the column value either a string or a number and 1 col Primary Key
   public async deleteBySingleCriteria(
     column: string,
-    value: string | number
+    value: string | number,
+    currentConnection: PoolConnection
   ): Promise<ResultSetHeader> {
     const query = `DELETE FROM ${this.table} WHERE ${column} = ?`;
 
-    const dataBack = await this.connection.execute<ResultSetHeader>(query, [
+    const dataBack = await currentConnection.execute<ResultSetHeader>(query, [
       value,
     ]);
     const [result] = dataBack;
@@ -64,11 +68,12 @@ export class GeneralQueryGenerator {
   //works where the column value either a string or a number and 1 col Primary Key
   public async deleteByTwoCriteria(
     columns: string[],
-    values: (string | number)[]
+    values: (string | number)[],
+    currentConnection: PoolConnection
   ): Promise<ResultSetHeader> {
     const query = `DELETE FROM ${this.table} WHERE ${columns[0]} = ? AND ${columns[1]} = ?`;
 
-    const [result] = await this.connection.execute<ResultSetHeader>(query, [
+    const [result] = await currentConnection.execute<ResultSetHeader>(query, [
       values,
     ]);
 
@@ -79,40 +84,33 @@ export class GeneralQueryGenerator {
   public async updateEntriesByMultiple(
     updateObject: IGenericIterableObject,
     identifierValue: string | number,
-    identifierColumn: string
-  ): Promise<ResultSetHeader | Error> {
+    identifierColumn: string,
+    currentConnection: PoolConnection
+  ): Promise<ResultSetHeader> {
     const keys = Object.keys(updateObject);
     const values = Object.values(updateObject);
 
     const columnWhiteList = await this.getTableColumnNames(this.table);
 
     //sanitize data
-    try {
-      keys.forEach((column) => {
-        if (!columnWhiteList.includes(column)) {
-          throw new Error("Column name does not match approved list");
-        }
-      });
-    } catch (error) {
-      return error as Error;
-    }
+
+    keys.forEach((column) => {
+      if (!columnWhiteList.includes(column)) {
+        throw new Error("Column name does not match approved list");
+      }
+    });
+
     const keysInQuery = keys.map((key) => `${key} = ?`).join(", ");
     //identifier column for where fieldName = "someValue" <-identifier value so we dont update the whole table
     const query = `UPDATE ${this.table} SET ${keysInQuery} WHERE ${identifierColumn} = ?`;
 
-    try {
-      const dataBack = await this.connection.execute<ResultSetHeader>(query, [
-        ...values,
-        identifierValue,
-      ]);
+    const dataBack = await currentConnection.execute<ResultSetHeader>(query, [
+      ...values,
+      identifierValue,
+    ]);
+    const [result] = dataBack;
 
-      const [result] = dataBack;
-      if (!result || result.affectedRows === 0)
-        throw new Error("Could not update this entry");
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    return result;
   }
 
   public getTableName(): string {

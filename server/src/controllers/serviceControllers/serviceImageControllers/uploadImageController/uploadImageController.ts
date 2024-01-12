@@ -5,7 +5,6 @@ import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
 
 export const uploadImageController = async (req: Request, res: Response) => {
-  console.log("we've hit this endpoint");
   if (!req.user || (req.user as IUser).privileges !== "admin")
     return res
       .status(401)
@@ -24,26 +23,29 @@ export const uploadImageController = async (req: Request, res: Response) => {
   const mainPicFileName = req.files[mainPicIndex]?.originalname;
 
   try {
-    //we need to do the uploading here
+    //not very concerned about transactional integrity here, want to focus on parralelisation
     const resultsArray = await Promise.all(
-      req.files.map(async (file) => uploadFile(file))
-    );
-    //then we need to send the relevant result bits to the database
-    const dbInsertResultsArray = await Promise.all(
-      resultsArray.map((uploadResult) => {
-        const dbImage: UploadedImage = {
-          fileName: uploadResult.Key,
-          url: uploadResult.Location,
-          bucket_name: uploadResult.Bucket,
-          service_id,
-          main_pic: uploadResult.Key === mainPicFileName,
-        };
+      req.files.map(async (file) => {
+        const currentConnection = await db.getSinglePoolConnection();
+        try {
+          const fileUploadResult = await uploadFile(file);
 
-        return db.getImagesDB().addImage(dbImage);
+          const dbImage: UploadedImage = {
+            fileName: fileUploadResult.Key,
+            url: fileUploadResult.Location,
+            bucket_name: fileUploadResult.Bucket,
+            service_id,
+            main_pic: fileUploadResult.Key === mainPicFileName,
+          };
+
+          db.getImagesDB().addImage(dbImage, currentConnection);
+        } finally {
+          currentConnection.release();
+        }
       })
     );
 
-    res.status(201).json({ imageDBEntries: dbInsertResultsArray });
+    res.status(201).json({ imageDBEntries: resultsArray });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

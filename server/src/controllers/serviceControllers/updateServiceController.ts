@@ -41,8 +41,8 @@ const updateServiceController = async (req: Request, res: Response) => {
       .getServiceDB()
       .getBaseTableQueries()
       .updateEntriesByMultiple(serviceBase, serviceId, "id");
-    if (updateServiceBaseResult instanceof Error)
-      throw new Error(updateServiceBaseResult.message);
+    if (updateServiceBaseResult.affectedRows === 0)
+      throw Error("Could not update base Service Result");
 
     //add in our contact numbers
     const formattedNumbers = contactNumber.map((contact) => ({

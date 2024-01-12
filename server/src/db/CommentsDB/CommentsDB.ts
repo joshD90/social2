@@ -1,11 +1,12 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import {
+  Pool,
+  PoolConnection,
+  ResultSetHeader,
+  RowDataPacket,
+} from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { commentQueryObj } from "./commentsDBQueries";
-import {
-  ICommentBase,
-  ICommentWithVotes,
-  IVote,
-} from "../../types/commentTypes/commentTypes";
+import { ICommentBase, IVote } from "../../types/commentTypes/commentTypes";
 import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 import { IUser } from "../../types/userTypes/UserType";
 
@@ -48,7 +49,8 @@ export class CommentsDB {
     try {
       const result =
         await this.commentGenericQueries.createTableEntryFromPrimitives(
-          comment as unknown as IGenericIterableObject
+          comment as unknown as IGenericIterableObject,
+          currentConnection
         );
 
       if (comment.inReplyTo) {
@@ -56,10 +58,11 @@ export class CommentsDB {
           await this.commentGenericQueries.updateEntriesByMultiple(
             { hasReplies: true },
             comment.inReplyTo,
-            "id"
+            "id",
+            currentConnection
           );
-        if (updateResult instanceof Error)
-          throw Error("Couldn't update the parent comment");
+        if (updateResult.affectedRows === 0)
+          throw Error("Could not update comment");
       }
       currentConnection.commit();
       currentConnection.release();
@@ -73,7 +76,7 @@ export class CommentsDB {
 
   public async voteComment(vote: IVote) {
     const voteValues = Object.values(vote);
-    //This is to allow passing in the update value
+    //This is to allow passing in the update value TODO: Figure out why I put this in and comment it correctly
     voteValues.push(voteValues[voteValues.length - 1]);
 
     try {
@@ -116,9 +119,16 @@ export class CommentsDB {
     }
   }
 
-  public async deleteComment(id: number): Promise<ResultSetHeader> {
+  public async deleteComment(
+    id: number,
+    currentConnection: PoolConnection
+  ): Promise<ResultSetHeader> {
     const deleteResult =
-      await this.commentGenericQueries.deleteBySingleCriteria("id", id);
+      await this.commentGenericQueries.deleteBySingleCriteria(
+        "id",
+        id,
+        currentConnection
+      );
 
     return deleteResult;
   }
@@ -127,19 +137,30 @@ export class CommentsDB {
     userId: number,
     commentId: number
   ): Promise<boolean | Error> {
-    try {
-      const result = await this.commentVotesGenericQueries.deleteByTwoCriteria(
-        ["user_id", "comment_id"],
-        [userId, commentId]
-      );
+    const currentConnection = await this.connection.getConnection();
 
+    try {
+      currentConnection.beginTransaction();
+      await this.commentVotesGenericQueries.deleteByTwoCriteria(
+        ["user_id", "comment_id"],
+        [userId, commentId],
+        currentConnection
+      );
+      currentConnection.commit();
+      currentConnection.release();
       return true;
     } catch (error) {
+      currentConnection.rollback();
+      currentConnection.release();
       return error as Error;
     }
   }
 
-  public async updateComment(comment: ICommentBase, user: IUser) {
+  public async updateComment(
+    comment: ICommentBase,
+    user: IUser,
+    currentConnection: PoolConnection
+  ) {
     if (!comment.id || !user.id) throw Error("Needs a comment.id and a userId");
     const currentTime = new Date().toISOString().slice(0, 19).replace("T", " ");
     const result = await this.commentGenericQueries.updateEntriesByMultiple(
@@ -149,9 +170,10 @@ export class CommentsDB {
         updated_by_id: user.id,
       },
       comment.id,
-      "id"
+      "id",
+      currentConnection
     );
-    if (result instanceof Error) throw result;
+    if (result.affectedRows === 0) throw Error("Could not update comment");
     return result;
   }
 

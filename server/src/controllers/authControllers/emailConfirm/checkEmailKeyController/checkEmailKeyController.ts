@@ -31,8 +31,10 @@ const checkEmailKeyController = async (req: Request, res: Response) => {
         username,
         "email"
       );
-    if (updatePrivilegeResult instanceof Error)
-      throw Error(updatePrivilegeResult.message);
+    if (updatePrivilegeResult.affectedRows === 0)
+      throw Error(
+        "There was an issue in updating the privilege status of the user"
+      );
     return res.status(200).json("Authenticated");
   } catch (error) {
     res.status(500).json((error as Error).message);

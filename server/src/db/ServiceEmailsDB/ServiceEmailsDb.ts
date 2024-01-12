@@ -1,4 +1,4 @@
-import { Pool, ResultSetHeader } from "mysql2/promise";
+import { Pool, PoolConnection, ResultSetHeader } from "mysql2/promise";
 
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import { initServiceEmailsTable } from "./serviceEmailsQueries";
@@ -20,10 +20,14 @@ export class ServiceEmailContactsDB {
   }
 
   public async insertMultipleEmails(
-    emailContacts: IServiceEmailContact[]
+    emailContacts: IServiceEmailContact[],
+    currentConnection: PoolConnection
   ): Promise<ResultSetHeader[]> {
     const emailResultsArray = emailContacts.map(async (contact) =>
-      this.emailGenericQueries.createTableEntryFromPrimitives(contact as any)
+      this.emailGenericQueries.createTableEntryFromPrimitives(
+        contact as any,
+        currentConnection
+      )
     );
     const awaitedResults = await Promise.all(emailResultsArray);
 
@@ -43,21 +47,32 @@ export class ServiceEmailContactsDB {
     return results;
   }
 
-  public async deleteEmailContacts(column: "service_id" | "id", value: number) {
-    await this.emailGenericQueries.deleteBySingleCriteria(column, value);
+  public async deleteEmailContacts(
+    column: "service_id" | "id",
+    value: number,
+    currentConnection: PoolConnection
+  ) {
+    await this.emailGenericQueries.deleteBySingleCriteria(
+      column,
+      value,
+      currentConnection
+    );
   }
 
   public async updateEmailContact(
-    emailContact: Partial<IServiceEmailContact>
+    emailContact: Partial<IServiceEmailContact>,
+    currentConnection: PoolConnection
   ): Promise<ResultSetHeader> {
     if (typeof emailContact.id !== "string" || emailContact.id !== "number")
       throw Error("Contact id must be present and be of type string or number");
     const updatedEntry = await this.emailGenericQueries.updateEntriesByMultiple(
       emailContact as IGenericIterableObject,
       emailContact.id,
-      "id"
+      "id",
+      currentConnection
     );
-    if (updatedEntry instanceof Error) throw new Error(updatedEntry.message);
+    if (updatedEntry.affectedRows === 0)
+      throw new Error("COuld not update Email Contacts");
     return updatedEntry;
   }
 

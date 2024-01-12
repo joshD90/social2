@@ -1,6 +1,6 @@
 import envConfig from "../../env/envConfig";
 import mysql from "mysql2";
-import { Pool } from "mysql2/promise";
+import { Pool, PoolConnection } from "mysql2/promise";
 import { ServiceDB } from "../ServiceDB/ServiceDB";
 import { CategoryDB } from "../CategoryDB/CategoryDB";
 import UserDB from "../UserDB/UserDB";
@@ -55,6 +55,10 @@ class Database {
     const connection = pool.promise();
 
     return connection;
+  }
+
+  public async getSinglePoolConnection(): Promise<PoolConnection> {
+    return await this.connection.getConnection();
   }
 
   //getters

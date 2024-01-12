@@ -1,4 +1,4 @@
-import { Pool, ResultSetHeader } from "mysql2/promise";
+import { Pool, PoolConnection, ResultSetHeader } from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 
 import queryObj from "./serviceContactsQueries";
@@ -23,12 +23,14 @@ class ServiceContactsDB {
   }
 
   public async insertPhoneContacts(
-    contacts: IServicePhoneContact[]
+    contacts: IServicePhoneContact[],
+    currentConnection: PoolConnection
   ): Promise<ResultSetHeader[]> {
     const allResults = Promise.all(
       contacts.map(async (contact) => {
         return this.phoneGenericQueries.createTableEntryFromPrimitives(
-          contact as any
+          contact as any,
+          currentConnection
         );
       })
     );
@@ -52,19 +54,29 @@ class ServiceContactsDB {
   //can either delete a single contact number or delete them all based on the service theyre attached to
   public async deletePhoneContactsByService(
     column: "service_id" | "id",
-    value: number
+    value: number,
+    currentConnection: PoolConnection
   ) {
-    await this.phoneGenericQueries.deleteBySingleCriteria(column, value);
+    await this.phoneGenericQueries.deleteBySingleCriteria(
+      column,
+      value,
+      currentConnection
+    );
   }
 
-  public async updatePhoneContacts(contact: Partial<IServicePhoneContact>) {
+  public async updatePhoneContacts(
+    contact: Partial<IServicePhoneContact>,
+    currentConnection: PoolConnection
+  ) {
     if (!contact.id) throw Error("Needs an id");
     const updatedEntry = await this.phoneGenericQueries.updateEntriesByMultiple(
       contact as any as IGenericIterableObject,
       contact.id,
-      "id"
+      "id",
+      currentConnection
     );
-    if (updatedEntry instanceof Error) throw Error(updatedEntry.message);
+    if (updatedEntry.affectedRows === 0)
+      throw Error("Could not update phone contact");
     return updatedEntry;
   }
 

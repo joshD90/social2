@@ -1,4 +1,4 @@
-import { Pool } from "mysql2/promise";
+import { Pool, PoolConnection } from "mysql2/promise";
 
 import { queryObj } from "./imageDBQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
@@ -23,9 +23,13 @@ export class ImagesDB {
     this.genericQueries = new GeneralQueryGenerator("images", connection);
   }
 
-  public async addImage(image: UploadedImage) {
+  public async addImage(
+    image: UploadedImage,
+    currentConnection: PoolConnection
+  ) {
     const result = await this.genericQueries.createTableEntryFromPrimitives(
-      image
+      image,
+      currentConnection
     );
 
     return result;

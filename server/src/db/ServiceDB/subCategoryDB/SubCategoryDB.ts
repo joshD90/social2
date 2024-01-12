@@ -74,7 +74,8 @@ export class SubCategoryDB {
 
   public async createAllSubCategories(
     serviceId: number,
-    subCatArray: (TAreasServed | TNeedsMet | TClientGroups)[]
+    subCatArray: (TAreasServed | TNeedsMet | TClientGroups)[],
+    currentConnection: PoolConnection
   ): Promise<boolean> {
     const successArray = await Promise.all(
       subCatArray.map((category) => {
@@ -83,7 +84,8 @@ export class SubCategoryDB {
         return this.addFullSubCategory(
           specificSubArray,
           Object.values(category)[0],
-          serviceId
+          serviceId,
+          currentConnection
         );
       })
     );
@@ -118,11 +120,17 @@ export class SubCategoryDB {
   public async addFullSubCategory(
     specificTableVar: SubCategoryTableSpecific,
     data: ISubServiceItem[],
-    serviceId: number
+    serviceId: number,
+    currentConnection: PoolConnection
   ): Promise<"success" | "failure"> {
     const successArray = await Promise.all(
       data.map((entry) => {
-        return this.addSubCategory(specificTableVar, entry, serviceId);
+        return this.addSubCategory(
+          specificTableVar,
+          entry,
+          serviceId,
+          currentConnection
+        );
       })
     );
     if (successArray.some((el) => el === "failure")) return "failure";
@@ -133,7 +141,8 @@ export class SubCategoryDB {
   public async addSubCategory(
     specificTableVar: SubCategoryTableSpecific,
     data: ISubServiceItem,
-    serviceId: number
+    serviceId: number,
+    currentConnection: PoolConnection
   ): Promise<"success" | "failure"> {
     const generalTableQuery = specificTableVar.tableQueries;
     const junctionTableQuery = specificTableVar.junctionTableQueries;
@@ -153,7 +162,8 @@ export class SubCategoryDB {
       //if it does use this id else create a new entry
       if (existingEntry.length === 0) {
         const result = await generalTableQuery.createTableEntryFromPrimitives(
-          formattedData
+          formattedData,
+          currentConnection
         );
 
         subId = result.insertId;
@@ -177,8 +187,12 @@ export class SubCategoryDB {
       };
       //insert into our junction table.
       const junctionResult =
-        await junctionTableQuery.createTableEntryFromPrimitives(junctionData);
-
+        await junctionTableQuery.createTableEntryFromPrimitives(
+          junctionData,
+          currentConnection
+        );
+      if (junctionResult.affectedRows === 0)
+        throw Error("No Entries were created for unknown reason");
       return "success";
     } catch (error) {
       console.log(error);
@@ -255,7 +269,8 @@ export class SubCategoryDB {
   }
 
   public async deleteJunctionTablesForService(
-    serviceId: number
+    serviceId: number,
+    currentConnection: PoolConnection
   ): Promise<boolean> {
     const junctionTablesQuery = [
       this.areasServedJunctionQueries,
@@ -265,7 +280,11 @@ export class SubCategoryDB {
     try {
       await Promise.all(
         junctionTablesQuery.map((tableQuery) => {
-          return tableQuery.deleteBySingleCriteria("service_id", serviceId);
+          return tableQuery.deleteBySingleCriteria(
+            "service_id",
+            serviceId,
+            currentConnection
+          );
         })
       );
       return true;

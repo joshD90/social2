@@ -118,3 +118,11 @@ Will need to add a new category of verified but not approved.
 - Create Endpoint to upload file through multer middleware (have this is services)[]
 - Create FileType front and backend []
 -
+
+### Error handle and rollback Database interactions
+
+- We need to find a way that we find a stable connection from the connection pool to work between various DB classes and methods.
+- May have to redesign and pass a connection.getConnection() into the methods and grab this one connection from the parent DB.
+- keep the standard this.connection in the class to use as a fallback and have a variable called currentConnection. Will need to do this througout nearly every class
+- Need to pass the error handling one level higher and probably need to handle by creating some error codes or perhaps error ENUMS or something
+- So we will handle the connection.beginTransaction and the rollback wherever we have the try catch, so if we're just throwing errors then pass the connection in. If it's fully self-contained, do the transaction in that try catch block.

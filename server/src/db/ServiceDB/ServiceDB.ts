@@ -77,7 +77,8 @@ export class ServiceDB {
       //make our base table before proceeding
       const baseResult =
         await this.ServiceBaseQueries.createTableEntryFromPrimitives(
-          baseData as unknown as IGenericIterableObject
+          baseData as unknown as IGenericIterableObject,
+          connection
         );
 
       const serviceId = baseResult.insertId;
@@ -88,7 +89,8 @@ export class ServiceDB {
         service_id: serviceId,
       }));
       await this.serviceContactsDB.insertPhoneContacts(
-        phoneContactDataWithServiceId
+        phoneContactDataWithServiceId,
+        connection
       );
       //insert our emails
       const emailContactDataWithServiceId = emailContactData.map((contact) => ({
@@ -96,13 +98,15 @@ export class ServiceDB {
         service_id: serviceId,
       }));
       await this.serviceEmailsDB.insertMultipleEmails(
-        emailContactDataWithServiceId
+        emailContactDataWithServiceId,
+        connection
       );
       // //now that we have made our base table entry we can create our sub directories
       const createSubCategoriesSuccess =
         await this.SubCategoryDB.createAllSubCategories(
           serviceId,
-          subCategories
+          subCategories,
+          connection
         );
       if (!createSubCategoriesSuccess)
         throw Error("Could not create sub categories");
@@ -125,16 +129,24 @@ export class ServiceDB {
     try {
       await connection.beginTransaction();
       const deletedJunctionTables =
-        await this.SubCategoryDB.deleteJunctionTablesForService(serviceId);
+        await this.SubCategoryDB.deleteJunctionTablesForService(
+          serviceId,
+          connection
+        );
       if (!deletedJunctionTables)
         throw Error("Could Not Delete Junction Tables");
 
       await this.serviceReportsQueries.deleteBySingleCriteria(
         "serviceId",
-        serviceId
+        serviceId,
+        connection
       );
 
-      await this.ServiceBaseQueries.deleteBySingleCriteria("id", serviceId);
+      await this.ServiceBaseQueries.deleteBySingleCriteria(
+        "id",
+        serviceId,
+        connection
+      );
 
       await connection.commit();
       return true;
