@@ -16,17 +16,24 @@ const updateServiceReportStatusController = async (
     return res
       .status(400)
       .json("Does not have the correct information in body");
+
+  const currentConnection = await db.getSinglePoolConnection();
   try {
+    await currentConnection.beginTransaction();
+
     const updateResult = await db
       .getServiceReportDB()
-      .updateSingleReportStatus(reportId, status);
-    if (updateResult instanceof Error) throw updateResult;
+      .updateSingleReportStatus(reportId, status, currentConnection);
+
     res.status(200).json("Report status successfully updated");
   } catch (error) {
+    await currentConnection.rollback();
     if (!(error instanceof Error)) return console.log(error);
     if (error.message === "Status value not in correct range")
       return res.status(400).json(error.message);
     res.status(500).json(error.message);
+  } finally {
+    currentConnection.release();
   }
 };
 

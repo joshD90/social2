@@ -76,8 +76,8 @@ export class SubCategoryDB {
     serviceId: number,
     subCatArray: (TAreasServed | TNeedsMet | TClientGroups)[],
     currentConnection: PoolConnection
-  ): Promise<boolean> {
-    const successArray = await Promise.all(
+  ): Promise<void> {
+    await Promise.all(
       subCatArray.map((category) => {
         const specificSubArray = this.generateSubTableVariables(category);
 
@@ -89,31 +89,22 @@ export class SubCategoryDB {
         );
       })
     );
-    if (successArray.some((el) => el === "failure")) {
-      // this.deleteAllEntriesRelatedToService(serviceId);
-      return false;
-    }
-    return true;
   }
+
   public async fetchAllSubCategories(serviceId: number) {
-    try {
-      const [needsMet] = await this.connection.execute<RowDataPacket[][]>(
-        this.subTableFetchQueries.get("needsMet")!,
-        [serviceId]
-      );
-      const [clientGroups] = await this.connection.execute<RowDataPacket[][]>(
-        this.subTableFetchQueries.get("clientGroups")!,
-        [serviceId]
-      );
-      const [areasServed] = await this.connection.execute<RowDataPacket[][]>(
-        this.subTableFetchQueries.get("areasServed")!,
-        [serviceId]
-      );
-      return { needsMet, clientGroups, areasServed };
-    } catch (error) {
-      console.log(error);
-      return Error((error as Error).message);
-    }
+    const [needsMet] = await this.connection.execute<RowDataPacket[][]>(
+      this.subTableFetchQueries.get("needsMet")!,
+      [serviceId]
+    );
+    const [clientGroups] = await this.connection.execute<RowDataPacket[][]>(
+      this.subTableFetchQueries.get("clientGroups")!,
+      [serviceId]
+    );
+    const [areasServed] = await this.connection.execute<RowDataPacket[][]>(
+      this.subTableFetchQueries.get("areasServed")!,
+      [serviceId]
+    );
+    return { needsMet, clientGroups, areasServed };
   }
 
   //add all subCategory Entries within a specific type
@@ -122,8 +113,8 @@ export class SubCategoryDB {
     data: ISubServiceItem[],
     serviceId: number,
     currentConnection: PoolConnection
-  ): Promise<"success" | "failure"> {
-    const successArray = await Promise.all(
+  ): Promise<void> {
+    await Promise.all(
       data.map((entry) => {
         return this.addSubCategory(
           specificTableVar,
@@ -133,8 +124,6 @@ export class SubCategoryDB {
         );
       })
     );
-    if (successArray.some((el) => el === "failure")) return "failure";
-    return "success";
   }
 
   //create one subCategory Entry
@@ -143,62 +132,59 @@ export class SubCategoryDB {
     data: ISubServiceItem,
     serviceId: number,
     currentConnection: PoolConnection
-  ): Promise<"success" | "failure"> {
+  ): Promise<boolean> {
     const generalTableQuery = specificTableVar.tableQueries;
     const junctionTableQuery = specificTableVar.junctionTableQueries;
     const subTable = specificTableVar.tableName;
     const fieldName = specificTableVar.fieldName;
+
     //we need to change the format to fit the general table query.
     const formattedData = { [fieldName]: data.value };
 
-    try {
-      //see does this entry already exist
-      const existingEntry = await generalTableQuery.findEntryBy(
-        specificTableVar.fieldName,
-        data.value
+    //see does this entry already exist
+    const existingEntry = await generalTableQuery.findEntryBy(
+      specificTableVar.fieldName,
+      data.value
+    );
+
+    let subId: number;
+    //if it does use this id else create a new entry
+    if (existingEntry.length === 0) {
+      const result = await generalTableQuery.createTableEntryFromPrimitives(
+        formattedData,
+        currentConnection
       );
 
-      let subId: number;
-      //if it does use this id else create a new entry
-      if (existingEntry.length === 0) {
-        const result = await generalTableQuery.createTableEntryFromPrimitives(
-          formattedData,
-          currentConnection
-        );
-
-        subId = result.insertId;
-      } else if (existingEntry[0]?.id) {
-        subId = parseInt(existingEntry[0].id);
-      } else {
-        throw Error(
-          `Something Unexpected Happenend in checking whether sub category exists ${JSON.stringify(
-            existingEntry
-          )}`
-        );
-      }
-
-      //take the id from the result and use this for the junction table
-      //prepare our data
-      const refColName = this.generateRefColNameJunc(subTable as SubServiceKey);
-      const junctionData = {
-        service_id: serviceId,
-        [refColName]: subId,
-        exclusive: data.exclusive,
-      };
-      //insert into our junction table.
-      const junctionResult =
-        await junctionTableQuery.createTableEntryFromPrimitives(
-          junctionData,
-          currentConnection
-        );
-      if (junctionResult.affectedRows === 0)
-        throw Error("No Entries were created for unknown reason");
-      return "success";
-    } catch (error) {
-      console.log(error);
-      return "failure";
+      subId = result.insertId;
+    } else if (existingEntry[0]?.id) {
+      subId = parseInt(existingEntry[0].id);
+    } else {
+      throw Error(
+        `Something Unexpected Happenend in checking whether sub category exists ${JSON.stringify(
+          existingEntry
+        )}`
+      );
     }
+
+    //take the id from the result and use this for the junction table
+    //prepare our data
+    const refColName = this.generateRefColNameJunc(subTable as SubServiceKey);
+    const junctionData = {
+      service_id: serviceId,
+      [refColName]: subId,
+      exclusive: data.exclusive,
+    };
+    //insert into our junction table.
+    const junctionResult =
+      await junctionTableQuery.createTableEntryFromPrimitives(
+        junctionData,
+        currentConnection
+      );
+    if (junctionResult.affectedRows === 0)
+      throw Error("No Entries were created for unknown reason");
+    return true;
   }
+
   //create the column name for the junction reference table
   private generateRefColNameJunc(subTable: SubServiceKey): string {
     switch (subTable) {

@@ -37,7 +37,7 @@ const handleDeleteHelper = async (
   commentId: number
 ): Promise<Response> => {
   const currentConnection = await db.getSinglePoolConnection();
-  currentConnection.beginTransaction();
+  await currentConnection.beginTransaction();
 
   try {
     const deleteResult = await db
@@ -47,13 +47,13 @@ const handleDeleteHelper = async (
       return res
         .status(404)
         .json("No Comments by that Id were available to delete");
-    currentConnection.commit();
-    currentConnection.release();
+    await currentConnection.commit();
     return res.status(200).json("Deleted Successfully");
   } catch (error) {
-    currentConnection.rollback();
-    currentConnection.release();
+    await currentConnection.rollback();
     return res.status(500).json((error as Error).message);
+  } finally {
+    currentConnection.release();
   }
 };
 

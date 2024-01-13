@@ -16,19 +16,21 @@ const deleteServiceByIdController = async (
 
   if (Number.isNaN(serviceId))
     return res.status(400).json("Service Id Provided is not a number");
-
+  const currentConnection = await db.getSinglePoolConnection();
   try {
+    await currentConnection.beginTransaction();
     const result = await db
       .getServiceDB()
-      .deleteServiceAndRelatedEntries(serviceId);
-    //if unsuccessful
-    if (result instanceof Error)
-      throw Error("There was an error in deleting this record");
+      .deleteServiceAndRelatedEntries(serviceId, currentConnection);
+    await currentConnection.commit();
     //otherwise return deleted
     return res.status(204).json("deleted");
   } catch (error) {
+    await currentConnection.rollback();
     if (error instanceof Error) return res.status(500).json(error.message);
     return res.status(500).json({ error: error });
+  } finally {
+    currentConnection.release();
   }
 };
 export default deleteServiceByIdController;

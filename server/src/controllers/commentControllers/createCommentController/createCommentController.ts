@@ -23,10 +23,22 @@ export const createCommentController = async (req: Request, res: Response) => {
   if ((req.user as IUser).id !== preparedObject.user_id)
     return res.status(403).json("You can only write comments in your own name");
 
-  const result = await db.getCommentsDB().createNewComment(preparedObject);
-  if (result instanceof Error)
+  const currentConnection = await db.getSinglePoolConnection();
+  try {
+    await currentConnection.beginTransaction();
+    const result = await db
+      .getCommentsDB()
+      .createNewComment(preparedObject, currentConnection);
+    await currentConnection.commit();
+
+    return res.status(201).json({ newId: result });
+  } catch (error) {
+    await currentConnection.rollback();
+
     return res.status(500).json("There was a problem in creating your comment");
-  return res.status(201).json({ newId: result });
+  } finally {
+    currentConnection.release();
+  }
 };
 
 const convertToSQLReady = (reqBody: unknown): ICommentBase | false => {

@@ -15,6 +15,8 @@ const updateImagesForServiceController = async (
   if (isNaN(serviceId))
     return res.status(400).json("There was an issue with the service id");
 
+  const currentConnection = await db.getSinglePoolConnection();
+  await currentConnection.beginTransaction();
   try {
     let keysToDelete = await db
       .getImagesDB()
@@ -38,9 +40,14 @@ const updateImagesForServiceController = async (
     const uploadResult = await Promise.all(
       req.files.map((file) => uploadFile(file))
     );
+
     await db
       .getImagesDB()
-      .genericQueries.deleteBySingleCriteria("service_id", serviceId);
+      .genericQueries.deleteBySingleCriteria(
+        "service_id",
+        serviceId,
+        currentConnection
+      );
 
     //then we need to send the relevant result bits to the database
     const dbInsertResultsArray = await Promise.all(
@@ -52,12 +59,16 @@ const updateImagesForServiceController = async (
           service_id: serviceId,
           main_pic: uploadResult.Key === mainPicFileName,
         };
-        return db.getImagesDB().addImage(dbImage);
+        return db.getImagesDB().addImage(dbImage, currentConnection);
       })
     );
+
     return res.status(201).json({ imageDBResults: dbInsertResultsArray });
   } catch (error) {
+    await currentConnection.rollback();
     res.status(500).json((error as Error).message);
+  } finally {
+    currentConnection.release();
   }
 };
 

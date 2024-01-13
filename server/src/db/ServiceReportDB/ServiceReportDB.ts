@@ -1,4 +1,9 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import {
+  Pool,
+  PoolConnection,
+  ResultSetHeader,
+  RowDataPacket,
+} from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import queryObj from "./serviceReportQueries";
 import { IServiceReportEntry } from "../../types/serviceTypes/ServiceType";
@@ -25,72 +30,62 @@ export class ServiceReportDB {
     }
   }
 
-  public async createEntry(data: {
-    userId: number;
-    serviceId: number;
-    report: string;
-  }): Promise<ResultSetHeader | Error> {
-    try {
-      const newEntry =
-        await this.genericReportQueries.createTableEntryFromPrimitives(data);
+  public async createEntry(
+    data: {
+      userId: number;
+      serviceId: number;
+      report: string;
+    },
+    currentConnection: PoolConnection
+  ): Promise<ResultSetHeader> {
+    const newEntry =
+      await this.genericReportQueries.createTableEntryFromPrimitives(
+        data,
+        currentConnection
+      );
 
-      return newEntry;
-    } catch (error) {
-      return error as Error;
-    }
+    return newEntry;
   }
 
   public async getEntriesByService(
     serviceId: number | string
-  ): Promise<ExtendedRowDataPacket<IServiceReportEntry>[] | Error> {
+  ): Promise<ExtendedRowDataPacket<IServiceReportEntry>[]> {
     const id = typeof serviceId === "number" ? serviceId : parseInt(serviceId);
     if (isNaN(id))
       throw Error("serviceId must be a number or a string of a number");
 
-    try {
-      const result =
-        await this.genericReportQueries.findEntryBy<IServiceReportEntry>(
-          "serviceId",
-          id
-        );
+    const result =
+      await this.genericReportQueries.findEntryBy<IServiceReportEntry>(
+        "serviceId",
+        id
+      );
 
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    return result;
   }
 
-  public async getAllServiceReportEntries(): Promise<RowDataPacket[] | Error> {
-    try {
-      const result = await this.genericReportQueries.findEntryBy();
-
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+  public async getAllServiceReportEntries(): Promise<RowDataPacket[]> {
+    const result = await this.genericReportQueries.findEntryBy();
+    return result;
   }
 
   public async getSingleServiceReportEntry(
     id: number
-  ): Promise<ExtendedRowDataPacket<IServiceReportEntry> | Error> {
-    try {
-      const result =
-        await this.genericReportQueries.findEntryBy<IServiceReportEntry>(
-          "id",
-          id
-        );
+  ): Promise<ExtendedRowDataPacket<IServiceReportEntry>> {
+    const result =
+      await this.genericReportQueries.findEntryBy<IServiceReportEntry>(
+        "id",
+        id
+      );
 
-      const [firstResult] = result;
-      return firstResult;
-    } catch (error) {
-      return error as Error;
-    }
+    const [firstResult] = result;
+    return firstResult;
   }
 
   public async updateSingleReportStatus(
     reportId: number,
-    status: "submitted" | "under review" | "declined" | "accepted"
-  ): Promise<boolean | Error> {
+    status: "submitted" | "under review" | "declined" | "accepted",
+    currentConnection: PoolConnection
+  ): Promise<boolean> {
     if (
       !(
         status === "accepted" ||
@@ -99,18 +94,14 @@ export class ServiceReportDB {
         status === "under review"
       )
     )
-      return Error("Status value not in correct range");
-    try {
-      const [result] = await this.connection.query<ResultSetHeader>(
-        queryObj.updateRecordStatus,
-        [status, reportId]
-      );
-      if (result.changedRows === 0)
-        throw Error("Unsuccessful update no changes made");
-      return true;
-    } catch (error) {
-      console.log(error, "error in serviceReportStatusChange in db");
-      return error as Error;
-    }
+      throw Error("Status value not in correct range");
+
+    const [result] = await currentConnection.query<ResultSetHeader>(
+      queryObj.updateRecordStatus,
+      [status, reportId]
+    );
+    if (result.changedRows === 0)
+      throw Error("Unsuccessful update no changes made");
+    return true;
   }
 }

@@ -19,12 +19,7 @@ export const configurePassport = (app: Application) => {
           const userFound = await db.getUserDB().findUser(["email", email]);
 
           //if we cant find the user or the user does not have a password return error
-          if (
-            userFound instanceof Error ||
-            !userFound[0] ||
-            !userFound[0].password
-          )
-            return done(null, false);
+          if (!userFound[0] || !userFound[0].password) return done(null, false);
 
           //check is password correct
           const passwordMatches = await bcrypt.compare(

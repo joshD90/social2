@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { IUser } from "../../types/userTypes/UserType";
 import { db } from "../../server";
 import sendStoreConfirmationLink from "./emailConfirm/sendStoreConfirmationLink/sendStoreConfirmationLink";
+import { connectionMock } from "../../db/generalQueryGenerator/GeneralQueryGenerator.test";
 
 const authSignupController = async (req: Request, res: Response) => {
   const {
@@ -33,8 +34,10 @@ const authSignupController = async (req: Request, res: Response) => {
       .json(
         "The organisation does not match your email, please use your work email as an identifier"
       );
-
+  const currentConnection = await db.getSinglePoolConnection();
   try {
+    await currentConnection.beginTransaction();
+
     const hashedPW = await bcrypt.hash(password, 10);
 
     const user: IUser = {
@@ -46,23 +49,24 @@ const authSignupController = async (req: Request, res: Response) => {
       privileges: "none",
     };
 
-    const result = await db.getUserDB().createNewUser(user);
-
-    if (result instanceof Error) throw Error("Issue with creating the entry");
+    const result = await db.getUserDB().createNewUser(user, currentConnection);
 
     const emailConfirmationKeyResult = await sendStoreConfirmationLink(
       user.email
     );
-
+    await currentConnection.commit();
     res
       .status(201)
       .json(`New user was created with the id of ${result.insertId}`);
   } catch (error) {
+    await currentConnection.rollback();
     if (error instanceof Error)
       return res
         .status(500)
         .json(error.message + "There was an error in creating the user");
     res.status(500).json(error);
+  } finally {
+    currentConnection.release();
   }
 };
 

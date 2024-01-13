@@ -9,9 +9,10 @@ export const getAllUserOrganisationsController = async (
     return res
       .status(403)
       .json("You do not have the privileges to access this endpoint");
-  const organisationNames = await db.getUserDB().getAllOrganisations();
-
-  if (organisationNames instanceof Error)
-    return res.status(500).json(organisationNames.message);
-  return res.status(200).json(organisationNames);
+  try {
+    const organisationNames = await db.getUserDB().getAllOrganisations();
+    return res.status(200).json(organisationNames);
+  } catch (error) {
+    return res.status(500).json((error as Error).message);
+  }
 };

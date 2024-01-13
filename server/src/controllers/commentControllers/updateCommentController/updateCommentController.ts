@@ -9,17 +9,16 @@ const updateCommentController = async (req: Request, res: Response) => {
   if (!comment.comment) return res.status(400).json("Needs a comment");
   const currentConnection = await db.getSinglePoolConnection();
   try {
-    currentConnection.beginTransaction();
+    await currentConnection.beginTransaction();
     await db.getCommentsDB().updateComment(comment, user, currentConnection);
-    currentConnection.commit();
-    currentConnection.release();
-
+    await currentConnection.commit();
     return res.status(200).json({ newId: comment.id });
   } catch (error) {
-    currentConnection.rollback();
-    currentConnection.release();
+    await currentConnection.rollback();
     console.log(error, "error in updateComment Controller");
     return res.status(500).json((error as Error).message);
+  } finally {
+    currentConnection.release();
   }
 };
 

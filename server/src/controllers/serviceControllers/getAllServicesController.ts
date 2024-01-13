@@ -7,14 +7,12 @@ import { RowDataPacket } from "mysql2";
 const getAllServicesController = async (req: Request, res: Response) => {
   const { minimal } = req.query;
   try {
-    let allServices: Error | ExtendedRowDataPacket<unknown>[] | RowDataPacket[];
+    let allServices: ExtendedRowDataPacket<unknown>[] | RowDataPacket[];
     if (!minimal) {
       allServices = await db.getServiceDB().fetchAllServices();
     } else {
       allServices = await db.getServiceDB().fetchServicesMinimal();
     }
-    if (allServices instanceof Error)
-      throw Error("Issue with fetching services from DB");
 
     res.status(200).json(allServices);
   } catch (error) {

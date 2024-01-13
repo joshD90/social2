@@ -119,16 +119,13 @@ export class GeneralQueryGenerator {
 
   public async getTableColumnNames(tableName: string): Promise<any> {
     const query = `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?`;
-    try {
-      const result = await this.connection.execute<RowDataPacket[]>(query, [
-        tableName,
-      ]);
-      const [onlyColumns] = result;
-      const columnNameArray = onlyColumns.map((row) => row.COLUMN_NAME);
 
-      return columnNameArray;
-    } catch (error) {
-      return Error((error as Error).message);
-    }
+    const result = await this.connection.execute<RowDataPacket[]>(query, [
+      tableName,
+    ]);
+    const [onlyColumns] = result;
+    const columnNameArray = onlyColumns.map((row) => row.COLUMN_NAME);
+
+    return columnNameArray;
   }
 }

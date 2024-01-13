@@ -53,7 +53,11 @@ export const getCommentsForServiceController = async (
   )
     paramsToPass.parentId = parseInt(req.query.parentCommentId);
 
-  const result = await db.getCommentsDB().fetchComments(paramsToPass);
-  if (result instanceof Error) return res.status(500).json(result.message);
-  res.status(200).json(result);
+  try {
+    const result = await db.getCommentsDB().fetchComments(paramsToPass);
+    if (result instanceof Error) return;
+    res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json((error as Error).message);
+  }
 };

@@ -41,54 +41,42 @@ export class CommentsDB {
   }
 
   public async createNewComment(
-    comment: ICommentBase
-  ): Promise<Error | number> {
-    const currentConnection = await this.connection.getConnection();
-    currentConnection.beginTransaction();
+    comment: ICommentBase,
+    currentConnection: PoolConnection
+  ): Promise<number> {
+    const result =
+      await this.commentGenericQueries.createTableEntryFromPrimitives(
+        comment as unknown as IGenericIterableObject,
+        currentConnection
+      );
 
-    try {
-      const result =
-        await this.commentGenericQueries.createTableEntryFromPrimitives(
-          comment as unknown as IGenericIterableObject,
+    if (comment.inReplyTo) {
+      const updateResult =
+        await this.commentGenericQueries.updateEntriesByMultiple(
+          { hasReplies: true },
+          comment.inReplyTo,
+          "id",
           currentConnection
         );
-
-      if (comment.inReplyTo) {
-        const updateResult =
-          await this.commentGenericQueries.updateEntriesByMultiple(
-            { hasReplies: true },
-            comment.inReplyTo,
-            "id",
-            currentConnection
-          );
-        if (updateResult.affectedRows === 0)
-          throw Error("Could not update comment");
-      }
-      currentConnection.commit();
-      currentConnection.release();
-      return result.insertId;
-    } catch (error) {
-      currentConnection.rollback();
-      currentConnection.release();
-      return error as Error;
+      if (updateResult.affectedRows === 0)
+        throw Error("Could not update comment");
     }
+
+    return result.insertId;
   }
 
-  public async voteComment(vote: IVote) {
+  public async voteComment(vote: IVote, currentConnection: PoolConnection) {
     const voteValues = Object.values(vote);
     //This is to allow passing in the update value TODO: Figure out why I put this in and comment it correctly
     voteValues.push(voteValues[voteValues.length - 1]);
 
-    try {
-      const [result] = await this.connection.query<ResultSetHeader>(
-        commentQueryObj.voteComment,
-        voteValues
-      );
-      if (result.affectedRows === 0)
-        throw Error("No affected rows - Nothing was changed");
-    } catch (error) {
-      return error as Error;
-    }
+    const [result] = await currentConnection.query<ResultSetHeader>(
+      commentQueryObj.voteComment,
+      voteValues
+    );
+    if (result.affectedRows === 0)
+      throw Error("No affected rows - Nothing was changed");
+    return result;
   }
 
   public async fetchComments(params: {
@@ -97,7 +85,7 @@ export class CommentsDB {
     limit: number;
     offset: number;
     parentId?: number;
-  }): Promise<RowDataPacket[] | Error> {
+  }): Promise<RowDataPacket[]> {
     const { serviceId, limit, offset, parentId, organisation } = params;
 
     const query = parentId
@@ -107,16 +95,12 @@ export class CommentsDB {
       ? [parentId, organisation, limit, offset]
       : [serviceId, organisation, limit, offset];
 
-    try {
-      const [result] = await this.connection.query<RowDataPacket[]>(
-        query,
-        values
-      );
+    const [result] = await this.connection.query<RowDataPacket[]>(
+      query,
+      values
+    );
 
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    return result;
   }
 
   public async deleteComment(
@@ -135,25 +119,16 @@ export class CommentsDB {
 
   public async deleteVote(
     userId: number,
-    commentId: number
-  ): Promise<boolean | Error> {
-    const currentConnection = await this.connection.getConnection();
+    commentId: number,
+    currentConnection: PoolConnection
+  ): Promise<boolean> {
+    await this.commentVotesGenericQueries.deleteByTwoCriteria(
+      ["user_id", "comment_id"],
+      [userId, commentId],
+      currentConnection
+    );
 
-    try {
-      currentConnection.beginTransaction();
-      await this.commentVotesGenericQueries.deleteByTwoCriteria(
-        ["user_id", "comment_id"],
-        [userId, commentId],
-        currentConnection
-      );
-      currentConnection.commit();
-      currentConnection.release();
-      return true;
-    } catch (error) {
-      currentConnection.rollback();
-      currentConnection.release();
-      return error as Error;
-    }
+    return true;
   }
 
   public async updateComment(

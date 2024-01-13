@@ -15,14 +15,23 @@ const createServiceReportController = async (
   const { data, user, serviceId } = req.body;
   if (!(typeof data.inaccuracyDesc === "string") || !user.id)
     return res.status(400).json("Missing some user id or issue description");
+
+  const currentConnection = await db.getSinglePoolConnection();
+
   try {
-    const createdEntry = await db.getServiceReportDB().createEntry({
-      userId: user.id,
-      report: data.inaccuracyDesc,
-      serviceId: serviceId,
-    });
+    await currentConnection.beginTransaction();
+    const createdEntry = await db.getServiceReportDB().createEntry(
+      {
+        userId: user.id,
+        report: data.inaccuracyDesc,
+        serviceId: serviceId,
+      },
+      currentConnection
+    );
     if (createdEntry instanceof Error)
       throw new Error("There was an issue in creating this entry");
+
+    await currentConnection.commit();
 
     return res
       .status(201)
@@ -30,7 +39,10 @@ const createServiceReportController = async (
         `You have successfully submitted a report with id of ${createdEntry.insertId}`
       );
   } catch (error) {
+    await currentConnection.rollback();
     return res.status(500).json((error as Error).message);
+  } finally {
+    currentConnection.release();
   }
 };
 

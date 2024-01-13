@@ -1,4 +1,9 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import {
+  Pool,
+  PoolConnection,
+  ResultSetHeader,
+  RowDataPacket,
+} from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
 import queryObj from "./userTableQueries";
 import { IUser, UserSearchTuple } from "../../types/userTypes/UserType";
@@ -32,42 +37,40 @@ class UserDB {
   }
 
   public async createNewUser(
-    userInfo: IUser
-  ): Promise<ResultSetHeader | Error> {
-    try {
-      const organisationResult = await this.organisationQueries.findEntryBy<{
-        id: number;
-        name: string;
-      }>("name", userInfo.organisation);
-      if (organisationResult.length === 0)
-        throw Error("No organisation in the database matched this query");
-      userInfo.organisation = organisationResult[0].id;
+    userInfo: IUser,
+    currentConnection: PoolConnection
+  ): Promise<ResultSetHeader> {
+    const organisationResult = await this.organisationQueries.findEntryBy<{
+      id: number;
+      name: string;
+    }>("name", userInfo.organisation);
+    if (organisationResult.length === 0)
+      throw Error("No organisation in the database matched this query");
+    userInfo.organisation = organisationResult[0].id;
 
-      const result = await this.userQueries.createTableEntryFromPrimitives(
-        userInfo as unknown as IGenericIterableObject
-      );
-      return result;
-    } catch (error) {
-      return Error((error as Error).message);
-    }
+    const result = await this.userQueries.createTableEntryFromPrimitives(
+      userInfo as unknown as IGenericIterableObject,
+      currentConnection
+    );
+    return result;
   }
 
-  public async deleteUser(userId: number): Promise<ResultSetHeader | Error> {
-    try {
-      const result = await this.userQueries.deleteBySingleCriteria(
-        "id",
-        userId
-      );
+  public async deleteUser(
+    userId: number,
+    currentConnection: PoolConnection
+  ): Promise<ResultSetHeader> {
+    const result = await this.userQueries.deleteBySingleCriteria(
+      "id",
+      userId,
+      currentConnection
+    );
 
-      return result;
-    } catch (error) {
-      return Error((error as Error).message);
-    }
+    return result;
   }
 
   public async findUser(
     criteria: UserSearchTuple
-  ): Promise<ExtendedRowDataPacket<IUser>[] | Error> {
+  ): Promise<ExtendedRowDataPacket<IUser>[]> {
     if (
       criteria[0] !== "users.id" &&
       criteria[0] !== "email" &&
@@ -77,36 +80,29 @@ class UserDB {
 
     const query = queryObj.generateFindUserQuery(criteria[0]);
 
-    try {
-      const [result] = await this.connection.query<
-        ExtendedRowDataPacket<IUser>[]
-      >(query, criteria[1]);
-      if (result.length === 0) return [];
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    const [result] = await this.connection.query<
+      ExtendedRowDataPacket<IUser>[]
+    >(query, criteria[1]);
+    if (result.length === 0) return [];
+    return result;
   }
 
   public async getAllUsers() {
-    try {
-      const [result] = await this.connection.query<RowDataPacket[]>(
-        queryObj.findAllUsers
-      );
-      const usersWithoutPasswords = result.map((user) => {
-        const { password, ...rest } = user;
-        return rest;
-      });
-      return usersWithoutPasswords;
-    } catch (error) {
-      return error as Error;
-    }
+    const [result] = await this.connection.query<
+      ExtendedRowDataPacket<IUser>[]
+    >(queryObj.findAllUsers);
+    const usersWithoutPasswords = result.map((user) => {
+      const { password, ...rest } = user;
+      return rest;
+    });
+    return usersWithoutPasswords;
   }
 
   public async updatePrivileges(
     privilege: string,
-    id: number
-  ): Promise<ResultSetHeader | Error> {
+    id: number,
+    currentConnection: PoolConnection
+  ): Promise<ResultSetHeader> {
     if (
       !(
         privilege === "none" ||
@@ -132,29 +128,23 @@ class UserDB {
     )
       throw Error("You Cannot confirm email or unconfirm email here");
     //update db
-    try {
-      const [result] = await this.connection.query<ResultSetHeader>(
-        queryObj.updatePrivileges,
-        [privilege, id]
-      );
-      if (result.affectedRows === 0) throw Error("No Affected Rows");
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+
+    const [result] = await currentConnection.query<ResultSetHeader>(
+      queryObj.updatePrivileges,
+      [privilege, id]
+    );
+    if (result.affectedRows === 0) throw Error("No Affected Rows");
+    return result;
   }
 
   public async getAllOrganisations() {
-    try {
-      const [result] = await this.connection.query<RowDataPacket[]>(
-        queryObj.getAllOrganisationsNames
-      );
+    const [result] = await this.connection.query<RowDataPacket[]>(
+      queryObj.getAllOrganisationsNames
+    );
 
-      return result;
-    } catch (error) {
-      return error as Error;
-    }
+    return result;
   }
+
   public getGenericUserQueries(): GeneralQueryGenerator {
     return this.userQueries;
   }

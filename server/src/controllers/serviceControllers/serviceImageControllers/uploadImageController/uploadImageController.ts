@@ -27,6 +27,7 @@ export const uploadImageController = async (req: Request, res: Response) => {
     const resultsArray = await Promise.all(
       req.files.map(async (file) => {
         const currentConnection = await db.getSinglePoolConnection();
+        await currentConnection.beginTransaction();
         try {
           const fileUploadResult = await uploadFile(file);
 
@@ -39,6 +40,7 @@ export const uploadImageController = async (req: Request, res: Response) => {
           };
 
           db.getImagesDB().addImage(dbImage, currentConnection);
+          await currentConnection.commit();
         } finally {
           currentConnection.release();
         }

@@ -10,6 +10,7 @@ import passport from "passport";
 import { uploadImageController } from "../controllers/serviceControllers/serviceImageControllers/uploadImageController/uploadImageController";
 import { getSignedImgUrlController } from "../controllers/serviceControllers/serviceImageControllers/getSignedImgUrlController/getSignedImgUrlController";
 import updateImagesForServiceController from "../controllers/serviceControllers/serviceImageControllers/updateImagesForServiceController/updateImagesForServiceController";
+import deleteImageController from "../controllers/serviceControllers/serviceImageControllers/deleteImageController/deleteImageController";
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -23,19 +24,7 @@ router.put(
   upload.array("images", 5),
   updateImagesForServiceController
 );
-router.delete("/:imageKey", async (req: Request, res: Response) => {
-  try {
-    const deleteResult = await deleteImage(req.params.imageKey);
-
-    const deleteFromDB = await db
-      .getImagesDB()
-      .genericQueries.deleteBySingleCriteria("fileName", req.params.imageKey);
-
-    return res.status(200).json({ deleteResult, deleteFromDB });
-  } catch (error) {
-    res.status(500).json((error as Error).message);
-  }
-});
+router.delete("/:imageKey", deleteImageController);
 router.post("/:serviceId", upload.array("images", 5), uploadImageController);
 
 export default router;

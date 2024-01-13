@@ -16,25 +16,22 @@ export class DatabaseSearcher {
 
   public async searchServices(
     keyString: string
-  ): Promise<IWeightedSearchedService[] | Error> {
+  ): Promise<IWeightedSearchedService[]> {
     const lowerCaseKey = keyString.toLowerCase();
-    try {
-      const result = await this.connection.execute<ISearchedService[]>(
-        queryObj.searchServicesQuery,
-        this.replicateKeyString(lowerCaseKey)
-      );
-      const data = result[0];
-      if (data.length === 0) return [];
 
-      const weightedAndConcatonated = this.determineRelevantHeadersAndWeigh(
-        data,
-        lowerCaseKey
-      );
+    const result = await this.connection.execute<ISearchedService[]>(
+      queryObj.searchServicesQuery,
+      this.replicateKeyString(lowerCaseKey)
+    );
+    const data = result[0];
+    if (data.length === 0) return [];
 
-      return weightedAndConcatonated.sort((a, b) => b.weight - a.weight);
-    } catch (error) {
-      return error as Error;
-    }
+    const weightedAndConcatonated = this.determineRelevantHeadersAndWeigh(
+      data,
+      lowerCaseKey
+    );
+
+    return weightedAndConcatonated.sort((a, b) => b.weight - a.weight);
   }
   //we weight and concatonate in the same function to avoid unnecessary overhead and to do more work while we are iterating
   public determineRelevantHeadersAndWeigh(

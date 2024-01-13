@@ -15,7 +15,6 @@ const getUsersController = async (req: Request, res: Response) => {
   try {
     if ((req.user as IUser).privileges === "admin" && !organisation) {
       const result = await db.getUserDB().getAllUsers();
-      if (result instanceof Error) throw Error(result.message);
 
       return res.status(200).json(result);
     } else {
@@ -24,8 +23,6 @@ const getUsersController = async (req: Request, res: Response) => {
       const result = await db
         .getUserDB()
         .findUser(["organisation", organisation]);
-
-      if (result instanceof Error) throw Error(result.message);
 
       return res.status(200).json(result);
     }

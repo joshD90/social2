@@ -1,4 +1,9 @@
-import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import {
+  Pool,
+  PoolConnection,
+  ResultSetHeader,
+  RowDataPacket,
+} from "mysql2/promise";
 
 import { initServiceTablesQueries as initQueryObj } from "./serviceInitDBQueries";
 import {
@@ -102,63 +107,51 @@ export class ServiceDB {
         connection
       );
       // //now that we have made our base table entry we can create our sub directories
-      const createSubCategoriesSuccess =
-        await this.SubCategoryDB.createAllSubCategories(
-          serviceId,
-          subCategories,
-          connection
-        );
-      if (!createSubCategoriesSuccess)
-        throw Error("Could not create sub categories");
+
+      await this.SubCategoryDB.createAllSubCategories(
+        serviceId,
+        subCategories,
+        connection
+      );
+
       //commit all the changes if there are no errors
-      await connection.commit();
+      connection.commit();
 
       return baseResult;
     } catch (error) {
-      await connection.rollback();
+      connection.rollback();
       return error as Error;
+    } finally {
+      connection.release();
     }
   }
 
   //delete all documents related to a single serviceId
   public async deleteServiceAndRelatedEntries(
-    serviceId: number
-  ): Promise<true | Error> {
+    serviceId: number,
+    currentConnection: PoolConnection
+  ): Promise<void> {
     //now we delete them in order - we must await the promises to avoid race conditions
-    const connection = await this.connection.getConnection();
-    try {
-      await connection.beginTransaction();
-      const deletedJunctionTables =
-        await this.SubCategoryDB.deleteJunctionTablesForService(
-          serviceId,
-          connection
-        );
-      if (!deletedJunctionTables)
-        throw Error("Could Not Delete Junction Tables");
 
-      await this.serviceReportsQueries.deleteBySingleCriteria(
-        "serviceId",
+    await currentConnection.beginTransaction();
+    const deletedJunctionTables =
+      await this.SubCategoryDB.deleteJunctionTablesForService(
         serviceId,
-        connection
+        currentConnection
       );
+    if (!deletedJunctionTables) throw Error("Could Not Delete Junction Tables");
 
-      await this.ServiceBaseQueries.deleteBySingleCriteria(
-        "id",
-        serviceId,
-        connection
-      );
+    await this.serviceReportsQueries.deleteBySingleCriteria(
+      "serviceId",
+      serviceId,
+      currentConnection
+    );
 
-      await connection.commit();
-      return true;
-    } catch (error) {
-      await connection.rollback();
-      if (
-        error instanceof Error &&
-        error.message === "There was no record matching that criteria"
-      )
-        return true;
-      return error as Error;
-    }
+    await this.ServiceBaseQueries.deleteBySingleCriteria(
+      "id",
+      serviceId,
+      currentConnection
+    );
   }
 
   //fetch service and related sub categories
@@ -166,51 +159,46 @@ export class ServiceDB {
     serviceId: number,
     user: IUser | null
   ) {
-    try {
-      const [baseService] = await this.connection.execute<RowDataPacket[]>(
-        fetchServices(serviceId),
-        [serviceId]
-      );
+    const [baseService] = await this.connection.execute<RowDataPacket[]>(
+      fetchServices(serviceId),
+      [serviceId]
+    );
 
-      //get contact numbers but filter out private ones if user is not approved or higher
-      let contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
-        serviceId
-      );
-      let emailContacts = await this.serviceEmailsDB.fetchEmailContacts(
-        serviceId
-      );
+    //get contact numbers but filter out private ones if user is not approved or higher
+    let contactNumbers = await this.serviceContactsDB.fetchPhoneContacts(
+      serviceId
+    );
+    let emailContacts = await this.serviceEmailsDB.fetchEmailContacts(
+      serviceId
+    );
 
-      if (
-        user?.privileges !== "admin" &&
-        user?.privileges !== "moderator" &&
-        user?.privileges !== "approved"
-      ) {
-        contactNumbers = contactNumbers.filter((number) => number.public);
-        emailContacts = emailContacts.filter((email) => email.public);
-      }
-
-      const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
-        serviceId
-      );
-      if (allSubCategories instanceof Error)
-        throw Error("Error in fetching sub categories");
-      const allChildren = await this.fetchAllChildrenServices(serviceId);
-
-      const serviceImages = await db
-        .getImagesDB()
-        .getImageSignedUrlsByService(serviceId);
-
-      return {
-        baseService,
-        children: allChildren,
-        contactNumber: contactNumbers,
-        emailContacts: emailContacts,
-        images: serviceImages,
-        ...allSubCategories,
-      };
-    } catch (error) {
-      return error;
+    if (
+      user?.privileges !== "admin" &&
+      user?.privileges !== "moderator" &&
+      user?.privileges !== "approved"
+    ) {
+      contactNumbers = contactNumbers.filter((number) => number.public);
+      emailContacts = emailContacts.filter((email) => email.public);
     }
+
+    const allSubCategories = await this.SubCategoryDB.fetchAllSubCategories(
+      serviceId
+    );
+
+    const allChildren = await this.fetchAllChildrenServices(serviceId);
+
+    const serviceImages = await db
+      .getImagesDB()
+      .getImageSignedUrlsByService(serviceId);
+
+    return {
+      baseService,
+      children: allChildren,
+      contactNumber: contactNumbers,
+      emailContacts: emailContacts,
+      images: serviceImages,
+      ...allSubCategories,
+    };
   }
 
   public async fetchAllServices() {

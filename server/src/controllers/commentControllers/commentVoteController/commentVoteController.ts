@@ -13,14 +13,23 @@ export const commentVoteController = async (req: Request, res: Response) => {
   const voteToPass = validateVote(req.body);
   if (!voteToPass)
     return res.status(400).json("Request body is not in right format");
+  const currentConnection = await db.getSinglePoolConnection();
 
   try {
-    const result = await db.getCommentsDB().voteComment(voteToPass);
-    if (result instanceof Error) throw Error(result.message);
+    await currentConnection.beginTransaction();
+    const result = await db
+      .getCommentsDB()
+      .voteComment(voteToPass, currentConnection);
+    await currentConnection.commit();
+
     return res.status(200).json("Vote Successfully recorded");
   } catch (error) {
     console.log(error);
+    await currentConnection.rollback();
+
     return res.status(500).json((error as Error).message);
+  } finally {
+    currentConnection.release();
   }
 };
 

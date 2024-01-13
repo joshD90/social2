@@ -26,13 +26,17 @@ const updateServiceController = async (req: Request, res: Response) => {
     return res.status(400).json("Not in proper format");
   }
 
+  //begin out transaction
+  const currentConnection = await db.getSinglePoolConnection();
+
   //this will simply delete the full service record and insert the entire new one.  Decided this will be cleaner and less likely to result in errors
   try {
+    await currentConnection.beginTransaction();
     //delete the junction tables so they can be refreshed before updating service base
     const deleteSubJunctionResult = await db
       .getServiceDB()
       .getSubCategoryDB()
-      .deleteJunctionTablesForService(serviceId);
+      .deleteJunctionTablesForService(serviceId, currentConnection);
     if (!deleteSubJunctionResult)
       throw Error("Could not successfully delete junction table entries");
 
@@ -40,7 +44,7 @@ const updateServiceController = async (req: Request, res: Response) => {
     const updateServiceBaseResult = await db
       .getServiceDB()
       .getBaseTableQueries()
-      .updateEntriesByMultiple(serviceBase, serviceId, "id");
+      .updateEntriesByMultiple(serviceBase, serviceId, "id", currentConnection);
     if (updateServiceBaseResult.affectedRows === 0)
       throw Error("Could not update base Service Result");
 
@@ -52,11 +56,11 @@ const updateServiceController = async (req: Request, res: Response) => {
     await db
       .getServiceDB()
       .getContactNumberDB()
-      .deletePhoneContactsByService("service_id", serviceId);
+      .deletePhoneContactsByService("service_id", serviceId, currentConnection);
     await db
       .getServiceDB()
       .getContactNumberDB()
-      .insertPhoneContacts(formattedNumbers);
+      .insertPhoneContacts(formattedNumbers, currentConnection);
     //add in email contacts
     const formattedEmails = contactEmail.map((contact) => ({
       ...contact,
@@ -66,26 +70,26 @@ const updateServiceController = async (req: Request, res: Response) => {
     await db
       .getServiceDB()
       .getContactEmailDB()
-      .deleteEmailContacts("service_id", serviceId);
+      .deleteEmailContacts("service_id", serviceId, currentConnection);
     await db
       .getServiceDB()
       .getContactEmailDB()
-      .insertMultipleEmails(formattedEmails);
+      .insertMultipleEmails(formattedEmails, currentConnection);
 
     //now we need to update the base service and not create the full service entry just create the junction tables
     const createResult = await db
       .getServiceDB()
       .getSubCategoryDB()
-      .createAllSubCategories(serviceId, subCategories);
-    if (!createResult)
-      throw Error(
-        "Service was deleted in preparation however an error occured when trying to add in updated version"
-      );
+      .createAllSubCategories(serviceId, subCategories, currentConnection);
 
+    await currentConnection.commit();
     res.status(200).json({ id: serviceId, message: "Successfully updated" });
   } catch (error) {
     console.log(error, "error in update service controller");
+    await currentConnection.rollback();
     res.status(500).json((error as Error).message);
+  } finally {
+    currentConnection.release();
   }
 };
 

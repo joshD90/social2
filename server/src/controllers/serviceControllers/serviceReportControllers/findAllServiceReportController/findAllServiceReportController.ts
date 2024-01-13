@@ -16,25 +16,26 @@ const findAllServiceReportController = async (
       .status(403)
       .json("You do not have sufficient privileges to access this endpoint");
   let result: RowDataPacket[] | Error;
+  try {
+    if (req.query.serviceId) {
+      //get all the reports for a particular service if the query param is there
+      const serviceId = parseInt(req.query.serviceId as string);
 
-  if (req.query.serviceId) {
-    //get all the reports for a particular service if the query param is there
-    const serviceId = parseInt(req.query.serviceId as string);
+      if (isNaN(serviceId))
+        return res
+          .status(400)
+          .json("serviceId query param should be of type int for this table");
+      result = await db.getServiceReportDB().getEntriesByService(serviceId);
+    } else {
+      //get all the reports in the table
+      result = await db.getServiceReportDB().getAllServiceReportEntries();
+    }
 
-    if (isNaN(serviceId))
-      return res
-        .status(400)
-        .json("serviceId query param should be of type int for this table");
-    result = await db.getServiceReportDB().getEntriesByService(serviceId);
-  } else {
-    //get all the reports in the table
-    result = await db.getServiceReportDB().getAllServiceReportEntries();
-  }
-
-  if (result instanceof Error)
+    if (result.length === 0) return res.status(404).json("No Entries found");
+    res.status(200).json(result);
+  } catch (error) {
     return res.status(500).json("There was an error searching the database");
-  if (result.length === 0) return res.status(404).json("No Entries found");
-  res.status(200).json(result);
+  }
 };
 
 export default findAllServiceReportController;
