@@ -82,6 +82,8 @@ const updateServiceController = async (req: Request, res: Response) => {
       .getSubCategoryDB()
       .createAllSubCategories(serviceId, subCategories, currentConnection);
 
+    //TODO we have somehow lost our image uploading or something perhaps actually I think that it could be something to do with hitting this as a seperate endpoint
+
     await currentConnection.commit();
     res.status(200).json({ id: serviceId, message: "Successfully updated" });
   } catch (error) {

@@ -46,7 +46,7 @@ export const uploadImageController = async (req: Request, res: Response) => {
         }
       })
     );
-
+    console.log(resultsArray, "RESULTS ARRAY IN UPLOAD IMAGE CONTROLLER");
     res.status(201).json({ imageDBEntries: resultsArray });
   } catch (error) {
     console.log(error);

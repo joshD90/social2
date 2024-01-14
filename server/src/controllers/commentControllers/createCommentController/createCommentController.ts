@@ -30,11 +30,9 @@ export const createCommentController = async (req: Request, res: Response) => {
       .getCommentsDB()
       .createNewComment(preparedObject, currentConnection);
     await currentConnection.commit();
-
     return res.status(201).json({ newId: result });
   } catch (error) {
     await currentConnection.rollback();
-
     return res.status(500).json("There was a problem in creating your comment");
   } finally {
     currentConnection.release();

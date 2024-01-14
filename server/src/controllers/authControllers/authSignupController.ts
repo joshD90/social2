@@ -52,7 +52,8 @@ const authSignupController = async (req: Request, res: Response) => {
     const result = await db.getUserDB().createNewUser(user, currentConnection);
 
     const emailConfirmationKeyResult = await sendStoreConfirmationLink(
-      user.email
+      user.email,
+      currentConnection
     );
     await currentConnection.commit();
     res

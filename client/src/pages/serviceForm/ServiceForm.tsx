@@ -105,6 +105,7 @@ const ServiceForm = () => {
       ? `${envIndex.urls.baseUrl}/services/${serviceId}`
       : `${envIndex.urls.baseUrl}/services`;
     const method = serviceId ? "PUT" : "POST";
+
     try {
       const result = await fetch(url, {
         method: method,
@@ -116,6 +117,7 @@ const ServiceForm = () => {
       if (!result.ok)
         throw new Error(`Request failed with status code of ${result.status}`);
       const data = await result.json();
+
       //assuming all goes well with the service upload the images
       const imageResponse = await uploadImages(
         images,
