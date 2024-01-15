@@ -3,6 +3,8 @@ import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGene
 import { generateDownloadUrl } from "../../utils/AWS/s3/s3";
 import { IServiceFile } from "../../types/serviceTypes/ServiceType";
 
+import dbQueries from "./ServiceFilesDBQueries";
+
 class ServiceFilesDB {
   private connection: Pool;
   private genericQueries: GeneralQueryGenerator;
@@ -13,6 +15,7 @@ class ServiceFilesDB {
       "service_files",
       connection
     );
+    this.initTable();
   }
 
   public async getFilesSignedUrlsByService(serviceId: number) {
@@ -25,6 +28,10 @@ class ServiceFilesDB {
       entries.map(async (file) => generateDownloadUrl(file.url))
     );
     return fileUrls;
+  }
+
+  private async initTable() {
+    await this.connection.execute(dbQueries.initTable);
   }
 
   public getGenericQueries(): GeneralQueryGenerator {
