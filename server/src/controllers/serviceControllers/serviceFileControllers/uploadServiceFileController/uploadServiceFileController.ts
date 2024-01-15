@@ -11,6 +11,7 @@ const uploadServiceFileController = async (req: Request, res: Response) => {
       .json(
         "You are not permitted to upload files as you do not have the correct privileges"
       );
+
   try {
     if (!req.files || !Array.isArray(req.files) || !req.body.service_id)
       return res
@@ -19,11 +20,11 @@ const uploadServiceFileController = async (req: Request, res: Response) => {
           "No Files Uploaded there was an issue with multer or no service id provided"
         );
     const uploadResultsArray = await Promise.all(
-      req.files.map((file) => uploadFile(file))
-    );
+      req.files.map(async (file) => {
+        const uploadResult = await uploadFile(file);
 
-    const dbInsertResultsArray = await Promise.all(
-      uploadResultsArray.map((uploadResult) => {
+        //don't want to rollback all the previous file upload records if one fails
+        const currentConnection = await db.getSinglePoolConnection();
         const dbFile = {
           fileName: uploadResult.Key,
           url: uploadResult.Location,
@@ -33,7 +34,7 @@ const uploadServiceFileController = async (req: Request, res: Response) => {
         return db
           .getServiceFilesDB()
           .getGenericQueries()
-          .createTableEntryFromPrimitives(dbFile);
+          .createTableEntryFromPrimitives(dbFile, currentConnection);
       })
     );
 
