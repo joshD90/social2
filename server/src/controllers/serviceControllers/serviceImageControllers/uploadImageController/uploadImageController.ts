@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
-import { uploadFile } from "../../../../utils/AWS/s3/s3";
+import { uploadFile } from "../../../../utils/AWS/s3/s3_v3";
 import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
 
@@ -32,15 +32,18 @@ export const uploadImageController = async (req: Request, res: Response) => {
           const fileUploadResult = await uploadFile(file);
 
           const dbImage: UploadedImage = {
-            fileName: fileUploadResult.Key,
-            url: fileUploadResult.Location,
-            bucket_name: fileUploadResult.Bucket,
+            fileName: file.originalname,
+            url: fileUploadResult.url,
+            bucket_name: fileUploadResult.bucket_name,
             service_id,
-            main_pic: fileUploadResult.Key === mainPicFileName,
+            main_pic: file.originalname === mainPicFileName,
           };
 
-          db.getImagesDB().addImage(dbImage, currentConnection);
+          const saveEntryResult = db
+            .getImagesDB()
+            .addImage(dbImage, currentConnection);
           await currentConnection.commit();
+          return saveEntryResult;
         } finally {
           currentConnection.release();
         }

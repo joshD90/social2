@@ -2,7 +2,7 @@ import { Pool, PoolConnection } from "mysql2/promise";
 
 import { queryObj } from "./imageDBQueries";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
-import { generateDownloadUrl } from "../../utils/AWS/s3/s3";
+import { generateDownloadUrl } from "../../utils/AWS/s3/s3_v3";
 
 export type UploadedImage = {
   id?: number;

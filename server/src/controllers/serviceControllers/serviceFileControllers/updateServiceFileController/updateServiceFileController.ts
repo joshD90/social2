@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
 import { db } from "../../../../server";
-import { IServiceFile } from "../../../../types/serviceTypes/ServiceType";
-import { uploadFile } from "../../../../utils/AWS/s3/s3";
+
+import { uploadFile } from "../../../../utils/AWS/s3/s3_v3";
 
 const updateServiceFileController = async (req: Request, res: Response) => {
   const { serviceId } = req.body;
@@ -29,19 +29,21 @@ const updateServiceFileController = async (req: Request, res: Response) => {
       .getGenericQueries()
       .deleteBySingleCriteria("service_id", serviceId, currentConnection);
 
-    files.forEach(async (file) => {
-      const uploadResult = await uploadFile(file);
-      const dbFile = {
-        fileName: uploadResult.Key,
-        url: uploadResult.Location,
-        bucketName: uploadResult.Bucket,
-        service_id: req.body.service_id,
-      };
-      const createEntryResult = await db
-        .getServiceFilesDB()
-        .getGenericQueries()
-        .createTableEntryFromPrimitives(dbFile, currentConnection);
-    });
+    Promise.all(
+      files.map(async (file) => {
+        const uploadResult = await uploadFile(file);
+        const dbFile = {
+          fileName: file.originalname,
+          url: uploadResult.url,
+          bucketName: uploadResult.bucket_name,
+          service_id: req.body.service_id,
+        };
+        const createEntryResult = await db
+          .getServiceFilesDB()
+          .getGenericQueries()
+          .createTableEntryFromPrimitives(dbFile, currentConnection);
+      })
+    );
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

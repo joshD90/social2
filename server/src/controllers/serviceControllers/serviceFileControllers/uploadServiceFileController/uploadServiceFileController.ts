@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
-import { uploadFile } from "../../../../utils/AWS/s3/s3";
+import { uploadFile } from "../../../../utils/AWS/s3/s3_v3";
 import { db } from "../../../../server";
 
 const uploadServiceFileController = async (req: Request, res: Response) => {
@@ -26,9 +26,9 @@ const uploadServiceFileController = async (req: Request, res: Response) => {
         //don't want to rollback all the previous file upload records if one fails
         const currentConnection = await db.getSinglePoolConnection();
         const dbFile = {
-          fileName: uploadResult.Key,
-          url: uploadResult.Location,
-          bucketName: uploadResult.Bucket,
+          fileName: file.originalname,
+          url: uploadResult.url,
+          bucketName: uploadResult.bucket_name,
           service_id: req.body.service_id,
         };
         return db

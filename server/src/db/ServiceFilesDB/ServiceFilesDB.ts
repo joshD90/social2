@@ -1,10 +1,9 @@
-import { Pool, PoolConnection } from "mysql2/promise";
+import { Pool } from "mysql2/promise";
 import { GeneralQueryGenerator } from "../generalQueryGenerator/GeneralQueryGenerator";
-import { generateDownloadUrl } from "../../utils/AWS/s3/s3";
+import { generateDownloadUrl } from "../../utils/AWS/s3/s3_v3";
 import { IServiceFile } from "../../types/serviceTypes/ServiceType";
 
 import dbQueries from "./ServiceFilesDBQueries";
-import { IGenericIterableObject } from "../../types/mySqlTypes/mySqlTypes";
 
 class ServiceFilesDB {
   private connection: Pool;

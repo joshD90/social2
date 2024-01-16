@@ -3,7 +3,8 @@ import { db } from "../../../../server";
 
 const getSignedFileUrlController = async (req: Request, res: Response) => {
   const serviceId = parseInt(req.params.serviceId);
-
+  if (isNaN(serviceId))
+    return res.status(400).json("Service Id should be of type integer");
   try {
     const signedUrls = await db
       .getServiceFilesDB()

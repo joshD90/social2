@@ -10,7 +10,7 @@ export const getSignedImgUrlController = async (
     const signedUrls = await db
       .getImagesDB()
       .getImageSignedUrlsByService(serviceId);
-    console.log(signedUrls, "signed urls");
+
     res.status(200).json({ urls: signedUrls });
   } catch (error) {
     console.log(error);
