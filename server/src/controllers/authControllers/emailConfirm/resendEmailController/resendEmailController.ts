@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
 import { Request, Response } from "express";
-import { sendConfirmMail } from "../../../../utils/AWS/SES/SES";
+import { sendConfirmMail } from "../../../../utils/AWS/SES/SES_v3";
 import { db } from "../../../../server";
 
 const resendEmailController = async (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { sendConfirmMail } from "../../../../utils/AWS/SES/SES";
+import { sendConfirmMail } from "../../../../utils/AWS/SES/SES_v3";
 import { db } from "../../../../server";
 import { PoolConnection } from "mysql2/promise";
 

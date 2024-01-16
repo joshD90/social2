@@ -1,14 +1,13 @@
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+
 import envIndex from "../../../env/envConfig";
 
-import AWS from "aws-sdk";
+const { region, accessKeyId, secretAccessKey } = envIndex.s3.image;
 
-AWS.config.update({
-  accessKeyId: envIndex.s3.image.accessKeyId,
-  secretAccessKey: envIndex.s3.image.secretAccessKey,
-  region: envIndex.s3.image.region,
+const sesClient = new SESClient({
+  region,
+  credentials: { accessKeyId, secretAccessKey },
 });
-
-const SES = new AWS.SES({ apiVersion: "2010-12-01" });
 
 const createConfirmEmailParams = (destination: string, magicKey: string) => {
   const url = `${envIndex.frontend.baseUrl}/auth/mailconfirm?username=${destination}&magickey=${magicKey}`;
@@ -34,6 +33,8 @@ const createConfirmEmailParams = (destination: string, magicKey: string) => {
 
 export const sendConfirmMail = async (email: string, magicKey: string) => {
   const params = createConfirmEmailParams(email, magicKey);
-  const sentEmail = await SES.sendEmail(params).promise();
+  const sendEmailCommand = new SendEmailCommand(params);
+
+  const sentEmail = await sesClient.send(sendEmailCommand);
   return sentEmail;
 };

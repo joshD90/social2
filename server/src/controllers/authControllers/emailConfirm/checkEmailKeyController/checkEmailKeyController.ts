@@ -14,10 +14,12 @@ const checkEmailKeyController = async (req: Request, res: Response) => {
       .status(400)
       .json("Need to have a valid username and key as part of the link");
   const currentConnection = await db.getSinglePoolConnection();
+
   try {
     await currentConnection.beginTransaction();
     if (!checkEmailConfirmKey(username, magickey))
       return res.status(403).json("No Matching elements ");
+
     //if successful we don't need this so clear it from our table
     db.getEmailConfirmationKeysDB().genericEmailConfirmQueries.deleteByTwoCriteria(
       ["email", "associated_key"],

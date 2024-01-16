@@ -1,10 +1,6 @@
-import { Request, Response, Router } from "express";
-
-import { deleteImage } from "../utils/AWS/s3/s3";
+import { Router } from "express";
 
 import multer from "multer";
-
-import { db } from "../server";
 
 import passport from "passport";
 import { uploadImageController } from "../controllers/serviceControllers/serviceImageControllers/uploadImageController/uploadImageController";

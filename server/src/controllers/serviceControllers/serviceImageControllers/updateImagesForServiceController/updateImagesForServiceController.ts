@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
 import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
-import { deleteImage, uploadFile } from "../../../../utils/AWS/s3/s3";
+import { deleteFile, uploadFile } from "../../../../utils/AWS/s3/s3_v3";
 
 const updateImagesForServiceController = async (
   req: Request,
@@ -24,7 +24,7 @@ const updateImagesForServiceController = async (
       .genericQueries.findEntryBy<UploadedImage>("service_id", serviceId);
 
     const deleteResults = await Promise.all(
-      keysToDelete.map((image) => deleteImage(image.fileName))
+      keysToDelete.map((image) => deleteFile(image.fileName))
     );
 
     if (deleteResults.find((result) => !result))
@@ -38,10 +38,6 @@ const updateImagesForServiceController = async (
     //index of the main
     const mainPicFileName = req.files[req.body.mainPicIndex]?.originalname;
 
-    const uploadResult = await Promise.all(
-      req.files.map((file) => uploadFile(file))
-    );
-
     await db
       .getImagesDB()
       .genericQueries.deleteBySingleCriteria(
@@ -50,22 +46,24 @@ const updateImagesForServiceController = async (
         currentConnection
       );
 
-    //then we need to send the relevant result bits to the database
-    const dbInsertResultsArray = await Promise.all(
-      uploadResult.map((uploadResult) => {
+    const uploadResult = await Promise.all(
+      req.files.map(async (file) => {
+        const uploadedFile = await uploadFile(file);
+
         const dbImage: UploadedImage = {
-          fileName: uploadResult.Key,
-          url: uploadResult.Location,
-          bucket_name: uploadResult.Bucket,
+          fileName: file.originalname,
+          url: uploadedFile.url,
+          bucket_name: uploadedFile.bucket_name,
           service_id: serviceId,
-          main_pic: uploadResult.Key === mainPicFileName,
+          main_pic: file.originalname === mainPicFileName,
         };
         return db.getImagesDB().addImage(dbImage, currentConnection);
       })
     );
+
     await currentConnection.commit();
 
-    return res.status(201).json({ imageDBResults: dbInsertResultsArray });
+    return res.status(201).json({ imageDBResults: uploadResult });
   } catch (error) {
     await currentConnection.rollback();
     res.status(500).json((error as Error).message);

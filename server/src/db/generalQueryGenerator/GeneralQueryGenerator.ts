@@ -74,7 +74,7 @@ export class GeneralQueryGenerator {
     const query = `DELETE FROM ${this.table} WHERE ${columns[0]} = ? AND ${columns[1]} = ?`;
 
     const [result] = await currentConnection.execute<ResultSetHeader>(query, [
-      values,
+      ...values,
     ]);
 
     return result;
