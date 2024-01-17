@@ -114,10 +114,13 @@ Will need to add a new category of verified but not approved.
 
 ### Upload other files such as application forms etc.
 
-- Create OtherFilesDB class []
-- Create Endpoint to upload file through multer middleware (have this is services)[]
-- Create FileType front and backend []
--
+- Create OtherFilesDB class [x]
+- Create Endpoint to upload file through multer middleware (have this is services)[x]
+- Create FileType front and backend [x]
+- Create function to upload and save file to db that will cover images and files as refactor [x]
+  Commit = refactored upload and file save and implemented into file and image controllers, made adjustment to timing of deleltion of updated pictures
+- Adjust service form creation to allow for file uploads []
+- handle upload and parsing of the information []
 
 ### Error handle and rollback Database interactions
 

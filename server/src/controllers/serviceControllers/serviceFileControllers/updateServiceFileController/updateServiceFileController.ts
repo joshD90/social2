@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
 import { db } from "../../../../server";
 
-import { uploadFile } from "../../../../utils/AWS/s3/s3_v3";
+import { deleteFile, uploadFile } from "../../../../utils/AWS/s3/s3_v3";
+import { IServiceFile } from "../../../../types/serviceTypes/ServiceType";
+import { uploadFileAndSaveDB } from "../uploadFileAndSaveDB/uploadFileAndSaveDB";
 
 const updateServiceFileController = async (req: Request, res: Response) => {
   const { serviceId } = req.body;
@@ -23,27 +25,29 @@ const updateServiceFileController = async (req: Request, res: Response) => {
   const currentConnection = await db.getSinglePoolConnection();
   try {
     await currentConnection.beginTransaction();
+    const currentDatabase = db.getServiceFilesDB();
 
-    await db
-      .getServiceFilesDB()
+    const filesToDelete = await currentDatabase
+      .getGenericQueries()
+      .findEntryBy<IServiceFile>("service_id", service_id);
+
+    await currentDatabase
       .getGenericQueries()
       .deleteBySingleCriteria("service_id", serviceId, currentConnection);
 
-    Promise.all(
-      files.map(async (file) => {
-        const uploadResult = await uploadFile(file);
-        const dbFile = {
-          fileName: file.originalname,
-          url: uploadResult.url,
-          bucketName: uploadResult.bucket_name,
-          service_id: req.body.service_id,
-        };
-        const createEntryResult = await db
-          .getServiceFilesDB()
-          .getGenericQueries()
-          .createTableEntryFromPrimitives(dbFile, currentConnection);
-      })
+    const uploadResult = await uploadFileAndSaveDB(
+      files,
+      service_id,
+      currentDatabase,
+      undefined,
+      currentConnection
     );
+
+    await Promise.all(
+      filesToDelete.map((fileEntry) => deleteFile(fileEntry.fileName))
+    );
+    await currentConnection.commit();
+    res.status(201).json(uploadResult);
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

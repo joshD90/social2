@@ -16,7 +16,7 @@ const AdminSingleUser: FC<Props> = ({ user }) => {
     const approvedValue = e.target.checked;
     const body = {
       userToUpdateId: user.id,
-      newPrivilege: approvedValue ? "approved" : user.privileges,
+      newPrivilege: approvedValue ? "approved" : "emailConfirmed",
     };
 
     try {

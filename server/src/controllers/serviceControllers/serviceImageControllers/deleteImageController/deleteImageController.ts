@@ -9,7 +9,8 @@ const deleteImageController = async (req: Request, res: Response) => {
 
     const deleteFromDB = await db
       .getImagesDB()
-      .genericQueries.deleteBySingleCriteria(
+      .getGenericQueries()
+      .deleteBySingleCriteria(
         "fileName",
         req.params.imageKey,
         currentConnection

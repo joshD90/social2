@@ -14,8 +14,8 @@ export type UploadedImage = {
 };
 
 export class ImagesDB {
-  connection: Pool;
-  genericQueries: GeneralQueryGenerator;
+  private connection: Pool;
+  private genericQueries: GeneralQueryGenerator;
 
   constructor(connection: Pool) {
     this.connection = connection;
@@ -27,25 +27,27 @@ export class ImagesDB {
     image: UploadedImage,
     currentConnection: PoolConnection
   ) {
-    const result = await this.genericQueries.createTableEntryFromPrimitives(
-      image,
-      currentConnection
-    );
+    const result =
+      await this.getGenericQueries().createTableEntryFromPrimitives(
+        image,
+        currentConnection
+      );
 
     return result;
   }
 
   public async fetchImage(id: number) {
-    const result = await this.genericQueries.findEntryBy("id", id);
+    const result = await this.getGenericQueries().findEntryBy("id", id);
     const [image] = result;
     return image;
   }
 
   public async getImageSignedUrlsByService(serviceId: number) {
-    const imageEntries = await this.genericQueries.findEntryBy<UploadedImage>(
-      "service_id",
-      serviceId
-    );
+    const imageEntries =
+      await this.getGenericQueries().findEntryBy<UploadedImage>(
+        "service_id",
+        serviceId
+      );
 
     const imgUrls = await Promise.all(
       imageEntries.map(async (img) => ({
@@ -62,5 +64,10 @@ export class ImagesDB {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  //getters
+  public getGenericQueries(): GeneralQueryGenerator {
+    return this.genericQueries;
   }
 }

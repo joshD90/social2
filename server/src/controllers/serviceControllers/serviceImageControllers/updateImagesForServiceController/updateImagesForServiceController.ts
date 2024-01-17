@@ -3,6 +3,8 @@ import { IUser } from "../../../../types/userTypes/UserType";
 import { db } from "../../../../server";
 import { UploadedImage } from "../../../../db/imageDB/ImageDB";
 import { deleteFile, uploadFile } from "../../../../utils/AWS/s3/s3_v3";
+import { IServiceFile } from "../../../../types/serviceTypes/ServiceType";
+import { uploadFileAndSaveDB } from "../../serviceFileControllers/uploadFileAndSaveDB/uploadFileAndSaveDB";
 
 const updateImagesForServiceController = async (
   req: Request,
@@ -19,46 +21,43 @@ const updateImagesForServiceController = async (
   const currentConnection = await db.getSinglePoolConnection();
   await currentConnection.beginTransaction();
   try {
-    let keysToDelete = await db
-      .getImagesDB()
-      .genericQueries.findEntryBy<UploadedImage>("service_id", serviceId);
+    const currentDatabase = db.getImagesDB();
 
-    const deleteResults = await Promise.all(
-      keysToDelete.map((image) => deleteFile(image.fileName))
-    );
+    if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+      const imagesToDelete = await currentDatabase
+        .getGenericQueries()
+        .findEntryBy<IServiceFile>("service_id", serviceId);
 
-    if (deleteResults.find((result) => !result))
-      return res.status(500).json("One or more images could not be deleted");
-    //now that they are all successfully deleted we can upload the new ones
-    if (!req.files || !Array.isArray(req.files) || req.files.length === 0)
+      await Promise.all(
+        imagesToDelete.map((imageEntry) => deleteFile(imageEntry.fileName))
+      );
+
       return res
         .status(200)
         .json("Successfully deleted with no images to upload");
+    }
 
     //index of the main
     const mainPicFileName = req.files[req.body.mainPicIndex]?.originalname;
 
-    await db
-      .getImagesDB()
-      .genericQueries.deleteBySingleCriteria(
-        "service_id",
-        serviceId,
-        currentConnection
-      );
+    const imagesToDelete = await currentDatabase
+      .getGenericQueries()
+      .findEntryBy<IServiceFile>("service_id", serviceId);
 
-    const uploadResult = await Promise.all(
-      req.files.map(async (file) => {
-        const uploadedFile = await uploadFile(file);
+    await currentDatabase
+      .getGenericQueries()
+      .deleteBySingleCriteria("service_id", serviceId, currentConnection);
 
-        const dbImage: UploadedImage = {
-          fileName: file.originalname,
-          url: uploadedFile.url,
-          bucket_name: uploadedFile.bucket_name,
-          service_id: serviceId,
-          main_pic: file.originalname === mainPicFileName,
-        };
-        return db.getImagesDB().addImage(dbImage, currentConnection);
-      })
+    const uploadResult = await uploadFileAndSaveDB(
+      req.files,
+      serviceId,
+      currentDatabase,
+      mainPicFileName,
+      currentConnection
+    );
+    //only delete the pictures at the moment right before commiting as we don't want to rollback images back into the db when theyve been deleted from the s3 bucket
+    await Promise.all(
+      imagesToDelete.map((imageEntry) => deleteFile(imageEntry.fileName))
     );
 
     await currentConnection.commit();

@@ -19,7 +19,7 @@ class ServiceFilesDB {
   }
 
   public async getFilesSignedUrlsByService(serviceId: number) {
-    const entries = await this.genericQueries.findEntryBy<IServiceFile>(
+    const entries = await this.getGenericQueries().findEntryBy<IServiceFile>(
       "service_id",
       serviceId
     );

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
 import { uploadFile } from "../../../../utils/AWS/s3/s3_v3";
 import { db } from "../../../../server";
+import { uploadFileAndSaveDB } from "../uploadFileAndSaveDB/uploadFileAndSaveDB";
 
 const uploadServiceFileController = async (req: Request, res: Response) => {
   const user = req.user as IUser;
@@ -19,23 +20,13 @@ const uploadServiceFileController = async (req: Request, res: Response) => {
         .json(
           "No Files Uploaded there was an issue with multer or no service id provided"
         );
-    const uploadResultsArray = await Promise.all(
-      req.files.map(async (file) => {
-        const uploadResult = await uploadFile(file);
 
-        //don't want to rollback all the previous file upload records if one fails
-        const currentConnection = await db.getSinglePoolConnection();
-        const dbFile = {
-          fileName: file.originalname,
-          url: uploadResult.url,
-          bucketName: uploadResult.bucket_name,
-          service_id: req.body.service_id,
-        };
-        return db
-          .getServiceFilesDB()
-          .getGenericQueries()
-          .createTableEntryFromPrimitives(dbFile, currentConnection);
-      })
+    const currentDatabase = db.getServiceFilesDB();
+
+    const uploadResultArray = await uploadFileAndSaveDB(
+      req.files,
+      req.body.service_id,
+      currentDatabase
     );
 
     res.status(201).json("Successfully uploaded files");

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { IUser } from "../../../../types/userTypes/UserType";
-import { uploadFile } from "../../../../utils/AWS/s3/s3_v3";
+
+import { uploadFileAndSaveDB } from "../../serviceFileControllers/uploadFileAndSaveDB/uploadFileAndSaveDB";
 import { db } from "../../../../server";
-import { UploadedImage } from "../../../../db/imageDB/ImageDB";
 
 export const uploadImageController = async (req: Request, res: Response) => {
   if (!req.user || (req.user as IUser).privileges !== "admin")
@@ -22,34 +22,16 @@ export const uploadImageController = async (req: Request, res: Response) => {
 
   const mainPicFileName = req.files[mainPicIndex]?.originalname;
 
+  const currentDatabase = db.getServiceFilesDB();
+
   try {
-    //not very concerned about transactional integrity here, want to focus on parralelisation
-    const resultsArray = await Promise.all(
-      req.files.map(async (file) => {
-        const currentConnection = await db.getSinglePoolConnection();
-        await currentConnection.beginTransaction();
-        try {
-          const fileUploadResult = await uploadFile(file);
-
-          const dbImage: UploadedImage = {
-            fileName: file.originalname,
-            url: fileUploadResult.url,
-            bucket_name: fileUploadResult.bucket_name,
-            service_id,
-            main_pic: file.originalname === mainPicFileName,
-          };
-
-          const saveEntryResult = db
-            .getImagesDB()
-            .addImage(dbImage, currentConnection);
-          await currentConnection.commit();
-          return saveEntryResult;
-        } finally {
-          currentConnection.release();
-        }
-      })
+    const resultsArray = await uploadFileAndSaveDB(
+      req.files,
+      service_id,
+      currentDatabase,
+      mainPicFileName
     );
-    console.log(resultsArray, "RESULTS ARRAY IN UPLOAD IMAGE CONTROLLER");
+
     res.status(201).json({ imageDBEntries: resultsArray });
   } catch (error) {
     console.log(error);
