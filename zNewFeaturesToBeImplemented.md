@@ -118,7 +118,6 @@ Will need to add a new category of verified but not approved.
 - Create Endpoint to upload file through multer middleware (have this is services)[x]
 - Create FileType front and backend [x]
 - Create function to upload and save file to db that will cover images and files as refactor [x]
-  Commit = refactored upload and file save and implemented into file and image controllers, made adjustment to timing of deleltion of updated pictures
 - Adjust service form creation to allow for file uploads []
 - handle upload and parsing of the information []
 
