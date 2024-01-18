@@ -10,7 +10,6 @@ const updateImagesForServiceController = async (
   req: Request,
   res: Response
 ) => {
-  console.log("Hitting the Update Images for Service Endpoint");
   if (!req.user || (req.user as IUser).privileges !== "admin")
     return res.status(401).json("You are not authorised to make these changes");
 
@@ -65,6 +64,7 @@ const updateImagesForServiceController = async (
     return res.status(201).json({ imageDBResults: uploadResult });
   } catch (error) {
     await currentConnection.rollback();
+    console.log(error, "error in image updateImagesForService");
     res.status(500).json((error as Error).message);
   } finally {
     currentConnection.release();

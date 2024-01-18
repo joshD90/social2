@@ -3,7 +3,9 @@ import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
-import SelectServiceImages from "./selectServiceImages/SelectServiceImages";
+import SelectServiceFiles from "./selectServiceImages/SelectServiceFiles";
+import SelectedServiceImagesDisplay from "./selectServiceImages/SelectedServiceImagesDisplay";
+import FileIconsDisplay from "./selectServiceImages/FileIconsDisplay";
 
 const thresholdOptions = [
   { value: "low", name: "Low" },
@@ -21,6 +23,8 @@ type Props = {
   setInputErrors: React.Dispatch<SetStateAction<{ [key: string]: string }>>;
   images: File[];
   setImages: React.Dispatch<SetStateAction<File[]>>;
+  files: File[];
+  setFiles: React.Dispatch<SetStateAction<File[]>>;
 };
 
 const BaseServiceFormExtras: FC<Props> = ({
@@ -30,6 +34,8 @@ const BaseServiceFormExtras: FC<Props> = ({
   setInputErrors,
   images,
   setImages,
+  files,
+  setFiles,
 }) => {
   return (
     <div className="w-full grid lg:grid-cols-2 gap-5 p-5">
@@ -87,7 +93,23 @@ const BaseServiceFormExtras: FC<Props> = ({
         inputError={inputErrors}
         setInputError={setInputErrors}
       />
-      <SelectServiceImages images={images} setImages={setImages} />
+      <SelectServiceFiles
+        files={images}
+        setFiles={setImages}
+        forImage={true}
+        fileDisplay={
+          <SelectedServiceImagesDisplay
+            imageFiles={images}
+            setImages={setImages}
+          />
+        }
+      />
+      <SelectServiceFiles
+        files={files}
+        setFiles={setFiles}
+        forImage={false}
+        fileDisplay={<FileIconsDisplay files={files} setFiles={setFiles} />}
+      />
     </div>
   );
 };

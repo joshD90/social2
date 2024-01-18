@@ -26,6 +26,7 @@ const ServiceForm = () => {
     serviceId ? `${envIndex.urls.baseUrl}/services/service/${serviceId}` : ""
   );
   const [images, setImages] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   const navigate = useNavigate();
 
@@ -61,6 +62,8 @@ const ServiceForm = () => {
             setInputErrors={setInputError}
             images={images}
             setImages={setImages}
+            files={files}
+            setFiles={setFiles}
           />
         );
       case 2:

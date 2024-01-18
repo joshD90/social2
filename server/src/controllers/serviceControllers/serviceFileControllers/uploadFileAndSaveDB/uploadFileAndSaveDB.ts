@@ -24,7 +24,7 @@ export const uploadFileAndSaveDB = async (
         const dbFile = {
           fileName: file.originalname,
           url: uploadResult.url,
-          bucketName: uploadResult.bucket_name,
+          bucket_name: uploadResult.bucket_name,
           service_id: service_id,
           ...(mainPicFileName
             ? { main_pic: file.originalname === mainPicFileName }

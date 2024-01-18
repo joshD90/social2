@@ -2,8 +2,6 @@ import { FaFilePdf, FaFilePowerpoint } from "react-icons/fa6";
 import { FaFileWord, FaFileAlt } from "react-icons/fa";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 
-import { IconType } from "react-icons";
-
 export const fileIcons = new Map<string, JSX.Element>();
 
 fileIcons.set("pdf", <FaFilePdf />);
@@ -39,11 +37,11 @@ export const findIconsOnExtensions = (file: File) => {
       keySearch = "excel";
       break;
     case "xlsx":
-      break;
       keySearch = "excel";
       break;
     default:
-      return "other";
+      keySearch = "other";
+      break;
   }
 
   return fileIcons.get(keySearch);
