@@ -13,7 +13,7 @@ import { mapSubServiceToISubCategory } from "../serviceDisplay/mapSubServiceToIS
 import BaseServiceFormExtras from "../../components/serviceForm/BaseServiceFormExtras";
 import validateServiceForm from "../../utils/formValidation/serviceFormValidation/serviceFormValidation";
 import envIndex from "../../envIndex/envIndex";
-import uploadImages from "../../components/serviceForm/selectServiceImages/UploadImages";
+import uploadFiles from "../../components/serviceForm/selectServiceFiles/UploadFiles";
 
 const ServiceForm = () => {
   const [stepIndex, setStepIndex] = useState(0);
@@ -25,6 +25,7 @@ const ServiceForm = () => {
   const { fetchedData } = useGetFetch(
     serviceId ? `${envIndex.urls.baseUrl}/services/service/${serviceId}` : ""
   );
+
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
@@ -108,7 +109,7 @@ const ServiceForm = () => {
       ? `${envIndex.urls.baseUrl}/services/${serviceId}`
       : `${envIndex.urls.baseUrl}/services`;
     const method = serviceId ? "PUT" : "POST";
-
+    console.log(method, "method");
     try {
       const result = await fetch(url, {
         method: method,
@@ -122,15 +123,29 @@ const ServiceForm = () => {
       const data = await result.json();
 
       //assuming all goes well with the service upload the images
-      const imageResponse = await uploadImages(
+      const imageResponse = await uploadFiles(
         images,
         data.id,
         setInputError,
+        true,
         method
       );
 
       if (!imageResponse)
         throw new Error("There was an issue with uploading the images");
+
+      //should we maybe be doing images and files in a promise.all so that we can parralelise them?
+      const fileResponse = await uploadFiles(
+        files,
+        data.id,
+        setInputError,
+        false,
+        method
+      );
+      if (!fileResponse)
+        throw new Error(
+          "There was an issue with uploading the associated files"
+        );
       navigate(`/admin/services/view?id=${data.id}`);
     } catch (error) {
       if (error instanceof Error) {

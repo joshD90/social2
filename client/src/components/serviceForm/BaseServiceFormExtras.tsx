@@ -3,9 +3,9 @@ import PrimitiveInput from "../../microcomponents/inputs/PrimitiveInput";
 import { TIterableService } from "../../types/serviceTypes/Service";
 import SelectPrimitiveInput from "../../microcomponents/inputs/SelectPrimitiveInput";
 import TextAreaInput from "../../microcomponents/inputs/TextAreaInput";
-import SelectServiceFiles from "./selectServiceImages/SelectServiceFiles";
-import SelectedServiceImagesDisplay from "./selectServiceImages/SelectedServiceImagesDisplay";
-import FileIconsDisplay from "./selectServiceImages/FileIconsDisplay";
+import SelectServiceFiles from "./selectServiceFiles/SelectServiceFiles";
+import SelectedServiceImagesDisplay from "./selectServiceFiles/SelectedServiceImagesDisplay";
+import FileIconsDisplay from "./selectServiceFiles/FileIconsDisplay";
 
 const thresholdOptions = [
   { value: "low", name: "Low" },

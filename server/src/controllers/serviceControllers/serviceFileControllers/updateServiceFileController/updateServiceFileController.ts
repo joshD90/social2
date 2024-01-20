@@ -7,9 +7,10 @@ import { IServiceFile } from "../../../../types/serviceTypes/ServiceType";
 import { uploadFileAndSaveDB } from "../uploadFileAndSaveDB/uploadFileAndSaveDB";
 
 const updateServiceFileController = async (req: Request, res: Response) => {
+  console.log(req.body, "req.body");
   const { serviceId } = req.body;
   const service_id = parseInt(serviceId);
-
+  console.log(service_id, "service_id");
   const user = req.user as IUser;
   if (!user || user.privileges !== "admin")
     return res
@@ -34,7 +35,7 @@ const updateServiceFileController = async (req: Request, res: Response) => {
     await currentDatabase
       .getGenericQueries()
       .deleteBySingleCriteria("service_id", serviceId, currentConnection);
-
+    console.log("delete files successfully");
     const uploadResult = await uploadFileAndSaveDB(
       files,
       service_id,
@@ -42,7 +43,7 @@ const updateServiceFileController = async (req: Request, res: Response) => {
       undefined,
       currentConnection
     );
-
+    console.log(uploadResult, "uploadResult in updateServiceFileContoroler");
     await Promise.all(
       filesToDelete.map((fileEntry) => deleteFile(fileEntry.fileName))
     );

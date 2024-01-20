@@ -9,6 +9,7 @@ const getSignedFileUrlController = async (req: Request, res: Response) => {
     const signedUrls = await db
       .getServiceFilesDB()
       .getFilesSignedUrlsByService(serviceId);
+
     return res.status(200).json({ fileUrls: signedUrls });
   } catch (error) {
     console.log(error);

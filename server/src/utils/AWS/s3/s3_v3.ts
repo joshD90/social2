@@ -25,11 +25,12 @@ export const uploadFile = async (file: any) => {
     Body: readableStream,
     Key: file.originalname,
   };
+
   const upload = new Upload({ client: s3Client, params: uploadParams });
 
   const uploadResult = await upload.done();
 
-  const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${file.orignalname}`;
+  const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${file.originalname}`;
   return { uploadResult, url: uploadUrl, bucket_name: bucketName };
 };
 
@@ -37,7 +38,9 @@ export const generateDownloadUrl = async (key: string) => {
   const params = { Bucket: bucketName, Key: key, Expires: 60 };
   const getObjectCommand = new GetObjectCommand(params);
 
-  const url = await getSignedUrl(s3Client, getObjectCommand, { expiresIn: 60 });
+  const url = await getSignedUrl(s3Client, getObjectCommand, {
+    expiresIn: 60,
+  });
   return url;
 };
 

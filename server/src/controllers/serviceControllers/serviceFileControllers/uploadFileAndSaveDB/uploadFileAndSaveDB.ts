@@ -30,6 +30,7 @@ export const uploadFileAndSaveDB = async (
             ? { main_pic: file.originalname === mainPicFileName }
             : {}),
         };
+
         const dbEntry = database
           .getGenericQueries()
           .createTableEntryFromPrimitives(dbFile, currentConnection);

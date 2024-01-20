@@ -38,8 +38,9 @@ async function uploadImages(
     formData.append("service_id", serviceId.toString());
     mainPicIndex && formData.append("mainPicIndex", mainPicIndex.toString());
   } else {
-    url = `${envIndex.urls.baseUrl}/services/files/${serviceId}`;
+    url = `${envIndex.urls.baseUrl}/services/files`;
     files.forEach((file) => formData.append("files", file));
+    formData.append("serviceId", serviceId.toString());
   }
 
   try {
@@ -58,7 +59,7 @@ async function uploadImages(
 
     return true;
   } catch (error) {
-    console.log(error, "error in upload images response");
+    console.log(error, "error in upload files response");
     if (isError(error)) console.log(error);
     // setInputErrors((prev) => ({ ...prev, images: (error as Error).message }));
     return false;
