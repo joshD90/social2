@@ -32,6 +32,7 @@ export interface IService extends IListItemBase {
   parent_service_forwardTo?: string;
   parent_service_name?: string;
   imageUrls?: { main_pic: boolean | undefined; url: string }[];
+  serviceFiles?: IServiceFileDBEntry[];
 }
 
 //Service with subsections
@@ -70,4 +71,12 @@ export interface IServiceEmailContact {
 
 export interface IFileWithPrimary extends File {
   main_pic?: boolean;
+}
+export interface IServiceFileDBEntry {
+  id?: number;
+  fileName: string;
+  service_id: number;
+  url: string;
+  bucket_name: string;
+  created_at: string;
 }

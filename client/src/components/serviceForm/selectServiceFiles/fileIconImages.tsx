@@ -10,8 +10,8 @@ fileIcons.set("txt", <FaFileWord />);
 fileIcons.set("excel", <PiMicrosoftExcelLogoFill />);
 fileIcons.set("other", <FaFileAlt />);
 
-export const findIconsOnExtensions = (file: File) => {
-  const extension = file.name.split(".")[file.name.split(".").length - 1];
+export const findIconsOnExtensions = (fileName: string) => {
+  const extension = fileName.split(".")[fileName.split(".").length - 1];
   let keySearch = "";
 
   switch (extension) {

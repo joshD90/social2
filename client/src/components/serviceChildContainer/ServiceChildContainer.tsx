@@ -24,7 +24,7 @@ const ServiceChildContainer: FC<Props> = ({ childServices, themeColor }) => {
     >
       <label
         htmlFor="serviceChidren"
-        className="bg-stone-800 text-stone-50 py-2"
+        className="bg-stone-400 text-stone-900 p-2"
       >
         Services contained within this service
       </label>

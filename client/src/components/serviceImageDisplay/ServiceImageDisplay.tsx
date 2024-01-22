@@ -10,7 +10,13 @@ type Props = { images: { main_pic: boolean | undefined; url: string }[] };
 
 const ServiceImageDisplay: FC<Props> = ({ images }) => {
   return (
-    <Swiper modules={[Navigation]} height={72} navigation loop={true}>
+    <Swiper
+      modules={[Navigation]}
+      height={72}
+      navigation
+      loop={true}
+      className="swiper-container"
+    >
       {images.map((img) => (
         <SwiperSlide key={img.url}>
           <div className="h-full w-full flex items-center justify-center">

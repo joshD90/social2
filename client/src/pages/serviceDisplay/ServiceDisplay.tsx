@@ -15,6 +15,7 @@ import { BsGlobe } from "react-icons/bs";
 import ServiceChildContainer from "../../components/serviceChildContainer/ServiceChildContainer";
 import ServiceContactDisplay from "../../components/serviceContactDisplay/ServiceContactDisplay";
 import ServiceImageDisplay from "../../components/serviceImageDisplay/ServiceImageDisplay";
+import ServiceFileDisplay from "../../components/serviceFileDisplay/serviceFileDisplay";
 
 type Props = {
   serviceId: string | boolean;
@@ -42,7 +43,7 @@ const ServiceDisplay: FC<Props> = ({
         });
         if (!result.ok) throw Error(result.statusText);
         const data = await result.json();
-
+        console.log(data, "data returned from service searched");
         const contactNumber =
           Array.isArray(data.contactNumber) && data.contactNumber.length > 0
             ? data.contactNumber
@@ -75,8 +76,9 @@ const ServiceDisplay: FC<Props> = ({
                 }
               ) ?? []
             : [],
+          serviceFiles: data.files ?? [],
         };
-        console.log(formattedData.imageUrls);
+        console.log(formattedData.serviceFiles);
         setService(formattedData);
       } catch (error) {
         console.log(error);
@@ -229,6 +231,13 @@ const ServiceDisplay: FC<Props> = ({
                 themeColor={themeColor}
               />
             ) : null}
+            {Array.isArray(service.serviceFiles) &&
+              service.serviceFiles.length > 0 && (
+                <ServiceFileDisplay
+                  files={service.serviceFiles}
+                  themeColor={themeColor ? themeColor : ThemeColor.blue}
+                />
+              )}
           </div>
           <hr className="w-2/3 ml-auto mr-auto" />
           <div className="p-5 grid lg:grid-cols-2 gap-3">

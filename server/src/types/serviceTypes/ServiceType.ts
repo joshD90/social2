@@ -66,6 +66,6 @@ export interface IServiceFile {
   fileName: string;
   service_id: number;
   url: string;
-  bucketName: string;
+  bucket_name: string;
   created_at: string;
 }

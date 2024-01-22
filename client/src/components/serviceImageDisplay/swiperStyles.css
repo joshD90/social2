@@ -1,3 +1,8 @@
+.swiper-container {
+  z-index: 0;
+  border: 5px solid red;
+}
+
 .swiper-button-next,
 .swiper-button-prev {
   opacity: 50%;

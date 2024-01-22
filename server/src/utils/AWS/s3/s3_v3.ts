@@ -30,7 +30,9 @@ export const uploadFile = async (file: any) => {
 
   const uploadResult = await upload.done();
 
-  const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${file.originalname}`;
+  const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${encodeURIComponent(
+    file.originalname
+  )}`;
   return { uploadResult, url: uploadUrl, bucket_name: bucketName };
 };
 
@@ -41,6 +43,7 @@ export const generateDownloadUrl = async (key: string) => {
   const url = await getSignedUrl(s3Client, getObjectCommand, {
     expiresIn: 60,
   });
+  console.log(url, "url in generate download url, the actual function");
   return url;
 };
 

@@ -30,6 +30,20 @@ class ServiceFilesDB {
     return fileUrls;
   }
 
+  public async getFileSignedUrlByColumn(
+    columnName: string,
+    columnValue: string | number
+  ) {
+    const entry = await this.getGenericQueries().findEntryBy<IServiceFile>(
+      columnName,
+      columnValue
+    );
+    if (!entry[0]) return undefined;
+    const signedUrl = await generateDownloadUrl(entry[0].url);
+
+    return signedUrl;
+  }
+
   private async initTable() {
     await this.connection.execute(dbQueries.initTable);
   }

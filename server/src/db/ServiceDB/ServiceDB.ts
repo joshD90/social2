@@ -23,6 +23,7 @@ import {
 import {
   IService,
   IServiceEmailContact,
+  IServiceFile,
   IServicePhoneContact,
 } from "../../types/serviceTypes/ServiceType";
 import queryObj from "../ServiceReportDB/serviceReportQueries";
@@ -191,12 +192,18 @@ export class ServiceDB {
       .getImagesDB()
       .getImageSignedUrlsByService(serviceId);
 
+    const serviceFiles = await db
+      .getServiceFilesDB()
+      .getGenericQueries()
+      .findEntryBy<IServiceFile>("service_id", serviceId);
+
     return {
       baseService,
       children: allChildren,
       contactNumber: contactNumbers,
       emailContacts: emailContacts,
       images: serviceImages,
+      files: serviceFiles,
       ...allSubCategories,
     };
   }

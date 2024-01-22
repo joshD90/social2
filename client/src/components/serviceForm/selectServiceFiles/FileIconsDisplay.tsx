@@ -16,7 +16,7 @@ const FileIconsDisplay: FC<Props> = ({ files, setFiles }) => {
       {files.map((file) => (
         <div className="">
           <div className="relative flex items-center justify-center">
-            <div className="text-2xl">{findIconsOnExtensions(file)}</div>
+            <div className="text-2xl">{findIconsOnExtensions(file.name)}</div>
             <span
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 text-xl text-red-400 cursor-pointer"
               onClick={() => removeFile(file.name)}

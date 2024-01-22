@@ -7,10 +7,9 @@ import { IServiceFile } from "../../../../types/serviceTypes/ServiceType";
 import { uploadFileAndSaveDB } from "../uploadFileAndSaveDB/uploadFileAndSaveDB";
 
 const updateServiceFileController = async (req: Request, res: Response) => {
-  console.log(req.body, "req.body");
   const { serviceId } = req.body;
   const service_id = parseInt(serviceId);
-  console.log(service_id, "service_id");
+
   const user = req.user as IUser;
   if (!user || user.privileges !== "admin")
     return res
