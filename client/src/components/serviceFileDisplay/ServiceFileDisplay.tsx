@@ -4,6 +4,7 @@ import { IServiceFileDBEntry } from "../../types/serviceTypes/Service";
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
 import envIndex from "../../envIndex/envIndex";
+import downloadBlob from "../../utils/downloadBlob/downloadBlob";
 
 type Props = { files: IServiceFileDBEntry[]; themeColor: ThemeColor };
 
@@ -11,7 +12,11 @@ const ServiceFileDisplay: FC<Props> = ({ files, themeColor }) => {
   const [error, setError] = useState("");
 
   const handleSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const url = `${envIndex.urls.baseUrl}/services/files/signed/${e.target.value}`;
+    const fileDetails = JSON.parse(e.target.value);
+    const { id, fileName } = fileDetails;
+    if (!id || !fileName) return setError("Incorrect file id or filename");
+
+    const url = `${envIndex.urls.baseUrl}/services/files/signed/${id}`;
 
     if (!url) return setError("There was no url selected");
     try {
@@ -28,7 +33,8 @@ const ServiceFileDisplay: FC<Props> = ({ files, themeColor }) => {
         return setError(
           "Could not fetch file from S3 bucket " + s3Response.statusText
         );
-      console.log(s3Response, "s3Response");
+      const blob = await s3Response.blob();
+      downloadBlob(blob, fileName);
     } catch (error) {
       console.log(error, "error in getting signed url");
       setError((error as Error).message);
@@ -52,7 +58,11 @@ const ServiceFileDisplay: FC<Props> = ({ files, themeColor }) => {
           Select File
         </option>
         {files.map((file) => (
-          <option className="w-full flex" value={file.id} key={file.id}>
+          <option
+            className="w-full flex"
+            value={JSON.stringify({ id: file.id, fileName: file.fileName })}
+            key={file.id}
+          >
             {file.fileName}
           </option>
         ))}

@@ -15,7 +15,7 @@ import { BsGlobe } from "react-icons/bs";
 import ServiceChildContainer from "../../components/serviceChildContainer/ServiceChildContainer";
 import ServiceContactDisplay from "../../components/serviceContactDisplay/ServiceContactDisplay";
 import ServiceImageDisplay from "../../components/serviceImageDisplay/ServiceImageDisplay";
-import ServiceFileDisplay from "../../components/serviceFileDisplay/serviceFileDisplay";
+import ServiceFileDisplay from "../../components/serviceFileDisplay/ServiceFileDisplay";
 
 type Props = {
   serviceId: string | boolean;
