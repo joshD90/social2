@@ -30,20 +30,31 @@ export const uploadFile = async (file: any) => {
 
   const uploadResult = await upload.done();
 
-  const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${encodeURIComponent(
-    file.originalname
-  )}`;
-  return { uploadResult, url: uploadUrl, bucket_name: bucketName };
+  console.log(
+    uploadResult.Location,
+    "location",
+    uploadResult.ETag,
+    "etag",
+    uploadResult.Key,
+    "key"
+  );
+
+  // const uploadUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${encodeURIComponent(
+  //   file.originalname
+  // )}`;
+
+  return { uploadResult, url: uploadResult.Location, bucket_name: bucketName };
 };
 
 export const generateDownloadUrl = async (key: string) => {
+  console.log(key, "key being looked for");
   const params = { Bucket: bucketName, Key: key, Expires: 60 };
   const getObjectCommand = new GetObjectCommand(params);
 
   const url = await getSignedUrl(s3Client, getObjectCommand, {
     expiresIn: 60,
   });
-  console.log(url, "url in generate download url, the actual function");
+
   return url;
 };
 

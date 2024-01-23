@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { IServiceFileDBEntry } from "../../types/serviceTypes/Service";
-import { findIconsOnExtensions } from "../serviceForm/selectServiceFiles/fileIconImages";
+
 import { ThemeColor } from "../../types/themeColorTypes/themeColorTypes";
 import { twThemeColors } from "../../assets/themeColors/twThemeColors";
 import envIndex from "../../envIndex/envIndex";
@@ -23,7 +23,7 @@ const ServiceFileDisplay: FC<Props> = ({ files, themeColor }) => {
         );
 
       const signedUrl = await response.json();
-      const s3Response = await fetch(signedUrl, { credentials: "include" });
+      const s3Response = await fetch(signedUrl);
       if (!s3Response.ok)
         return setError(
           "Could not fetch file from S3 bucket " + s3Response.statusText
@@ -43,13 +43,16 @@ const ServiceFileDisplay: FC<Props> = ({ files, themeColor }) => {
       <p className="w-full p-2 bg-stone-400">
         Select Associated File to Download
       </p>
-      <select className="w-full p-2" onChange={(e) => handleSelect(e)}>
-        <option disabled selected>
+      <select
+        className="w-full p-2"
+        onChange={(e) => handleSelect(e)}
+        defaultValue={"Select File"}
+      >
+        <option disabled value={"Select File"}>
           Select File
         </option>
         {files.map((file) => (
           <option className="w-full flex" value={file.id} key={file.id}>
-            {findIconsOnExtensions(file.fileName)}
             {file.fileName}
           </option>
         ))}

@@ -39,7 +39,7 @@ class ServiceFilesDB {
       columnValue
     );
     if (!entry[0]) return undefined;
-    const signedUrl = await generateDownloadUrl(entry[0].url);
+    const signedUrl = await generateDownloadUrl(entry[0].fileName);
 
     return signedUrl;
   }

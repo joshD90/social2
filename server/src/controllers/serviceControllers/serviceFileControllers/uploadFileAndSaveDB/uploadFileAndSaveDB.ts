@@ -21,6 +21,7 @@ export const uploadFileAndSaveDB = async (
         const uploadResult = await uploadFile(file);
         console.log(uploadResult, "s3 upload result");
         //don't want to rollback all the previous file upload records if one fails
+        if (!uploadResult.url) throw Error("No Upload Url / Location");
 
         const dbFile = {
           fileName: encodeURIComponent(file.originalname),
