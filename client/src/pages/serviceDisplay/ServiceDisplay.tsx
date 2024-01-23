@@ -95,12 +95,11 @@ const ServiceDisplay: FC<Props> = ({
     >
       {service ? (
         <div className="relative pt-10">
-          <ServiceOverlay serviceId={serviceId} backClickPath={backClickPath} />
           <h1 className="w-full flex justify-center text-2xl text-stone-50">
             {service.name}
           </h1>
           {!service.imageUrls && service.imageUrl && (
-            <div className="w-full flex justify-center my-5">
+            <div className="w-full flex justify-center my-5 z-0">
               <img
                 src={service.imageUrl}
                 className="rounded-sm"
@@ -113,6 +112,7 @@ const ServiceDisplay: FC<Props> = ({
               <ServiceImageDisplay images={service.imageUrls} />
             </div>
           )}
+
           <div className="flex flex-col items-center">
             {service.description && (
               <p className="my-5 text-stone-50 w-4/5 text-center">
@@ -257,6 +257,7 @@ const ServiceDisplay: FC<Props> = ({
               themeColor={themeColor ? themeColor : ThemeColor.blue}
             />
           </div>
+          <ServiceOverlay serviceId={serviceId} backClickPath={backClickPath} />
         </div>
       ) : (
         <div className="w-full h-screen flex items-center justify-center">

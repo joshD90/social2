@@ -24,7 +24,7 @@ const ServiceOverlay: FC<Props> = ({ backClickPath, serviceId }) => {
   return (
     <div>
       <button
-        className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2 top-3 text-stone-800"
+        className="p-2 bg-green-500 rounded-md hover:bg-green-400 absolute left-2 top-3 text-stone-800 z-10"
         onClick={handleBackClick}
       >
         Back
