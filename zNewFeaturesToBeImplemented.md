@@ -120,7 +120,8 @@ Will need to add a new category of verified but not approved.
 - Create function to upload and save file to db that will cover images and files as refactor [x]
 - Adjust service form creation to allow for file uploads [x]
 - handle upload and parsing of the information [x]
-- There is an error where sometimes getting 403 forbidden error for images and then getting a CORS error for s3 for the files []
+- There is an error where sometimes getting 403 forbidden error for images and then getting a CORS error for s3 for the files [x]
+- Allow for file downloading on selection [x]
 
 ### Error handle and rollback Database interactions
 
@@ -129,6 +130,15 @@ Will need to add a new category of verified but not approved.
 - Need to pass the error handling one level higher and probably need to handle by creating some error codes or perhaps error ENUMS or something []
 - So we will handle the connection.beginTransaction and the rollback wherever we have the try catch, so if we're just throwing errors then pass the connection in. If it's fully self-contained, do the transaction in that try catch block. [x]
 
-### Fix Frontend Issue with Report not sitting on top
+### Fix Frontend Issue with Report not sitting on top [x]
 
-- Perhaps change z-index?
+### Fix Frontend Issue of Dropdown menu not auto closing [x]
+
+### Reset Password
+
+- Create a table to store link tokens in []
+- create endpoints to create the token and send the magic link []
+  - this endpoint should do encryption for the token []
+- create post endpoint to check token off against hashed database entry. []
+- allow this endpoint if successful to update the username, use same passport procedures as used in user account creation []
+- create frontend endpoint that magic link will take you to with form for password updating []

@@ -42,6 +42,10 @@ const ProfileNavDropDown: FC<Props> = ({
     }
   };
 
+  useEffect(() => {
+    setIsVisible(false);
+  }, [setIsVisible]);
+
   //this is to handle clicking outside of the dropdown menu this will close it
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
