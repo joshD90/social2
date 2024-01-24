@@ -24,3 +24,9 @@ export type AuthReducerActions =
       type: "GET_USER_FAILURE";
       payload: string;
     };
+
+export type TPasswordResetToken = {
+  id?: number;
+  username: string;
+  reset_token: string;
+};

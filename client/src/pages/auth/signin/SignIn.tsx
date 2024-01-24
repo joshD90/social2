@@ -76,6 +76,18 @@ const SignIn = () => {
         >
           Sign In
         </button>
+        <div className="w-full text-center">
+          <a
+            className="text-stone-50 cursor-pointer text-sm"
+            onClick={() =>
+              navigate("/auth/forgotten-password", {
+                state: { email: formState.email },
+              })
+            }
+          >
+            Forgotten Your Password?
+          </a>
+        </div>
       </form>
       <div className="p-3 text-white flex items-center gap-5">
         <p className="mb-2">Don't have an Account yet?</p>

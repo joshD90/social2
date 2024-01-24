@@ -36,3 +36,9 @@ export interface IEmailConfirmationKey {
   creation_time: string;
   expiry_time: string;
 }
+
+export type TPasswordResetToken = {
+  id?: number;
+  username: string;
+  reset_token: string;
+};

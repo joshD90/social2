@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { IUser } from "../../types/userTypes/UserType";
 import { db } from "../../server";
 import sendStoreConfirmationLink from "./emailConfirm/sendStoreConfirmationLink/sendStoreConfirmationLink";
-import { connectionMock } from "../../db/generalQueryGenerator/GeneralQueryGenerator.test";
 
 const authSignupController = async (req: Request, res: Response) => {
   const {

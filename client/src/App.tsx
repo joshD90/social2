@@ -16,6 +16,7 @@ import AdminUsersView from "./pages/admin/adminUsersView/AdminUsersView";
 import UploadImageS3Test from "./pages/uploadImageS3Test/UploadImageS3Test";
 import SignupExplainer from "./pages/auth/signupExplainer/signupExplainer";
 import EmailConfirm from "./pages/auth/emailConfirm/EmailConfirm";
+import TriggerForgottenPassword from "./pages/auth/triggerForgottenPassword/TriggerForgottenPassword";
 
 const App = () => {
   return (
@@ -26,6 +27,10 @@ const App = () => {
         <Route path="signin" element={<SignIn />} />
         <Route path="signupexplainer" element={<SignupExplainer />} />
         <Route path="mailconfirm" element={<EmailConfirm />} />
+        <Route
+          path="forgotten-password"
+          element={<TriggerForgottenPassword />}
+        />
       </Route>
       <Route path="/services/*" element={<PrimaryLayout />}>
         <Route index element={<CategoryLanding />} />

@@ -10,6 +10,7 @@ import { CommentsDB } from "../CommentsDB/CommentsDB";
 import { ImagesDB } from "../imageDB/ImageDB";
 import EmailConfirmationKeysDB from "../emailConfirmationKeysDB/EmailConfirmationKeysDB";
 import ServiceFilesDB from "../ServiceFilesDB/ServiceFilesDB";
+import { PasswordResetTokenDB } from "../PasswordResetTokenDB/PasswordResetTokenDB";
 
 const { db } = envConfig;
 //our overarching database class
@@ -24,6 +25,7 @@ class Database {
   private imagesDB: ImagesDB;
   private emailConfirmationKeysDB: EmailConfirmationKeysDB;
   private serviceFilesDB: ServiceFilesDB;
+  private passwordResetTokensDB: PasswordResetTokenDB;
 
   constructor() {
     this.connection = this.initDatabase();
@@ -37,6 +39,7 @@ class Database {
     this.imagesDB = new ImagesDB(this.connection);
     this.emailConfirmationKeysDB = new EmailConfirmationKeysDB(this.connection);
     this.serviceFilesDB = new ServiceFilesDB(this.connection);
+    this.passwordResetTokensDB = new PasswordResetTokenDB(this.connection);
   }
   //connection initialises within the constructor of the database
   private initDatabase(): Pool {
@@ -91,6 +94,9 @@ class Database {
   }
   public getServiceFilesDB(): ServiceFilesDB {
     return this.serviceFilesDB;
+  }
+  public getPasswordResetTokensDB(): PasswordResetTokenDB {
+    return this.passwordResetTokensDB;
   }
 }
 

@@ -38,3 +38,33 @@ export const sendConfirmMail = async (email: string, magicKey: string) => {
   const sentEmail = await sesClient.send(sendEmailCommand);
   return sentEmail;
 };
+
+const createPasswordResetEmail = (email: string, token: string) => {
+  const url = `${envIndex.frontend.baseUrl}/auth/passwordReset?username=${email}&token=${token}`;
+
+  const params = {
+    Destination: {
+      ToAddresses: [email],
+    },
+    Message: {
+      Body: {
+        Text: {
+          Data: `This email was sent to reset your password.  If you did not expect this please ignore.  Click here to follow through to the password reset page ${url}`,
+        },
+      },
+      Subject: {
+        Data: "Reset your Social2 Password",
+      },
+    },
+    Source: "joshuadancey@hotmail.com",
+  };
+  return params;
+};
+
+export const sendResetPasswordEmail = async (email: string, token: string) => {
+  const params = createPasswordResetEmail(email, token);
+  const sendEmailCommand = new SendEmailCommand(params);
+
+  const sentEmail = await sesClient.send(sendEmailCommand);
+  return sentEmail;
+};

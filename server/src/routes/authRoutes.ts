@@ -6,6 +6,8 @@ import authSignOutController from "../controllers/authControllers/authSignOutCon
 import userDataController from "../controllers/authControllers/userDataController";
 import checkEmailKeyController from "../controllers/authControllers/emailConfirm/checkEmailKeyController/checkEmailKeyController";
 import resendEmailController from "../controllers/authControllers/emailConfirm/resendEmailController/resendEmailController";
+import { createTokenExportLinkController } from "../controllers/authControllers/passwordReset/createTokenSendLinkController/createTokenSendLinkController";
+import { checkResetTokenController } from "../controllers/authControllers/passwordReset/checkResetTokenController/checkResetTokenController";
 
 const router = Router();
 
@@ -23,4 +25,7 @@ router.get(
 );
 router.get("/compare-mail-check", checkEmailKeyController);
 router.get("/mail-key-resend", resendEmailController);
+
+router.post("create-reset-token", createTokenExportLinkController);
+router.post("confirm-reset-token", checkResetTokenController);
 export default router;
