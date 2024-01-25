@@ -17,6 +17,7 @@ import UploadImageS3Test from "./pages/uploadImageS3Test/UploadImageS3Test";
 import SignupExplainer from "./pages/auth/signupExplainer/signupExplainer";
 import EmailConfirm from "./pages/auth/emailConfirm/EmailConfirm";
 import TriggerForgottenPassword from "./pages/auth/triggerForgottenPassword/TriggerForgottenPassword";
+import ResetForgottenPassword from "./pages/auth/resetForgottenPassword/resetForgottenPassword";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           path="forgotten-password"
           element={<TriggerForgottenPassword />}
         />
+        <Route path="passwordReset" element={<ResetForgottenPassword />} />
       </Route>
       <Route path="/services/*" element={<PrimaryLayout />}>
         <Route index element={<CategoryLanding />} />

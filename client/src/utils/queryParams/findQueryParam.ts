@@ -3,14 +3,14 @@
 const findQueryParam = (
   urlSearch: string,
   queryParam: string
-): string | boolean => {
+): string | undefined => {
   const paramArray = urlSearch.split("&");
   let paramResult = "";
   paramArray.forEach((param) => {
     if (param.includes(`${queryParam}=`)) paramResult = param.split("=")[1];
   });
   if (paramResult !== "") return paramResult;
-  return false;
+  return undefined;
 };
 
 export default findQueryParam;

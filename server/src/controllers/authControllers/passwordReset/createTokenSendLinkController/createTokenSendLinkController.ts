@@ -5,19 +5,26 @@ import bcrypt from "bcrypt";
 import { db } from "../../../../server";
 import { sendResetPasswordEmail } from "../../../../utils/AWS/SES/SES_v3";
 
-export const createTokenExportLinkController = async (
+export const createTokenSendLinkController = async (
   req: Request,
   res: Response
 ) => {
   const { email } = req.body;
+
   if (!email)
     return res
       .status(400)
       .json("Need to know which username to attempt to reset");
-  //TODO need to delete any previous records cant have more than one associated with an email at a time
+
   const currentConnection = await db.getSinglePoolConnection();
   try {
     await currentConnection.beginTransaction();
+
+    await db
+      .getPasswordResetTokensDB()
+      .getGenericQueries()
+      .deleteBySingleCriteria("username", email, currentConnection);
+
     const token = crypto.randomBytes(50).toString("hex");
 
     const hashedToken = await bcrypt.hash(token, 10);
