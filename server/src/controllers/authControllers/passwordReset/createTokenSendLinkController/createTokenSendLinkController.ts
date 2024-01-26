@@ -18,6 +18,14 @@ export const createTokenSendLinkController = async (
 
   const currentConnection = await db.getSinglePoolConnection();
   try {
+    const userResult = await db.getUserDB().findUser(["email", email]);
+    if (
+      userResult.length === 0 ||
+      userResult[0].privileges === "admin" ||
+      userResult[0].privileges === "moderator"
+    )
+      return res.status(401).json("You Are Not Authorised To Do this");
+
     await currentConnection.beginTransaction();
 
     await db

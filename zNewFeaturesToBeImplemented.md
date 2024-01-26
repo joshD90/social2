@@ -136,9 +136,13 @@ Will need to add a new category of verified but not approved.
 
 ### Reset Password
 
-- Create a table to store link tokens in []
-- create endpoints to create the token and send the magic link []
-  - this endpoint should do encryption for the token []
-- create post endpoint to check token off against hashed database entry. []
-- allow this endpoint if successful to update the username, use same passport procedures as used in user account creation []
+- Create a table to store link tokens in [x]
+- create endpoints to create the token and send the magic link [x]
+  - this endpoint should do encryption for the token [x]
+- create post endpoint to check token off against hashed database entry. [x]
+- allow this endpoint if successful to update the username, use same passport procedures as used in user account creation [x]
 - create frontend endpoint that magic link will take you to with form for password updating []
+- finish off error handling []
+- finish off success []
+- abstract form validation function []
+-

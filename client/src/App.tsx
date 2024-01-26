@@ -17,7 +17,7 @@ import UploadImageS3Test from "./pages/uploadImageS3Test/UploadImageS3Test";
 import SignupExplainer from "./pages/auth/signupExplainer/signupExplainer";
 import EmailConfirm from "./pages/auth/emailConfirm/EmailConfirm";
 import TriggerForgottenPassword from "./pages/auth/triggerForgottenPassword/TriggerForgottenPassword";
-import ResetForgottenPassword from "./pages/auth/resetForgottenPassword/resetForgottenPassword";
+import ResetForgottenPassword from "./pages/auth/resetForgottenPassword/ResetForgottenPassword";
 
 const App = () => {
   return (
