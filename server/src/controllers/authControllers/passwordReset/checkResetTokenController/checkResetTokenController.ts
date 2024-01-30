@@ -30,15 +30,19 @@ export const checkResetTokenController = async (
       .getPasswordResetTokensDB()
       .getGenericQueries()
       .findEntryBy<TPasswordResetToken>("username", email);
-    console.log(userResult, "userResult");
+
     if (userResult.length === 0)
       return res.status(401).json("Email Does not Match Our Records");
     const areTheSame = await bcrypt.compare(token, userResult[0].reset_token);
-    console.log(areTheSame);
+
     if (!areTheSame)
       return res
         .status(401)
         .json("You are not authorised to reset your password");
+
+    if (!checkIf24HoursOld(userResult[0].created_at!))
+      return res.status(401).json("The Token has Expired");
+
     const newHashedPW = await bcrypt.hash(newPassword, 10);
     const updateResult = await db
       .getUserDB()
@@ -56,6 +60,7 @@ export const checkResetTokenController = async (
         .status(404)
         .json("Could not find the user you are referring to");
     }
+
     //delete token at very end of process
     await db
       .getPasswordResetTokensDB()

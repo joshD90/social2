@@ -16,7 +16,10 @@ const ResetForgottenPassword = () => {
     primary: string;
     passwordConfirm: string;
   }>({ primary: "", passwordConfirm: "" });
-  const [responseMessage, setResponseMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState({
+    positive: false,
+    message: "",
+  });
   const [inputError, setInputError] = useState<{
     [key: string]: string;
   }>({ password: "", passwordConfirm: "" });
@@ -36,7 +39,10 @@ const ResetForgottenPassword = () => {
     );
 
     if (validationResult instanceof Error)
-      return setResponseMessage(validationResult.message);
+      return setResponseMessage({
+        positive: false,
+        message: validationResult.message,
+      });
     if (!validationResult.valid) {
       setInputError(validationResult.errors);
       return;
@@ -51,9 +57,15 @@ const ResetForgottenPassword = () => {
         method: "POST",
       });
       if (!resetResponse.ok) throw Error(resetResponse.statusText);
-      setResponseMessage(changeSuccessMessage);
+      setResponseMessage({
+        positive: true,
+        message: changeSuccessMessage,
+      });
     } catch (error) {
-      setResponseMessage((error as Error).message);
+      setResponseMessage({
+        positive: false,
+        message: (error as Error).message,
+      });
     }
   };
 
@@ -66,10 +78,16 @@ const ResetForgottenPassword = () => {
       className="p-5 border-stone-50 border-2 rounded-md flex flex-col gap-5"
       onSubmit={handleSubmit}
     >
-      {responseMessage !== "" && (
-        <p className="text-red-500 text-center">{responseMessage}</p>
+      {responseMessage.message !== "" && (
+        <p
+          className={`text-center ${
+            responseMessage.positive ? "text-green-500" : "text-red-800"
+          }`}
+        >
+          {responseMessage.message}
+        </p>
       )}
-      {responseMessage === changeSuccessMessage && (
+      {responseMessage.message === changeSuccessMessage && (
         <button
           onClick={() => navigate("/auth/signin")}
           className="w-full p-2 text-stone-50 bg-green-600 hover:bg-green-500 rounded-sm"

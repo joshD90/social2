@@ -41,4 +41,5 @@ export type TPasswordResetToken = {
   id?: number;
   username: string;
   reset_token: string;
+  created_at?: string;
 };

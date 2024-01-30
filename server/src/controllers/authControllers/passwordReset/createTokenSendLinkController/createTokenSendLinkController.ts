@@ -24,7 +24,7 @@ export const createTokenSendLinkController = async (
       userResult[0].privileges === "admin" ||
       userResult[0].privileges === "moderator"
     )
-      return res.status(401).json("You Are Not Authorised To Do this");
+      return res.status(404).json("You Are Not Authorised To Do this");
 
     await currentConnection.beginTransaction();
 

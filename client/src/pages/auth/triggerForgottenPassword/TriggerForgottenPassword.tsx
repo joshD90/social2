@@ -8,7 +8,10 @@ const TriggerForgottenPassword = () => {
   const location = useLocation();
   const [email, setEmail] = useState(location.state.email ?? "");
   const [error, setError] = useState<TIterableStringObj>({ email: "" });
-  const [responseMessage, setResponseMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState({
+    positive: false,
+    message: "",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,9 +25,16 @@ const TriggerForgottenPassword = () => {
         credentials: "include",
       });
       if (!resetResponse.ok) throw Error(resetResponse.statusText);
-      setResponseMessage("You Successfully Created A Token");
+      setResponseMessage({
+        positive: true,
+        message: "You Successfully Sent an Reset Link to Email Address",
+      });
+      setEmail("");
     } catch (error) {
-      setResponseMessage((error as Error).message);
+      setResponseMessage({
+        positive: false,
+        message: (error as Error).message,
+      });
     }
   };
 
@@ -33,8 +43,14 @@ const TriggerForgottenPassword = () => {
       className="p-5 border-stone-50 border-2 rounded-md flex flex-col gap-5"
       onSubmit={handleSubmit}
     >
-      {responseMessage !== "" && (
-        <p className="text-red-500 text-center">{responseMessage}</p>
+      {responseMessage.message !== "" && (
+        <p
+          className={`${
+            responseMessage.positive ? "text-green-500" : "text-red-500"
+          } text-center`}
+        >
+          {responseMessage.message}
+        </p>
       )}
       <p className="text-stone-50 text-center">Enter Email Below. </p>
       <p className="text-stone-50">
@@ -52,7 +68,12 @@ const TriggerForgottenPassword = () => {
       />
       <button
         type="submit"
-        className="w-full p-2 text-stone-50 bg-green-600 hover:bg-green-500 rounded-sm"
+        className={`w-full p-2  ${
+          !responseMessage.positive
+            ? "bg-green-600 hover:bg-green-500 text-stone-50"
+            : "bg-stone-600 text-stone-300"
+        } rounded-sm`}
+        disabled={responseMessage.positive}
       >
         Send Recovery Link
       </button>
