@@ -141,8 +141,13 @@ Will need to add a new category of verified but not approved.
   - this endpoint should do encryption for the token [x]
 - create post endpoint to check token off against hashed database entry. [x]
 - allow this endpoint if successful to update the username, use same passport procedures as used in user account creation [x]
-- create frontend endpoint that magic link will take you to with form for password updating []
-- finish off error handling []
-- finish off success []
-- abstract form validation function []
--
+- create frontend endpoint that magic link will take you to with form for password updating [x]
+- finish off error handling [x]
+- finish off success [x]
+- abstract form validation function [x]
+
+### Do up User Profile
+
+- Create a User Profile Page Displaying their details []
+- have section that gets recent comments / activity []
+- provide link to send email confirmation if not email confirmed []
