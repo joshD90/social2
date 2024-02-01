@@ -1,4 +1,5 @@
 import { db } from "../../../../server";
+import { checkIf24HoursOld } from "../../../../utils/checkIf24HoursOld";
 
 const checkEmailConfirmKey = async (
   email: string,

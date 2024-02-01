@@ -68,7 +68,10 @@ const ProfileNavDropDown: FC<Props> = ({
       ref={dropDownRef}
     >
       <ul className="h-full w-full p-0 m-0 flex flex-col">
-        <li className="basis-1 flex-grow flex items-center justify-between hover:bg-blue-800 cursor-pointer px-5">
+        <li
+          className="basis-1 flex-grow flex items-center justify-between hover:bg-blue-800 cursor-pointer px-5"
+          onClick={() => navigate("/user")}
+        >
           View Profile
         </li>
         <li

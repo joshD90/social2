@@ -18,11 +18,13 @@ import SignupExplainer from "./pages/auth/signupExplainer/signupExplainer";
 import EmailConfirm from "./pages/auth/emailConfirm/EmailConfirm";
 import TriggerForgottenPassword from "./pages/auth/triggerForgottenPassword/TriggerForgottenPassword";
 import ResetForgottenPassword from "./pages/auth/resetForgottenPassword/ResetForgottenPassword";
+import UserProfileContainer from "./pages/userProfile/UserProfileContainer/UserProfileContainer";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/image" element={<UploadImageS3Test />} />
+      {/* Auth Routes */}
       <Route path="/auth" element={<AuthWrapper />}>
         <Route path="signup" element={<SignUp />} />
         <Route path="signin" element={<SignIn />} />
@@ -34,6 +36,7 @@ const App = () => {
         />
         <Route path="passwordReset" element={<ResetForgottenPassword />} />
       </Route>
+      {/* Service Routes */}
       <Route path="/services/*" element={<PrimaryLayout />}>
         <Route index element={<CategoryLanding />} />
         <Route path="search" element={<SearchResultsContainer />} />
@@ -43,6 +46,7 @@ const App = () => {
           element={<ServiceDisplayContainer />}
         />
       </Route>
+      <Route path="/user" element={<UserProfileContainer />} />
       <Route path="/admin" element={<AdminProtectedWrapper />}>
         <Route index element={<AdminLanding />} />
         <Route path="users/" element={<AdminUsersView />} />

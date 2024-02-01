@@ -1,4 +1,4 @@
-const checkIf24HoursOld = (pastDateString: string) => {
+export const checkIf24HoursOld = (pastDateString: string) => {
   const pastDate = new Date(pastDateString);
   const currentTime = Date.now();
 

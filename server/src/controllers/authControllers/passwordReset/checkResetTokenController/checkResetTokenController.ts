@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import { db } from "../../../../server";
 import { TPasswordResetToken } from "../../../../types/userTypes/UserType";
+import { checkIf24HoursOld } from "../../../../utils/checkIf24HoursOld";
 
 export const checkResetTokenController = async (
   req: Request,
