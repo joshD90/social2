@@ -1,4 +1,4 @@
-import { FC, useContext, useLayoutEffect } from "react";
+import { FC, useContext } from "react";
 import { AuthContext } from "../../../context/authContext/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserProfile from "../../../components/user/userProfile/UserProfile";
@@ -16,7 +16,7 @@ const UserProfileContainer: FC = () => {
   }
 
   return (
-    <section className="bg-blue-950 w-screen h-screen overflow-auto items-center justify-center flex ">
+    <section className="bg-blue-950 w-screen h-screen overflow-auto items-center justify-start flex flex-col gap-10 p-0 md:p-10">
       <UserProfile user={currentUser.user} />
       <UserRecentActivity user={currentUser.user} />
     </section>

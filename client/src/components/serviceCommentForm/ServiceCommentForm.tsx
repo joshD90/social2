@@ -66,7 +66,7 @@ const ServiceCommentForm: FC<Props> = ({
         id: data.newId,
         updated_at: commentToEdit ? Date.now().toLocaleString() : undefined,
       };
-      console.log(createdComment, "Created Comment");
+
       const dispatchType = commentToEdit
         ? "UPDATE_COMMENT"
         : "PREPEND_COMMENT_AFTER_CREATE";
